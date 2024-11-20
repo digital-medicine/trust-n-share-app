@@ -7,65 +7,16 @@ import {
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as Keychain from 'react-native-keychain';
-
-const LoginContext = React.createContext();
-function useIsLoggedIn() {
-  const isLoggedIn = React.useContext(LoginContext);
-  return isLoggedIn;
-}
-function useIsLoggedOut() {
-  const isLoggedIn = React.useContext(LoginContext);
-  return !isLoggedIn;
-}
-
-const AuthContext = React.createContext();
-
-function HomeScreen() {
-  const { logout } = React.useContext(AuthContext);
-
-  const handleLogout = async () => {
-    logout();
-  }
-
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen Testest</Text>
-
-      <TouchableHighlight onPress={handleLogout}>
-        <Text>Logout</Text>
-      </TouchableHighlight>
-    </View>
-  );
-}
+import AuthContext from './app/contexts/AuthContext.js';
+import LoginScreen from './app/screens/Login.tsx';
+import {LoginContext, useIsLoggedIn, useIsLoggedOut } from './app/contexts/LoginContext.js';
+import HomeScreen from './app/screens/Home.tsx';
+import RegisterScreen from './app/screens/Register.tsx';
 
 function SplashScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Loading...</Text>
-    </View>
-  );
-}
-
-function LoginScreen() {
-  const { login } = React.useContext(AuthContext);
-
-  const handleLogin = async () => {
-    await login();
-  }
-
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <TouchableHighlight onPress={handleLogin}>
-        <Text>Login</Text>
-      </TouchableHighlight>
-    </View>
-  );
-}
-
-function RegisterScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>TODO Register</Text>
     </View>
   );
 }
