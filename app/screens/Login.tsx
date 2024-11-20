@@ -25,10 +25,9 @@ export default function LoginScreen() {
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Text style={styles.title}>Login</Text>
-        <Text>Test</Text>
 
         <TextInput
           placeholder="Email"
@@ -57,6 +56,9 @@ export default function LoginScreen() {
 
 // Styles for the component
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     padding: 20,
