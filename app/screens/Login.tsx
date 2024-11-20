@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import PrimaryButton from '../components/PrimaryButton.tsx';
 import TextInput from '../components/TextInput.tsx';
+import Link from '../components/Link.tsx';
+import {useNavigation} from '@react-navigation/native';
 
 export default function LoginScreen() {
   const { login } = React.useContext(AuthContext);
@@ -19,6 +21,8 @@ export default function LoginScreen() {
     // TODO: Add validation
     login(email, password);
   };
+
+  const navigation = useNavigation();
 
   return (
     <SafeAreaView>
@@ -42,6 +46,10 @@ export default function LoginScreen() {
         />
 
         <PrimaryButton title="Login" onPress={handleLogin} />
+
+        <Link onPress={() => navigation.navigate("Register")}>
+          New user? Register
+        </Link>
       </View>
     </SafeAreaView>
   );

@@ -5,6 +5,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
+import Link from '../components/Link.tsx';
 
 export default function HomeScreen() {
   const { logout } = React.useContext(AuthContext);
@@ -12,10 +13,7 @@ export default function HomeScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Home Screen</Text>
-
-      <TouchableHighlight onPress={logout}>
-        <Text>Logout</Text>
-      </TouchableHighlight>
+      <Link onPress={logout}>Logout</Link>
     </View>
   );
 }
