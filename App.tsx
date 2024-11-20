@@ -32,7 +32,12 @@ const RootStack = createNativeStackNavigator({
     Auth: {
       if: useIsLoggedOut,
       screens: {
-        Login: LoginScreen,
+        Login: {
+          screen: LoginScreen,
+          options: {
+            headerShown: false,
+          }
+        },
         Register: RegisterScreen,
       },
     },
@@ -71,7 +76,7 @@ function App(): React.JSX.Element {
   }, []);
 
   const authContext = React.useMemo(() => ({
-    login: async () => {
+    login: async (email: string, password: string) => {
       const token = 'dummy-auth-token'; // TODO: Get token from API
       await Keychain.setGenericPassword('trust-user', token);
       setUserToken(token);
