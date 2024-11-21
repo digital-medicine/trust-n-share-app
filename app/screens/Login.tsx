@@ -46,7 +46,7 @@ export default function LoginScreen() {
         />
 
         <PrimaryButton title="Login" onPress={handleLogin} />
-        
+
         <Link onPress={() => navigation.navigate("Register")}>
           New user? Register here
         </Link>
