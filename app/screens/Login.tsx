@@ -42,12 +42,13 @@ export default function LoginScreen() {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+          autoCapitalize="none"
         />
 
         <PrimaryButton title="Login" onPress={handleLogin} />
-
+        
         <Link onPress={() => navigation.navigate("Register")}>
-          New user? Register
+          New user? Register here
         </Link>
       </View>
     </SafeAreaView>
