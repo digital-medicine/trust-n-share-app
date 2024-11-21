@@ -11,17 +11,42 @@ import TextInput from '../components/TextInput.tsx';
 import Link from '../components/Link.tsx';
 import {useNavigation} from '@react-navigation/native';
 
+const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 export default function LoginScreen() {
   const { login } = React.useContext(AuthContext);
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [errors, setErrors] = React.useState({});
 
-  const handleLogin = () => {
-    // TODO: Basic validation
+  const validate = (): boolean => {
+    let newErrors = {};
 
-    login(email, password);
-  };
+    // Validate email
+    if (!EMAIL_REGEX.test(email)) {
+      newErrors = { ...newErrors, email: 'Invalid email address' };
+    }
+
+    // Validate password
+    if (password.length === 0) {
+      newErrors = { ...newErrors, password: 'Password must not be empty' };
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
+  const handleLogin = async () => {
+    if (!validate()) return;
+
+    try {
+      await login(email, password);
+    } catch (e) {
+      console.log(e);
+      setErrors({form: e.message});
+    }
+  }
 
   const navigation = useNavigation();
 
@@ -29,6 +54,8 @@ export default function LoginScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Text style={styles.title}>Login</Text>
+
+        {errors.form ? <Text style={{ color: 'red' }}>{errors.form}</Text> : null}
 
         <TextInput
           placeholder="Email"
@@ -38,6 +65,8 @@ export default function LoginScreen() {
           autoCapitalize="none"
         />
 
+        {errors.email ? <Text style={{ color: 'red' }}>{errors.email}</Text> : null}
+
         <TextInput
           placeholder="Password"
           value={password}
@@ -45,6 +74,8 @@ export default function LoginScreen() {
           secureTextEntry
           autoCapitalize="none"
         />
+
+        {errors.password ? <Text style={{ color: 'red' }}>{errors.password}</Text> : null}
 
         <PrimaryButton title="Login" onPress={handleLogin} />
 
