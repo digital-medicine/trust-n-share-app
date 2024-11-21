@@ -41,12 +41,15 @@ export const AuthProvider = ({ children }) => {
       const token = 'dummy-auth-token'; // TODO: Replace with real API call to fetch token
       await Keychain.setGenericPassword('trust-user', token);
       setUserToken(token);
-      console.log('Logged in');
+    },
+    register: async (gender, firstName, lastName, email, password, birthDate) => {
+      const token = 'dummy-auth-token'; // TODO: Replace with real API call to fetch token
+      await Keychain.setGenericPassword('trust-user', token);
+      setUserToken(token);
     },
     logout: async () => {
       await Keychain.resetGenericPassword();
       setUserToken(null);
-      console.log('Logged out');
     },
     isLoading,
     isLoggedIn: !!userToken,

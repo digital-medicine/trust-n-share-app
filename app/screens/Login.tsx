@@ -18,7 +18,8 @@ export default function LoginScreen() {
   const [password, setPassword] = React.useState('');
 
   const handleLogin = () => {
-    // TODO: Add validation
+    // TODO: Basic validation
+
     login(email, password);
   };
 

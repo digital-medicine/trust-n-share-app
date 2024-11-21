@@ -3,17 +3,23 @@ import React from 'react';
 import TextInput from '../components/TextInput.tsx';
 import RNPickerSelect from 'react-native-picker-select';
 import PrimaryButton from '../components/PrimaryButton.tsx';
+import AuthContext from '../contexts/AuthContext';
 
 export default function RegisterScreen() {
+  const { register } = React.useContext(AuthContext);
+
   const [gender, setGender]  = React.useState('other');
   const [firstName, setFirstName] = React.useState('');
   const [lastName, setLastName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
+  const [birthDate, setBirthDate] = React.useState('');
 
   const handleRegister = () => {
-    // TODO
+    // TODO: Basic validation
+
+    register(gender, firstName, lastName, email, password, birthDate);
   }
 
   return (
