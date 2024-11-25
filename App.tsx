@@ -7,6 +7,8 @@ import LoginScreen from './app/screens/Login.tsx';
 import {LoginContext, useIsLoggedIn, useIsLoggedOut} from './app/contexts/LoginContext.js';
 import HomeScreen from './app/screens/Home.tsx';
 import RegisterScreen from './app/screens/Register.tsx';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ProfileScreen from './app/screens/Profile.tsx';
 
 function SplashScreen() {
   return (
@@ -16,12 +18,24 @@ function SplashScreen() {
   );
 }
 
+const MainTabs = createBottomTabNavigator({
+  screens: {
+    Home: HomeScreen,
+    Profile: ProfileScreen,
+  },
+});
+
 const RootStack = createNativeStackNavigator({
   groups: {
-    Home: {
+    Main: {
       if: useIsLoggedIn,
       screens: {
-        Home: HomeScreen,
+        MainTabs: {
+          screen: MainTabs,
+          options: {
+            headerShown: false,
+          },
+        },
       },
     },
     Auth: {
