@@ -9,6 +9,7 @@ import HomeScreen from './app/screens/Home.tsx';
 import RegisterScreen from './app/screens/Register.tsx';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileScreen from './app/screens/Profile.tsx';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function SplashScreen() {
   return (
@@ -19,6 +20,22 @@ function SplashScreen() {
 }
 
 const MainTabs = createBottomTabNavigator({
+  screenOptions: ({ route }) => ({
+    tabBarIcon: ({ focused, color, size }) => {
+      let iconName;
+
+      if (route.name === 'Home') {
+        iconName = focused
+          ? 'home'
+          : 'home-outline';
+      } else if (route.name === 'Profile') {
+        iconName = focused ? 'person' : 'person-outline';
+      }
+
+      return <Ionicons name={iconName} size={size} color={color} />;
+    },
+    tabBarActiveTintColor: '#0071e3',
+  }),
   screens: {
     Home: HomeScreen,
     Profile: ProfileScreen,
