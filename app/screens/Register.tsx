@@ -1,10 +1,21 @@
-import {Button, StyleSheet, Text, View} from 'react-native';
+import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useContext, useState} from 'react';
 import TextInput from '../components/TextInput.tsx';
 import RNPickerSelect from 'react-native-picker-select';
 import PrimaryButton from '../components/PrimaryButton.tsx';
 import AuthContext from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {validateEmail} from '../utils/validateEmail.ts';
+
+type errors = {
+  form?: string;
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  confirmPassword?: string;
+  birthDate?: string;
+}
 
 export default function RegisterScreen() {
   const { register } = useContext(AuthContext);
@@ -15,93 +26,146 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [birthDate, setBirthDate] = useState(new Date(1598051730000));
+  const [birthDate, setBirthDate] = useState(new Date(946731600000));
 
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [errors, setErrors] = useState({} as errors);
 
   const onDatePickerChange = (event, selectedDate) => {
     setShowDatePicker(false);
     setBirthDate(selectedDate);
   };
 
-  const handleRegister = () => {
-    // TODO: Basic validation
+  const validate = (): boolean => {
+    let newErrors = {};
 
-    register(gender, firstName, lastName, email, password, birthDate);
+    // Validate email
+    if (!validateEmail(email)) {
+      newErrors = { ...newErrors, email: 'Invalid email address' };
+    }
+
+    // Validate name
+    if (firstName.length === 0) {
+      newErrors = { ...newErrors, firstName: 'First name must not be empty' };
+    }
+    if (lastName.length === 0) {
+      newErrors = { ...newErrors, lastName: 'Last name must not be empty' };
+    }
+
+    // Validate password
+    if (password.length === 0) {
+      newErrors = { ...newErrors, password: 'Password must not be empty' };
+    }
+    if (password !== confirmPassword) {
+      newErrors = { ...newErrors, confirmPassword: 'Passwords do not match' };
+    }
+
+    // Validate birthdate
+    if (birthDate >= new Date()) {
+      newErrors = { ...newErrors, birthDate: 'Birthdate is in the future' };
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
+  const handleRegister = async () => {
+    if (!validate()) return;
+
+    try {
+      await register(gender, firstName, lastName, email, password, birthDate);
+    } catch (e) {
+      console.log(e);
+      setErrors({form: e.message});
+    }
   }
 
   return (
-    <View style={styles.container}>
-      {/*<Text style={styles.title}>Register</Text>*/}
+    <ScrollView>
+      <View style={styles.container}>
+        {errors.form ? <Text style={{ color: 'red' }}>{errors.form}</Text> : null}
 
-      <RNPickerSelect
-        placeholder={{
-          label: 'Gender',
-          value: null,
-        }}
-        style={pickerSelectStyles}
-        onValueChange={(value) => setGender(value)}
-        items={[
-          { label: 'Female', value: 'female' },
-          { label: 'Male', value: 'male' },
-          { label: 'Other', value: 'other' },
-        ]}
-      />
-
-      <TextInput
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={setFirstName}
-        keyboardType="default"
-        autoCapitalize="words"
-      />
-
-      <TextInput
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={setLastName}
-        keyboardType="default"
-        autoCapitalize="words"
-      />
-
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        autoCapitalize="none"
-      />
-
-      <TextInput
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-        autoCapitalize="none"
-      />
-
-      <View style={styles.datePickerContainer}>
-        <Text style={styles.datePickerText}>Birth date</Text>
-
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={birthDate}
-          mode="date"
-          onChange={onDatePickerChange}
+        <RNPickerSelect
+          placeholder={{
+            label: 'Gender',
+            value: null,
+          }}
+          style={pickerSelectStyles}
+          onValueChange={(value) => setGender(value)}
+          items={[
+            { label: 'Female', value: 'female' },
+            { label: 'Male', value: 'male' },
+            { label: 'Other', value: 'other' },
+          ]}
         />
+
+        <TextInput
+          placeholder="First Name"
+          value={firstName}
+          onChangeText={setFirstName}
+          keyboardType="default"
+          autoCapitalize="words"
+        />
+
+        {errors.firstName ? <Text style={{ color: 'red' }}>{errors.firstName}</Text> : null}
+
+        <TextInput
+          placeholder="Last Name"
+          value={lastName}
+          onChangeText={setLastName}
+          keyboardType="default"
+          autoCapitalize="words"
+        />
+
+        {errors.lastName ? <Text style={{ color: 'red' }}>{errors.lastName}</Text> : null}
+
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+
+        {errors.email ? <Text style={{ color: 'red' }}>{errors.email}</Text> : null}
+
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          autoCapitalize="none"
+        />
+
+        {errors.password ? <Text style={{ color: 'red' }}>{errors.password}</Text> : null}
+
+        <TextInput
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+          autoCapitalize="none"
+        />
+
+        {errors.confirmPassword ? <Text style={{ color: 'red' }}>{errors.confirmPassword}</Text> : null}
+
+        <View style={styles.datePickerContainer}>
+          <Text style={styles.datePickerText}>Birthdate</Text>
+
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={birthDate}
+            mode="date"
+            onChange={onDatePickerChange}
+          />
+        </View>
+
+        {errors.birthDate ? <Text style={{ color: 'red' }}>{errors.birthDate}</Text> : null}
+
+        <PrimaryButton onPress={handleRegister} title="Register" />
+
       </View>
-
-      <PrimaryButton onPress={handleRegister} title="Register" />
-
-    </View>
+    </ScrollView>
   );
 }
 

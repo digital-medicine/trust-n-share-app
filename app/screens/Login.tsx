@@ -10,21 +10,26 @@ import PrimaryButton from '../components/PrimaryButton.tsx';
 import TextInput from '../components/TextInput.tsx';
 import Link from '../components/Link.tsx';
 import {useNavigation} from '@react-navigation/native';
+import {validateEmail} from '../utils/validateEmail.ts';
 
-const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+type errors = {
+  form?: string;
+  email?: string;
+  password?: string;
+}
 
 export default function LoginScreen() {
   const { login } = React.useContext(AuthContext);
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [errors, setErrors] = React.useState({});
+  const [errors, setErrors] = React.useState({} as errors);
 
   const validate = (): boolean => {
     let newErrors = {};
 
     // Validate email
-    if (!EMAIL_REGEX.test(email)) {
+    if (!validateEmail(email)) {
       newErrors = { ...newErrors, email: 'Invalid email address' };
     }
 

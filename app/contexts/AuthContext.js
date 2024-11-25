@@ -4,6 +4,7 @@ import * as Keychain from 'react-native-keychain';
 // Create the AuthContext
 const AuthContext = createContext({
   login: async (email, password) => {},
+  register: async (gender, firstName, lastName, email, password, birthDate) => {},
   logout: async () => {},
   isLoading: true,
   isLoggedIn: false,
@@ -38,17 +39,17 @@ export const AuthProvider = ({ children }) => {
 
   const authContextValue = useMemo(() => ({
     login: async (email, password) => {
-      const token = 'dummy-auth-token'; // TODO: Replace with real API call to fetch token
-      if (password === "error") {
-        throw new Error('Invalid password');
-      }
+      // TODO: Login using API
+      const token = 'dummy-auth-token';
 
-      await Keychain.setGenericPassword('trust-user', token);
+      await Keychain.setGenericPassword('HealthNavApp', token);
       setUserToken(token);
     },
     register: async (gender, firstName, lastName, email, password, birthDate) => {
-      const token = 'dummy-auth-token'; // TODO: Replace with real API call to fetch token
-      await Keychain.setGenericPassword('trust-user', token);
+      // TODO: Register using API
+      const token = 'dummy-auth-token';
+
+      await Keychain.setGenericPassword('HealthNavApp', token);
       setUserToken(token);
     },
     logout: async () => {
