@@ -1,20 +1,28 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import {Button, StyleSheet, Text, View} from 'react-native';
+import {useContext, useState} from 'react';
 import TextInput from '../components/TextInput.tsx';
 import RNPickerSelect from 'react-native-picker-select';
 import PrimaryButton from '../components/PrimaryButton.tsx';
 import AuthContext from '../contexts/AuthContext';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function RegisterScreen() {
-  const { register } = React.useContext(AuthContext);
+  const { register } = useContext(AuthContext);
 
-  const [gender, setGender]  = React.useState('other');
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [confirmPassword, setConfirmPassword] = React.useState('');
-  const [birthDate, setBirthDate] = React.useState('');
+  const [gender, setGender]  = useState('other');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [birthDate, setBirthDate] = useState(new Date(1598051730000));
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const onDatePickerChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+    setBirthDate(selectedDate);
+  };
 
   const handleRegister = () => {
     // TODO: Basic validation
@@ -80,6 +88,17 @@ export default function RegisterScreen() {
         autoCapitalize="none"
       />
 
+      <View style={styles.datePickerContainer}>
+        <Text style={styles.datePickerText}>Birth date</Text>
+
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={birthDate}
+          mode="date"
+          onChange={onDatePickerChange}
+        />
+      </View>
+
       <PrimaryButton onPress={handleRegister} title="Register" />
 
     </View>
@@ -101,6 +120,19 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     color: 'black',
     paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  datePickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+  },
+  datePickerText: {
+    fontSize: 16,
+    color: '#1d1d1f',
   },
 });
 
