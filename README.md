@@ -10,6 +10,8 @@ export const HealthKit = Object.assign({}, AppleHealthKit, {
   isAvailable: NativeModules.AppleHealthKit.isAvailable,
   initHealthKit: NativeModules.AppleHealthKit.initHealthKit,
   getStepCount: NativeModules.AppleHealthKit.getStepCount,
+  getActiveEnergyBurned: NativeModules.AppleHealthKit.getActiveEnergyBurned,
+  getBasalEnergyBurned: NativeModules.AppleHealthKit.getBasalEnergyBurned,
 
   Constants: {
     Activities,
