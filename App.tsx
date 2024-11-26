@@ -37,7 +37,12 @@ const MainTabs = createBottomTabNavigator({
     tabBarActiveTintColor: '#0071e3',
   }),
   screens: {
-    Home: HomeScreen,
+    Home: {
+      screen: HomeScreen,
+      options: {
+        headerShown: false,
+      }
+    },
     Profile: ProfileScreen,
   },
 });
