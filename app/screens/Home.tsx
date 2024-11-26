@@ -33,6 +33,12 @@ export default function HomeScreen() {
           <PersonalHealthItem title="steps taken" value={healthData.steps} icon="footsteps" />
         </View>
       </View>
+
+      {/* fitness statistics */}
+      <View style={styles.statisticsContainer}>
+        <Text style={styles.header}>Fitness Statistics</Text>
+        <Text>TODO</Text>
+      </View>
     </SafeAreaView>
   );
 }
@@ -82,6 +88,10 @@ const personalHealthItemStyles = StyleSheet.create({
 
 const styles = StyleSheet.create({
   personalHealthContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statisticsContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },
