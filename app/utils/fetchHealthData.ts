@@ -71,9 +71,9 @@ function getStepCount(): Promise<number|null> {
   });
 }
 
-function getActiveEnergyBurned(): Promise<number|null> {
+function getActiveEnergyBurned(options): Promise<number|null> {
   return new Promise((resolve, _) => {
-    AppleHealthKit.getActiveEnergyBurned({}, (error: string, results: HealthValue[]) => {
+    AppleHealthKit.getActiveEnergyBurned(options, (error: string, results: HealthValue[]) => {
       if (error) {
         console.log('getActiveEnergyBurned error:', error);
         return resolve(null);
@@ -84,9 +84,9 @@ function getActiveEnergyBurned(): Promise<number|null> {
   });
 }
 
-function getBasalEnergyBurned(): Promise<number|null> {
+function getBasalEnergyBurned(options): Promise<number|null> {
   return new Promise((resolve, _) => {
-    AppleHealthKit.getBasalEnergyBurned({}, (error: string, results: HealthValue[]) => {
+    AppleHealthKit.getBasalEnergyBurned(options, (error: string, results: HealthValue[]) => {
       if (error) {
         console.log('getBasalEnergyBurned error:', error);
         return resolve(null);
@@ -98,16 +98,23 @@ function getBasalEnergyBurned(): Promise<number|null> {
 }
 
 async function getTotalEnergyBurned(): Promise<number|null> {
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const isoStartOfDay = startOfDay.toISOString();
+  const options = {
+    startDate: isoStartOfDay,
+  }
+
   const [activeEnergy, basalEnergy] = await Promise.all([
-    getActiveEnergyBurned(),
-    getBasalEnergyBurned(),
+    getActiveEnergyBurned(options),
+    getBasalEnergyBurned(options),
   ]);
 
   if (activeEnergy === null || basalEnergy === null) {
     return null;
   }
 
-  return activeEnergy + basalEnergy;
+  return Math.round(activeEnergy + basalEnergy);
 }
 
 function fetchGoogleFitData(): Promise<HealthData> {
