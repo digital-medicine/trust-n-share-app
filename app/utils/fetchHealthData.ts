@@ -2,8 +2,8 @@ import {Platform} from 'react-native';
 import AppleHealthKit, {HealthKitPermissions, HealthValue} from 'react-native-health';
 
 export class HealthData {
-  steps?: number;
-  energyBurned?: number;
+  steps?: {date: string, value: number}[];
+  energyBurned?: {date: string, value: number}[];
   // TODO: Add more
 }
 
@@ -36,7 +36,7 @@ async function fetchHealthKitData(): Promise<HealthData> {
 
   const [steps, energyBurned] = await Promise.all([
     getStepCount(),
-    getTotalEnergyBurned(),
+    getEnergyBurned(),
     // ADD MORE FETCH FUNCTIONS HERE
   ]);
 
@@ -59,62 +59,81 @@ function initHealthKit(permissions: HealthKitPermissions): Promise<void> {
   });
 }
 
-function getStepCount(): Promise<number|null> {
+function getStepCount(): Promise<{ date: string, value: number }[] | null> {
+  // Get step count for the last 7 days
+  const options = {
+    startDate: new Date(new Date().getTime() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+  };
+
   return new Promise((resolve, _) => {
-    AppleHealthKit.getStepCount({}, (error: string, result: HealthValue) => {
+    AppleHealthKit.getDailyStepCountSamples(options, (error: string, results: Array<any>) => {
       if (error) {
         console.log('getStepCount error:', error);
         return resolve(null);
       }
-      resolve(result.value);
+
+      // Aggregate steps by day
+      const aggregatedSteps = results.reduce((acc: Record<string, number>, item) => {
+        // Extract the date (ignoring time)
+        const day = new Date(item.startDate).toISOString().split('T')[0];
+
+        // Aggregate steps for each day
+        if (!acc[day]) {
+          acc[day] = 0;
+        }
+        acc[day] += item.value;
+
+        return acc;
+      }, {});
+
+      // Convert aggregated results into an array of objects
+      const stepsByDay = Object.entries(aggregatedSteps).map(([date, totalSteps]) => ({
+        date,
+        value: totalSteps,
+      }));
+
+      console.log('stepsByDay:', stepsByDay);
+
+      resolve(stepsByDay);
     });
   });
 }
 
-function getActiveEnergyBurned(options): Promise<number|null> {
+function getEnergyBurned(): Promise<{ date: string, value: number }[] | null> {
+  const options = {
+    startDate: new Date(new Date().getTime() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+  };
+
   return new Promise((resolve, _) => {
     AppleHealthKit.getActiveEnergyBurned(options, (error: string, results: HealthValue[]) => {
       if (error) {
         console.log('getActiveEnergyBurned error:', error);
         return resolve(null);
       }
-      const totalActiveEnergy = results.reduce((sum, item) => sum + item.value, 0);
-      resolve(totalActiveEnergy);
+
+      // Aggregate energy burned by day
+      const aggregatedEnergy = results.reduce((acc: Record<string, number>, item) => {
+        // Extract the date (ignoring time)
+        const day = new Date(item.startDate).toISOString().split('T')[0];
+
+        // Aggregate energy burned for each day
+        if (!acc[day]) {
+          acc[day] = 0;
+        }
+        acc[day] += item.value;
+
+        return acc;
+      }, {});
+
+      // Convert aggregated results into an array of objects
+      const energyByDay = Object.entries(aggregatedEnergy).map(([date, totalEnergy]) => ({
+        date,
+        value: totalEnergy,
+      }));
+
+      resolve(energyByDay);
     });
   });
-}
-
-function getBasalEnergyBurned(options): Promise<number|null> {
-  return new Promise((resolve, _) => {
-    AppleHealthKit.getBasalEnergyBurned(options, (error: string, results: HealthValue[]) => {
-      if (error) {
-        console.log('getBasalEnergyBurned error:', error);
-        return resolve(null);
-      }
-      const totalBasalEnergy = results.reduce((sum, item) => sum + item.value, 0);
-      resolve(totalBasalEnergy);
-    });
-  });
-}
-
-async function getTotalEnergyBurned(): Promise<number|null> {
-  const startOfDay = new Date();
-  startOfDay.setHours(0, 0, 0, 0);
-  const isoStartOfDay = startOfDay.toISOString();
-  const options = {
-    startDate: isoStartOfDay,
-  }
-
-  const [activeEnergy, basalEnergy] = await Promise.all([
-    getActiveEnergyBurned(options),
-    getBasalEnergyBurned(options),
-  ]);
-
-  if (activeEnergy === null || basalEnergy === null) {
-    return null;
-  }
-
-  return Math.round(activeEnergy + basalEnergy);
 }
 
 function fetchGoogleFitData(): Promise<HealthData> {
