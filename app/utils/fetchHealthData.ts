@@ -1,5 +1,5 @@
 import {Platform} from 'react-native';
-import AppleHealthKit, {HealthKitPermissions, HealthValue} from 'react-native-health';
+import AppleHealthKit, {HealthKitPermissions} from 'react-native-health';
 
 export class HealthData {
   steps?: {date: string, value: number}[];
@@ -35,8 +35,8 @@ async function fetchHealthKitData(): Promise<HealthData> {
   await initHealthKit(permissions);
 
   const [steps, energyBurned] = await Promise.all([
-    getStepCount(),
-    getEnergyBurned(),
+    fetchAndAggregateData(AppleHealthKit.getDailyStepCountSamples),
+    fetchAndAggregateData(AppleHealthKit.getActiveEnergyBurned),
     // ADD MORE FETCH FUNCTIONS HERE
   ]);
 
@@ -59,81 +59,44 @@ function initHealthKit(permissions: HealthKitPermissions): Promise<void> {
   });
 }
 
-function getStepCount(): Promise<{ date: string, value: number }[] | null> {
-  // Get step count for the last 7 days
+function fetchAndAggregateData(
+  fetchMethod: (options: any, callback: (error: string, results: Array<any>) => void) => void,
+): Promise<{ date: string; value: number }[] | null> {
   const options = {
-    startDate: new Date(new Date().getTime() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+    startDate: getStartDateAWeekAgo(),
   };
 
-  return new Promise((resolve, _) => {
-    AppleHealthKit.getDailyStepCountSamples(options, (error: string, results: Array<any>) => {
+  return new Promise((resolve) => {
+    fetchMethod(options, (error: string, results: Array<any>) => {
       if (error) {
-        console.log('getStepCount error:', error);
+        console.log('fetch error:', error);
         return resolve(null);
       }
 
-      // Aggregate steps by day
-      const aggregatedSteps = results.reduce((acc: Record<string, number>, item) => {
-        // Extract the date (ignoring time)
-        const day = new Date(item.startDate).toISOString().split('T')[0];
-
-        // Aggregate steps for each day
-        if (!acc[day]) {
-          acc[day] = 0;
-        }
-        acc[day] += item.value;
-
-        return acc;
-      }, {});
-
-      // Convert aggregated results into an array of objects
-      const stepsByDay = Object.entries(aggregatedSteps).map(([date, totalSteps]) => ({
-        date,
-        value: totalSteps,
-      }));
-
-      console.log('stepsByDay:', stepsByDay);
-
-      resolve(stepsByDay);
+      const dataByDay = sumResultsByDay(results);
+      resolve(dataByDay);
     });
   });
 }
 
-function getEnergyBurned(): Promise<{ date: string, value: number }[] | null> {
-  const options = {
-    startDate: new Date(new Date().getTime() - 6 * 24 * 60 * 60 * 1000).toISOString(),
-  };
+function sumResultsByDay(results: Array<any>): { date: string; value: number }[] {
+  const aggregatedData = results.reduce((acc: Record<string, number>, item) => {
+    const day = new Date(item.startDate).toISOString().split('T')[0];
+    acc[day] = (acc[day] || 0) + item.value;
+    return acc;
+  }, {});
 
-  return new Promise((resolve, _) => {
-    AppleHealthKit.getActiveEnergyBurned(options, (error: string, results: HealthValue[]) => {
-      if (error) {
-        console.log('getActiveEnergyBurned error:', error);
-        return resolve(null);
-      }
+  return Object.entries(aggregatedData).map(([date, value]) => ({
+    date,
+    value,
+  }));
+}
 
-      // Aggregate energy burned by day
-      const aggregatedEnergy = results.reduce((acc: Record<string, number>, item) => {
-        // Extract the date (ignoring time)
-        const day = new Date(item.startDate).toISOString().split('T')[0];
-
-        // Aggregate energy burned for each day
-        if (!acc[day]) {
-          acc[day] = 0;
-        }
-        acc[day] += item.value;
-
-        return acc;
-      }, {});
-
-      // Convert aggregated results into an array of objects
-      const energyByDay = Object.entries(aggregatedEnergy).map(([date, totalEnergy]) => ({
-        date,
-        value: totalEnergy,
-      }));
-
-      resolve(energyByDay);
-    });
-  });
+function getStartDateAWeekAgo(): string {
+  const date = new Date();
+  date.setDate(date.getDate() - 6);
+  date.setHours(0, 0, 0, 0);
+  return date.toISOString();
 }
 
 function fetchGoogleFitData(): Promise<HealthData> {
