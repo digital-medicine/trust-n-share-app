@@ -20,6 +20,7 @@
     "@react-navigation/native-stack": "^7.1.0",
     "react": "18.3.1",
     "react-native": "0.76.2",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-date-picker": "5.0",
     "react-native-gesture-handler": "^2.21.2",
     "react-native-health": "^1.19.0",
@@ -28,6 +29,7 @@
     "react-native-reanimated": "^3.16.1",
     "react-native-safe-area-context": "^4.14.0",
     "react-native-screens": "^4.2.0",
+    "react-native-svg": "^15.9.0",
     "react-native-vector-icons": "^10.2.0"
   },
   "devDependencies": {

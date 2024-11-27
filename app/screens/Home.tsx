@@ -2,11 +2,15 @@ import {useEffect, useState} from 'react';
 import {Dimensions, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import fetchHealthData, {HealthData} from '../utils/fetchHealthData.ts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {BarChart} from 'react-native-chart-kit';
 
 export default function HomeScreen() {
   const [healthData, setHealthData] = useState(new HealthData());
   const [stepsToday, setStepsToday] = useState<number|null>(null);
   const [energyBurnedToday, setEnergyBurnedToday] = useState<number|null>(null);
+  const [stepsChartData, setStepsChartData] = useState<{labels: string[], datasets: {}}>(
+    {labels: [], datasets: [{data: []}]},
+  );
 
   useEffect(() => {
     // Fetch health data
@@ -21,15 +25,32 @@ export default function HomeScreen() {
 
     fetchData();
 
-    // Get steps taken today
     if (healthData.steps) {
+      // Get steps taken today
       const today = new Date().toISOString().split('T')[0];
-      const steps = healthData.steps
+      const stepsToday = healthData.steps
         .find((entry) => entry.date === today)
         ?.value;
-      if (steps) {
-        setStepsToday(Math.round(steps));
+      if (stepsToday) {
+        setStepsToday(Math.round(stepsToday));
       }
+
+      // Prepare step data for bar chart
+      let labels = [];
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        labels.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
+      }
+
+      let data = Array(7).fill(0);
+      const todayIndex = new Date().getDay();
+      for (const entry of healthData.steps) {
+        const day = new Date(entry.date).getDay();
+        data[(day + todayIndex) % 7] += entry.value;
+      }
+
+      setStepsChartData({labels, datasets: [{data}]});
     }
 
     // Get energy burned today
@@ -61,7 +82,45 @@ export default function HomeScreen() {
       {/* fitness statistics */}
       <View style={styles.statisticsContainer}>
         <Text style={styles.header}>Fitness Statistics</Text>
-        <Text>TODO</Text>
+        {/* bar chart daily steps*/}
+        <View style={styles.chartContainer}>
+          <Text style={styles.chartHeader}>Steps taken this week</Text>
+          {healthData?.steps?.length ?? 0 > 0
+            ? <BarChart
+                data={stepsChartData}
+                style={{
+                  marginVertical: 8,
+                  borderRadius: 8,
+                  paddingRight: 0,
+                }}
+                chartConfig={{
+                  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  decimalPlaces: 0,
+                  backgroundGradientFrom: "#d7d7d7",
+                  backgroundGradientFromOpacity: 0,
+                  backgroundGradientTo: "#d7d7d7",
+                  backgroundGradientToOpacity: 0,
+                  barPercentage: 1,
+                  useShadowColorFromDataset: false,
+                  fillShadowGradientFrom: '#0071e3',
+                  fillShadowGradientFromOpacity: 1,
+                  fillShadowGradientTo: '#0071e3',
+                  fillShadowGradientToOpacity: 1,
+                  barRadius: 8,
+                }}
+                width={Dimensions.get('window').width - 50}
+                height={200}
+                fromZero={true}
+                withInnerLines={false}
+                showBarTops={false}
+                withHorizontalLabels={false}
+                showValuesOnTopOfBars={true}
+              />
+            : <View style={styles.chartEmptyState}>
+                <Text style={styles.noData}>No data</Text>
+            </View>
+          }
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -74,7 +133,7 @@ function PersonalHealthItem({title, value, icon}: {title: string; value: number 
         <Ionicons name={icon} size={30} color="#6c6c6c" />
         {value !== null
           ? <Text style={personalHealthItemStyles.value}>{value}</Text>
-          : <Text style={personalHealthItemStyles.noData}>No data</Text>
+          : <Text style={styles.noData}>No data</Text>
         }
         <Text style={personalHealthItemStyles.title}>{title}</Text>
       </View>
@@ -103,11 +162,6 @@ const personalHealthItemStyles = StyleSheet.create({
     color: 'black',
     paddingVertical: 6,
   },
-  noData: {
-    fontSize: 24,
-    paddingVertical: 12,
-    color: '#989898',
-  }
 })
 
 const styles = StyleSheet.create({
@@ -130,5 +184,25 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     padding: 10,
   },
-
+  chartContainer: {
+    backgroundColor: '#d7d7d7',
+    borderRadius: 8,
+    width: Dimensions.get('window').width - 40,
+    marginTop: 20,
+  },
+  chartHeader: {
+    fontSize: 18,
+    textAlign: 'center',
+    paddingVertical: 10,
+  },
+  chartEmptyState: {
+    height: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noData: {
+    fontSize: 24,
+    paddingVertical: 12,
+    color: '#989898',
+  }
 });
