@@ -6,6 +6,7 @@ import PrimaryButton from '../components/PrimaryButton.tsx';
 import AuthContext from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {validateEmail} from '../utils/validateEmail.ts';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type errors = {
   form?: string;
@@ -87,7 +88,7 @@ export default function RegisterScreen() {
 
         <RNPickerSelect
           placeholder={{
-            label: 'Gender',
+            label: 'Select your Gender ...',
             value: null,
           }}
           style={pickerSelectStyles}
@@ -97,6 +98,9 @@ export default function RegisterScreen() {
             { label: 'Male', value: 'male' },
             { label: 'Other', value: 'other' },
           ]}
+          Icon={() => {
+            return <Ionicons name="caret-down" size={24} color="gray" />;
+          }}
         />
 
         <TextInput
@@ -201,6 +205,9 @@ const styles = StyleSheet.create({
 });
 
 const pickerSelectStyles = StyleSheet.create({
+  inputIOSContainer: {
+    pointerEvents: "none"
+  },
   inputIOS: {
     height: 50,
     fontSize: 16,
@@ -225,5 +232,9 @@ const pickerSelectStyles = StyleSheet.create({
   },
   placeholder: {
     color: '#999', // Placeholder text color
+  },
+  iconContainer: {
+    top: 13,
+    right: 12,
   },
 });
