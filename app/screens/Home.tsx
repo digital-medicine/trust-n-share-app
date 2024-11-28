@@ -5,6 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BarChart} from 'react-native-chart-kit';
 
 export default function HomeScreen() {
+  const [loading, setLoading] = useState(true);
   const [healthData, setHealthData] = useState(new HealthData());
   const [stepsToday, setStepsToday] = useState<number|null>(null);
   const [energyBurnedToday, setEnergyBurnedToday] = useState<number|null>(null);
@@ -19,13 +20,17 @@ export default function HomeScreen() {
         const data = await fetchHealthData();
         setHealthData(data);
       } catch (e) {
-        console.log(e);
+        console.error(e);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
+  }, []); // Run only once when the component mounts.
 
-    if (healthData.steps) {
+  useEffect(() => {
+    if (healthData.steps && healthData.steps.length > 0) {
       // Get steps taken today
       const today = new Date().toISOString().split('T')[0];
       const stepsToday = healthData.steps
@@ -36,34 +41,40 @@ export default function HomeScreen() {
       }
 
       // Prepare step data for bar chart
-      let labels = [];
+      const stepsChartDataTemp = [];
       for (let i = 6; i >= 0; i--) {
         const date = new Date();
         date.setDate(date.getDate() - i);
-        labels.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
-      }
 
-      let data = Array(7).fill(0);
-      const todayIndex = new Date().getDay();
-      for (const entry of healthData.steps) {
-        const day = new Date(entry.date).getDay();
-        data[(day + todayIndex) % 7] += entry.value;
-      }
+        const label = date.toLocaleDateString('en-US', { weekday: 'short' });
 
-      setStepsChartData({labels, datasets: [{data}]});
+        const value =
+          healthData.steps.find(
+            (entry) => entry.date === date.toISOString().split('T')[0]
+          )?.value ?? 0;
+
+        stepsChartDataTemp.push({
+          date,
+          label,
+          value,
+        });
+      }
+      const labels = stepsChartDataTemp.map((entry) => entry.label);
+      const data = stepsChartDataTemp.map((entry) => entry.value);
+      setStepsChartData({ labels, datasets: [{ data }] });
     }
 
     // Get energy burned today
     if (healthData.energyBurned) {
       const today = new Date().toISOString().split('T')[0];
-      const energy = healthData.energyBurned
-        .find((entry) => entry.date === today)
-        ?.value;
+      const energy = healthData.energyBurned.find(
+        (entry) => entry.date === today
+      )?.value;
       if (energy) {
         setEnergyBurnedToday(Math.round(energy));
       }
     }
-  }, []);
+  }, [healthData]); // Runs whenever healthData changes.
 
   return (
     <SafeAreaView>
@@ -71,22 +82,26 @@ export default function HomeScreen() {
       {/* Personal Health data */}
       <View style={styles.personalHealthContainer}>
         <Text style={styles.header}>Personal Fitness Data</Text>
-        <View style={styles.personalHealthGrid}>
-          <PersonalHealthItem title="steps taken" value={stepsToday} icon="footsteps" />
-          <PersonalHealthItem title="calories burned" value={energyBurnedToday} icon="flame" />
-          {/*<PersonalHealthItem title="calories burned" value={healthData.energyBurned} icon="flame" />*/}
-          {/*<PersonalHealthItem title="steps taken" value={healthData.steps} icon="footsteps" />*/}
-        </View>
+        {loading
+          ? <Text>Loading...</Text>
+          : <View style={styles.personalHealthGrid}>
+              <PersonalHealthItem title="steps taken" value={stepsToday} icon="footsteps" />
+              <PersonalHealthItem title="calories burned" value={energyBurnedToday} icon="flame" />
+            </View>
+        }
+
       </View>
 
       {/* fitness statistics */}
       <View style={styles.statisticsContainer}>
         <Text style={styles.header}>Fitness Statistics</Text>
-        {/* bar chart daily steps*/}
-        <View style={styles.chartContainer}>
-          <Text style={styles.chartHeader}>Steps taken this week</Text>
-          {healthData?.steps?.length ?? 0 > 0
-            ? <BarChart
+        {loading
+          ? <Text>Loading...</Text>
+          :
+          <View style={styles.chartContainer}>
+            <Text style={styles.chartHeader}>Steps taken this week</Text>
+            {healthData?.steps?.length ?? 0 > 0
+              ? <BarChart
                 data={stepsChartData}
                 style={{
                   marginVertical: 8,
@@ -116,11 +131,12 @@ export default function HomeScreen() {
                 withHorizontalLabels={false}
                 showValuesOnTopOfBars={true}
               />
-            : <View style={styles.chartEmptyState}>
+              : <View style={styles.chartEmptyState}>
                 <Text style={styles.noData}>No data</Text>
-            </View>
-          }
-        </View>
+              </View>
+            }
+          </View>
+        }
       </View>
     </SafeAreaView>
   );

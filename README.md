@@ -9,9 +9,8 @@ const NativeModules = require('react-native').NativeModules
 export const HealthKit = Object.assign({}, AppleHealthKit, {
   isAvailable: NativeModules.AppleHealthKit.isAvailable,
   initHealthKit: NativeModules.AppleHealthKit.initHealthKit,
-  getStepCount: NativeModules.AppleHealthKit.getStepCount,
+  getStepCount: NativeModules.AppleHealthKit.getDailyStepCountSamples,
   getActiveEnergyBurned: NativeModules.AppleHealthKit.getActiveEnergyBurned,
-  getBasalEnergyBurned: NativeModules.AppleHealthKit.getBasalEnergyBurned,
 
   Constants: {
     Activities,
