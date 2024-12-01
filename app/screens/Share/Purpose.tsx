@@ -2,61 +2,53 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import FormContainer from '../../components/FormContainer.tsx';
 import {useState} from 'react';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
+import {useFormContext} from '../../contexts/FormContext';
+import {useNavigation} from '@react-navigation/native';
 
 
 export default function Purpose()  {
-  const [selected, setSelected] = useState<string[]>([]);
-  const toggleSelected = (key: string) => {
-    if (selected.includes(key)) {
-      setSelected(selected.filter((item) => item !== key));
-    } else {
-      setSelected([...selected, key]);
-    }
-  }
-
-  const onSubmit = () => {
-    // TODO
-  }
+  const navigation = useNavigation();
+  const { form, toggleFormSelected } = useFormContext();
 
   return (
     <FormContainer>
       <ListItem
         title="Pharmaceutical studies"
-        onPress={() => toggleSelected('pharma')}
-        selected={selected.includes('pharma')}
+        onPress={() => toggleFormSelected('purposes', 'pharma')}
+        selected={form.purposes.includes('pharma')}
       />
 
       <ListItem
         title="Development of Medical equipment"
-        onPress={() => toggleSelected('medical')}
-        selected={selected.includes('medical')}
+        onPress={() => toggleFormSelected('purposes', 'medical')}
+        selected={form.purposes.includes('medical')}
       />
 
       <ListItem
         title="Development of Fitness equipment"
-        onPress={() => toggleSelected('fitness')}
-        selected={selected.includes('fitness')}
+        onPress={() => toggleFormSelected('purposes', 'fitness')}
+        selected={form.purposes.includes('fitness')}
       />
 
       <ListItem
         title="Improvement of Traffic"
-        onPress={() => toggleSelected('traffic')}
-        selected={selected.includes('traffic')}
+        onPress={() => toggleFormSelected('purposes', 'traffic')}
+        selected={form.purposes.includes('traffic')}
       />
 
       <ListItem
         title="City planning"
-        onPress={() => toggleSelected('city')}
-        selected={selected.includes('city')}
+        onPress={() => toggleFormSelected('purposes', 'city')}
+        selected={form.purposes.includes('city')}
       />
 
       <ListItem
         title="Market research"
-        onPress={() => toggleSelected('marketing')}
-        selected={selected.includes('marketing')}
+        onPress={() => toggleFormSelected('purposes', 'marketing')}
+        selected={form.purposes.includes('marketing')}
       />
 
-      <PrimaryButton onPress={onSubmit} title={'Next'} />
+      <PrimaryButton onPress={() => navigation.navigate('Institutions')} title={'Next'} />
     </FormContainer>
   );
 }

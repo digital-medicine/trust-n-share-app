@@ -9,26 +9,11 @@ import FormContainer from '../../components/FormContainer.tsx';
 
 export default function DataSelection() {
   const navigation = useNavigation();
+  const { form, toggleFormSelected } = useFormContext();
 
   const { healthData } = useHealthData();
-  const { form, updateForm } = useFormContext();
-
   const [steps, setSteps] = useState<number|null>(null);
   const [energyBurned, setEnergyBurned] = useState<number|null>(null);
-
-  const [selected, setSelected] = useState<string[]>([]);
-  const toggleSelected = (key: string) => {
-    if (selected.includes(key)) {
-      setSelected(selected.filter((item) => item !== key));
-    } else {
-      setSelected([...selected, key]);
-    }
-  }
-
-  const onSubmit = () => {
-    updateForm({ data: selected });
-    navigation.navigate('Purpose');
-  }
 
   // Transform health data for display
   useEffect(() => {
@@ -52,8 +37,8 @@ export default function DataSelection() {
         dataDescription={'Total steps'}
         data={steps}
         icon={'footsteps'}
-        onPress={() => toggleSelected('steps')}
-        selected={selected.includes('steps')}
+        onPress={() => toggleFormSelected('data', 'steps')}
+        selected={form.data.includes('steps')}
       />
 
       <ListItem
@@ -61,11 +46,11 @@ export default function DataSelection() {
         dataDescription={'Total energy burned'}
         data={energyBurned}
         icon={'flame'}
-        onPress={() => toggleSelected('energyBurned')}
-        selected={selected.includes('energyBurned')}
+        onPress={() => toggleFormSelected('data', 'energyBurned')}
+        selected={form.data.includes('energyBurned')}
       />
 
-      <PrimaryButton onPress={onSubmit} title={'Next'} />
+      <PrimaryButton onPress={() => navigation.navigate('Purpose')} title={'Next'} />
     </FormContainer>
   );
 }
@@ -73,7 +58,7 @@ export default function DataSelection() {
 function ListItem({title, dataDescription, data, icon, onPress, selected}: {
   title: string,
   dataDescription: string,
-  data: number|string,
+  data: number|string|null,
   icon: string,
   onPress: () => void,
   selected: boolean,
