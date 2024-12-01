@@ -13,6 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DataSelection from './app/screens/Share/DataSelection.tsx';
 import {HealthDataProvider} from './app/contexts/HealthContext';
 import {FormProvider} from './app/contexts/FormContext';
+import Purpose from './app/screens/Share/Purpose.tsx';
 
 function SplashScreen() {
   return (
@@ -31,9 +32,9 @@ const ShareStack = createNativeStackNavigator({
       },
     },
     Purpose: {
-      screen: () => <Text>Purpose</Text>,
+      screen: Purpose,
       options: {
-        title: 'Purpose',
+        title: 'Purpose of Data usage',
       },
     },
     Institutions: {

@@ -5,6 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useEffect, useState} from 'react';
 import {useHealthData} from '../../contexts/HealthContext';
 import {useFormContext} from '../../contexts/FormContext';
+import FormContainer from '../../components/FormContainer.tsx';
 
 export default function DataSelection() {
   const navigation = useNavigation();
@@ -45,29 +46,27 @@ export default function DataSelection() {
   });
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        <ListItem
-          title={'Steps'}
-          dataDescription={'Total steps'}
-          data={steps}
-          icon={'footsteps'}
-          onPress={() => toggleSelected('steps')}
-          selected={selected.includes('steps')}
-        />
+    <FormContainer>
+      <ListItem
+        title={'Steps'}
+        dataDescription={'Total steps'}
+        data={steps}
+        icon={'footsteps'}
+        onPress={() => toggleSelected('steps')}
+        selected={selected.includes('steps')}
+      />
 
-        <ListItem
-          title={'Energy Burned'}
-          dataDescription={'Total energy burned'}
-          data={energyBurned}
-          icon={'flame'}
-          onPress={() => toggleSelected('energyBurned')}
-          selected={selected.includes('energyBurned')}
-        />
+      <ListItem
+        title={'Energy Burned'}
+        dataDescription={'Total energy burned'}
+        data={energyBurned}
+        icon={'flame'}
+        onPress={() => toggleSelected('energyBurned')}
+        selected={selected.includes('energyBurned')}
+      />
 
-        <PrimaryButton onPress={onSubmit} title={'Next'} />
-      </ScrollView>
-    </View>
+      <PrimaryButton onPress={onSubmit} title={'Next'} />
+    </FormContainer>
   );
 }
 
@@ -106,7 +105,7 @@ function ListItem({title, dataDescription, data, icon, onPress, selected}: {
       <View style={{ gap: 4 }}>
         <Text style={listItemTitleStyle}>{title}</Text>
 
-        <View style={{ flexDirection: "row", gap: 10 }}>
+        <View style={{ flexDirection: "row", gap: 6 }}>
           <Text style={listItemDataDescriptionStyle}>{dataDescription}:</Text>
           {data !== null
             ? <Text style={listItemDataStyle}>{data}</Text>
@@ -122,13 +121,6 @@ function ListItem({title, dataDescription, data, icon, onPress, selected}: {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  scrollView: {
-    gap: 20,
-  },
   listItem: {
     flexDirection: 'row',
     paddingVertical: 10,
