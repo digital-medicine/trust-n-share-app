@@ -2,12 +2,33 @@ import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import {useHealthData} from '../../contexts/HealthContext';
 
 export default function DataSelection() {
   const navigation = useNavigation();
 
-  const [steps, setSteps] = useState(false);
+  const { healthData } = useHealthData();
+
+  const [steps, setSteps] = useState<number|null>(null);
+
+  const [selected, setSelected] = useState<string[]>([]);
+  const toggleSelected = (key: string) => {
+    if (selected.includes(key)) {
+      setSelected(selected.filter((item) => item !== key));
+    } else {
+      setSelected([...selected, key]);
+    }
+  }
+
+  // Transform health data for display
+  useEffect(() => {
+    // total steps
+    if (healthData.steps && healthData.steps.length > 0) {
+      const totalSteps = healthData.steps.reduce((acc, entry) => acc + entry.value, 0);
+      setSteps(totalSteps);
+    }
+  });
 
   return (
     <View style={styles.container}>
@@ -15,10 +36,10 @@ export default function DataSelection() {
         <ListItem
           title={'Steps'}
           dataDescription={'Total steps'}
-          data={512}
+          data={steps}
           icon={'footsteps'}
-          onPress={() => setSteps(!steps)}
-          selected={steps}
+          onPress={() => toggleSelected('steps')}
+          selected={selected.includes('steps')}
         />
 
         <PrimaryButton onPress={() => navigation.navigate('Purpose')} title={'Next'} />
@@ -51,6 +72,10 @@ function ListItem({title, dataDescription, data, icon, onPress, selected}: {
     styles.listItemData,
     selected ? styles.listItemDataSelected : null,
   ];
+  const listItemNoDataStyle = [
+    styles.listItemNoData,
+    selected ? styles.listItemDataSelected : null,
+  ];
 
   return (
     <TouchableOpacity style={listItemStyle} onPress={onPress}>
@@ -60,7 +85,10 @@ function ListItem({title, dataDescription, data, icon, onPress, selected}: {
 
         <View style={{ flexDirection: "row", gap: 10 }}>
           <Text style={listItemDataDescriptionStyle}>{dataDescription}:</Text>
-          <Text style={listItemDataStyle}>{data}</Text>
+          {data !== null
+            ? <Text style={listItemDataStyle}>{data}</Text>
+            : <Text style={listItemNoDataStyle}>No data</Text>
+          }
         </View>
       </View>
 
@@ -107,6 +135,10 @@ const styles = StyleSheet.create({
   listItemData: {
     fontSize: 16,
     color: '#4f4f4f',
+  },
+  listItemNoData: {
+    fontSize: 16,
+    color: '#989898',
   },
   listItemDataSelected: {
     color: '#fff',

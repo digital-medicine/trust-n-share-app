@@ -1,34 +1,23 @@
 import {useEffect, useState} from 'react';
 import {Dimensions, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import fetchHealthData, {HealthData} from '../utils/fetchHealthData.ts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BarChart} from 'react-native-chart-kit';
+import {useHealthData} from '../contexts/HealthContext';
 
 export default function HomeScreen() {
-  const [loading, setLoading] = useState(true);
-  const [healthData, setHealthData] = useState(new HealthData());
+  const { healthData, fetchHealth, healthLoading } = useHealthData();
   const [stepsToday, setStepsToday] = useState<number|null>(null);
   const [energyBurnedToday, setEnergyBurnedToday] = useState<number|null>(null);
   const [stepsChartData, setStepsChartData] = useState<{labels: string[], datasets: {}}>(
     {labels: [], datasets: [{data: []}]},
   );
 
+  // Fetch health data on mount
   useEffect(() => {
-    // Fetch health data
-    const fetchData = async () => {
-      try {
-        const data = await fetchHealthData();
-        setHealthData(data);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
+    fetchHealth();
+  }, []);
 
-    fetchData();
-  }, []); // Run only once when the component mounts.
-
+  // Transform health data for display
   useEffect(() => {
     if (healthData.steps && healthData.steps.length > 0) {
       // Get steps taken today
@@ -74,15 +63,14 @@ export default function HomeScreen() {
         setEnergyBurnedToday(Math.round(energy));
       }
     }
-  }, [healthData]); // Runs whenever healthData changes.
+  }, [healthData]);
 
   return (
     <SafeAreaView>
-
       {/* Personal Health data */}
       <View style={styles.personalHealthContainer}>
         <Text style={styles.header}>Personal Fitness Data</Text>
-        {loading
+        {healthLoading
           ? <Text>Loading...</Text>
           : <View style={styles.personalHealthGrid}>
               <PersonalHealthItem title="steps taken" value={stepsToday} icon="footsteps" />
@@ -95,7 +83,7 @@ export default function HomeScreen() {
       {/* fitness statistics */}
       <View style={styles.statisticsContainer}>
         <Text style={styles.header}>Fitness Statistics</Text>
-        {loading
+        {healthLoading
           ? <Text>Loading...</Text>
           :
           <View style={styles.chartContainer}>
