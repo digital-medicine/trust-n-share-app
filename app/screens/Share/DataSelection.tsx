@@ -11,6 +11,7 @@ export default function DataSelection() {
   const { healthData } = useHealthData();
 
   const [steps, setSteps] = useState<number|null>(null);
+  const [energyBurned, setEnergyBurned] = useState<number|null>(null);
 
   const [selected, setSelected] = useState<string[]>([]);
   const toggleSelected = (key: string) => {
@@ -28,6 +29,12 @@ export default function DataSelection() {
       const totalSteps = healthData.steps.reduce((acc, entry) => acc + entry.value, 0);
       setSteps(totalSteps);
     }
+
+    // total energy burned
+    if (healthData.energyBurned && healthData.energyBurned.length > 0) {
+      const totalEnergyBurned = healthData.energyBurned.reduce((acc, entry) => acc + entry.value, 0);
+      setEnergyBurned(totalEnergyBurned);
+    }
   });
 
   return (
@@ -40,6 +47,15 @@ export default function DataSelection() {
           icon={'footsteps'}
           onPress={() => toggleSelected('steps')}
           selected={selected.includes('steps')}
+        />
+
+        <ListItem
+          title={'Energy Burned'}
+          dataDescription={'Total energy burned'}
+          data={energyBurned}
+          icon={'flame'}
+          onPress={() => toggleSelected('energyBurned')}
+          selected={selected.includes('energyBurned')}
         />
 
         <PrimaryButton onPress={() => navigation.navigate('Purpose')} title={'Next'} />
