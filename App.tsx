@@ -14,6 +14,7 @@ import DataSelection from './app/screens/Share/DataSelection.tsx';
 import {HealthDataProvider} from './app/contexts/HealthContext';
 import {FormProvider} from './app/contexts/FormContext';
 import Purpose from './app/screens/Share/Purpose.tsx';
+import Institutions from './app/screens/Share/Institutions.tsx';
 
 function SplashScreen() {
   return (
@@ -38,7 +39,7 @@ const ShareStack = createNativeStackNavigator({
       },
     },
     Institutions: {
-      screen: () => <Text>Institutions</Text>,
+      screen: Institutions,
       options: {
         title: 'Institutions',
       },

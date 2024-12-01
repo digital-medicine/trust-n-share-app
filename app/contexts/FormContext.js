@@ -6,6 +6,7 @@ export const FormProvider = ({ children }) => {
   const [form, setForm] = useState({
     data: [],
     purposes: [],
+    institutions: [],
   });
 
   const toggleFormSelected = (category, key) => {
@@ -21,7 +22,6 @@ export const FormProvider = ({ children }) => {
       newForm[category] = [...newForm[category], key];
     }
 
-    console.log('newForm', newForm);
     setForm(newForm);
   }
 
