@@ -4,11 +4,13 @@ import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useEffect, useState} from 'react';
 import {useHealthData} from '../../contexts/HealthContext';
+import {useFormContext} from '../../contexts/FormContext';
 
 export default function DataSelection() {
   const navigation = useNavigation();
 
   const { healthData } = useHealthData();
+  const { form, updateForm } = useFormContext();
 
   const [steps, setSteps] = useState<number|null>(null);
   const [energyBurned, setEnergyBurned] = useState<number|null>(null);
@@ -20,6 +22,11 @@ export default function DataSelection() {
     } else {
       setSelected([...selected, key]);
     }
+  }
+
+  const onSubmit = () => {
+    updateForm({ data: selected });
+    navigation.navigate('Purpose');
   }
 
   // Transform health data for display
@@ -58,7 +65,7 @@ export default function DataSelection() {
           selected={selected.includes('energyBurned')}
         />
 
-        <PrimaryButton onPress={() => navigation.navigate('Purpose')} title={'Next'} />
+        <PrimaryButton onPress={onSubmit} title={'Next'} />
       </ScrollView>
     </View>
   );

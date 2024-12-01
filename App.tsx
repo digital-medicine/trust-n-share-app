@@ -12,6 +12,7 @@ import ProfileScreen from './app/screens/Profile.tsx';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DataSelection from './app/screens/Share/DataSelection.tsx';
 import {HealthDataProvider} from './app/contexts/HealthContext';
+import {FormProvider} from './app/contexts/FormContext';
 
 function SplashScreen() {
   return (
@@ -164,7 +165,9 @@ function AppContent() {
   return (
     <LoginContext.Provider value={isLoggedIn}>
       <HealthDataProvider>
-        <Navigation />
+        <FormProvider>
+          <Navigation />
+        </FormProvider>
       </HealthDataProvider>
     </LoginContext.Provider>
   );
