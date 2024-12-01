@@ -10,6 +10,7 @@ import RegisterScreen from './app/screens/Register.tsx';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileScreen from './app/screens/Profile.tsx';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import DataSelection from './app/screens/Share/DataSelection.tsx';
 
 function SplashScreen() {
   return (
@@ -19,17 +20,86 @@ function SplashScreen() {
   );
 }
 
+const ShareStack = createNativeStackNavigator({
+  screens: {
+    DataSelection: {
+      screen: DataSelection,
+      options: {
+        title: 'Data Selection',
+      },
+    },
+    Purpose: {
+      screen: () => <Text>Purpose</Text>,
+      options: {
+        title: 'Purpose',
+      },
+    },
+    Institutions: {
+      screen: () => <Text>Institutions</Text>,
+      options: {
+        title: 'Institutions',
+      },
+    },
+    Duration: {
+      screen: () => <Text>Duration</Text>,
+      options: {
+        title: 'Duration',
+      },
+    },
+    Information: {
+      screen: () => <Text>Information</Text>,
+      options: {
+        title: 'Information',
+      },
+    },
+    PrivacyLevel: {
+      screen: () => <Text>Privacy Level</Text>,
+      options: {
+        title: 'Privacy Level',
+      },
+    },
+    Reputation: {
+      screen: () => <Text>Reputation</Text>,
+      options: {
+        title: 'Reputation',
+      },
+    },
+    Incentive: {
+      screen: () => <Text>Incentive</Text>,
+      options: {
+        title: 'Incentive',
+      },
+    },
+    Consumers: {
+      screen: () => <Text>Consumers</Text>,
+      options: {
+        title: 'Consumers',
+      },
+    },
+    Congrats: {
+      screen: () => <Text>Congrats</Text>,
+      options: {
+        title: 'Congrats',
+      },
+    },
+  }
+});
+
 const MainTabs = createBottomTabNavigator({
   screenOptions: ({ route }) => ({
     tabBarIcon: ({ focused, color, size }) => {
       let iconName;
 
-      if (route.name === 'Home') {
-        iconName = focused
-          ? 'home'
-          : 'home-outline';
-      } else if (route.name === 'Profile') {
-        iconName = focused ? 'person' : 'person-outline';
+      switch (route.name) {
+        case 'Home':
+          iconName = focused ? 'home' : 'home-outline';
+          break;
+        case 'Share':
+          iconName = focused ? 'share-social' : 'share-social-outline';
+          break;
+        case 'Profile':
+          iconName = focused ? 'person' : 'person-outline';
+          break;
       }
 
       return <Ionicons name={iconName} size={size} color={color} />;
@@ -39,6 +109,12 @@ const MainTabs = createBottomTabNavigator({
   screens: {
     Home: {
       screen: HomeScreen,
+      options: {
+        headerShown: false,
+      }
+    },
+    Share: {
+      screen: ShareStack,
       options: {
         headerShown: false,
       }
