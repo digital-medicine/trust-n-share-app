@@ -1,4 +1,3 @@
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import FormContainer from '../../components/FormContainer.tsx';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useFormContext} from '../../contexts/FormContext';
@@ -42,6 +41,7 @@ export default function Institutions()  {
         selected={form.institutions.includes('insurance')}
       />
 
+      {/*@ts-ignore*/}
       <PrimaryButton onPress={() => navigation.navigate('Duration')} title={'Next'} />
     </FormContainer>
   );

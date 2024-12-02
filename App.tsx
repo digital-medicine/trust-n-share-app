@@ -15,6 +15,7 @@ import {HealthDataProvider} from './app/contexts/HealthContext';
 import {FormProvider} from './app/contexts/FormContext';
 import Purpose from './app/screens/Share/Purpose.tsx';
 import Institutions from './app/screens/Share/Institutions.tsx';
+import Duration from './app/screens/Share/Duration.tsx';
 
 function SplashScreen() {
   return (
@@ -45,7 +46,7 @@ const ShareStack = createNativeStackNavigator({
       },
     },
     Duration: {
-      screen: () => <Text>Duration</Text>,
+      screen: Duration,
       options: {
         title: 'Duration',
       },

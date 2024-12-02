@@ -7,6 +7,7 @@ export const FormProvider = ({ children }) => {
     data: [],
     purposes: [],
     institutions: [],
+    duration: 12,
   });
 
   const toggleFormSelected = (category, key) => {
@@ -25,8 +26,12 @@ export const FormProvider = ({ children }) => {
     setForm(newForm);
   }
 
+  const setDuration = (months) => {
+    setForm({ ...form, duration: months });
+  }
+
   return (
-    <FormContext.Provider value={{ form, toggleFormSelected }}>
+    <FormContext.Provider value={{ form, toggleFormSelected, setDuration }}>
       {children}
     </FormContext.Provider>
   );
