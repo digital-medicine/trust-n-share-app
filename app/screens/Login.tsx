@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import PrimaryButton from '../components/PrimaryButton.tsx';
-import TextInput from '../components/TextInput.tsx';
+import FormTextInput from '../components/FormTextInput.tsx';
 import Link from '../components/Link.tsx';
 import {useNavigation} from '@react-navigation/native';
 import {validateEmail} from '../utils/validateEmail.ts';
@@ -62,7 +62,7 @@ export default function LoginScreen() {
 
         {errors.form ? <Text style={{ color: 'red' }}>{errors.form}</Text> : null}
 
-        <TextInput
+        <FormTextInput
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
@@ -72,7 +72,7 @@ export default function LoginScreen() {
 
         {errors.email ? <Text style={{ color: 'red' }}>{errors.email}</Text> : null}
 
-        <TextInput
+        <FormTextInput
           placeholder="Password"
           value={password}
           onChangeText={setPassword}

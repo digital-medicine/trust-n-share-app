@@ -3,7 +3,7 @@ import { TextInput, StyleSheet, TextInputProps } from 'react-native';
 
 interface PrimaryTextInputProps extends TextInputProps {}
 
-const PrimaryTextInput: React.FC<PrimaryTextInputProps> = (props) => {
+const FormTextInput: React.FC<PrimaryTextInputProps> = (props) => {
   return (
     <TextInput
       style={[styles.input, props.style]}
@@ -13,7 +13,7 @@ const PrimaryTextInput: React.FC<PrimaryTextInputProps> = (props) => {
   );
 };
 
-export default PrimaryTextInput;
+export default FormTextInput;
 
 const styles = StyleSheet.create({
   input: {

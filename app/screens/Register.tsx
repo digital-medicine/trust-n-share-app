@@ -1,6 +1,6 @@
 import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useContext, useState} from 'react';
-import TextInput from '../components/TextInput.tsx';
+import FormTextInput from '../components/FormTextInput.tsx';
 import RNPickerSelect from 'react-native-picker-select';
 import PrimaryButton from '../components/PrimaryButton.tsx';
 import AuthContext from '../contexts/AuthContext';
@@ -103,7 +103,7 @@ export default function RegisterScreen() {
           }}
         />
 
-        <TextInput
+        <FormTextInput
           placeholder="First Name"
           value={firstName}
           onChangeText={setFirstName}
@@ -113,7 +113,7 @@ export default function RegisterScreen() {
 
         {errors.firstName ? <Text style={{ color: 'red' }}>{errors.firstName}</Text> : null}
 
-        <TextInput
+        <FormTextInput
           placeholder="Last Name"
           value={lastName}
           onChangeText={setLastName}
@@ -123,7 +123,7 @@ export default function RegisterScreen() {
 
         {errors.lastName ? <Text style={{ color: 'red' }}>{errors.lastName}</Text> : null}
 
-        <TextInput
+        <FormTextInput
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
@@ -133,7 +133,7 @@ export default function RegisterScreen() {
 
         {errors.email ? <Text style={{ color: 'red' }}>{errors.email}</Text> : null}
 
-        <TextInput
+        <FormTextInput
           placeholder="Password"
           value={password}
           onChangeText={setPassword}
@@ -143,7 +143,7 @@ export default function RegisterScreen() {
 
         {errors.password ? <Text style={{ color: 'red' }}>{errors.password}</Text> : null}
 
-        <TextInput
+        <FormTextInput
           placeholder="Confirm Password"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
