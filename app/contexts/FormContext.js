@@ -15,6 +15,7 @@ export const FormProvider = ({ children }) => {
     },
     reputation: 50,
     incentives: [],
+    consumers: [],
   });
 
   const toggleFormSelected = (category, key) => {
@@ -53,6 +54,12 @@ export const FormProvider = ({ children }) => {
     setForm({ ...form, reputation: value });
   }
 
+  const submitForm = () => {
+    console.log(form);
+
+    // TODO
+  }
+
   return (
     <FormContext.Provider value={{
       form,
@@ -62,6 +69,7 @@ export const FormProvider = ({ children }) => {
       setPrivacyHighRisk,
       setPrivacyLowRisk,
       setReputation,
+      submitForm,
     }}>
       {children}
     </FormContext.Provider>

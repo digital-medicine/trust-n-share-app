@@ -20,6 +20,7 @@ import Information from './app/screens/Share/Information.tsx';
 import PrivacyLevel from './app/screens/Share/PrivacyLevel.tsx';
 import Reputation from './app/screens/Share/Reputation.tsx';
 import Incentives from './app/screens/Share/Incentives.tsx';
+import Consumers from './app/screens/Share/Consumers.tsx';
 
 function SplashScreen() {
   return (
@@ -80,7 +81,7 @@ const ShareStack = createNativeStackNavigator({
       },
     },
     Consumers: {
-      screen: () => <Text>Consumers</Text>,
+      screen: Consumers,
       options: {
         title: 'Consumers',
       },
