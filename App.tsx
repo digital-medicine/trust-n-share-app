@@ -17,6 +17,7 @@ import Purpose from './app/screens/Share/Purpose.tsx';
 import Institutions from './app/screens/Share/Institutions.tsx';
 import Duration from './app/screens/Share/Duration.tsx';
 import Information from './app/screens/Share/Information.tsx';
+import PrivacyLevel from './app/screens/Share/PrivacyLevel.tsx';
 
 function SplashScreen() {
   return (
@@ -59,9 +60,9 @@ const ShareStack = createNativeStackNavigator({
       },
     },
     PrivacyLevel: {
-      screen: () => <Text>Privacy Level</Text>,
+      screen: PrivacyLevel,
       options: {
-        title: 'Privacy Level',
+        title: 'Level of Privacy',
       },
     },
     Reputation: {

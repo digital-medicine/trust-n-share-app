@@ -32,6 +32,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: '#d7d7d7',
     textAlign: 'justify',
-    lineHeight: 23,
+    lineHeight: 20,
   }
 });

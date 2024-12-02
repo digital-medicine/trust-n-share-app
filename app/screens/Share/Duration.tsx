@@ -12,18 +12,28 @@ export default function Duration() {
 
   const [error, setError] = useState<string|null>(null);
 
-  const onSubmit = () => {
-    // Validate duration
-    if (isNaN(form.duration)) {
+  const onDurationChange = (duration) => {
+    validateDuration(duration);
+    setDuration(duration);
+  }
+
+  const validateDuration = (duration: number) => {
+    if (isNaN(duration)) {
       setError('Duration must be a number');
-      return;
+      return false;
     }
-    if (form.duration < 1) {
+    if (duration < 1) {
       setError('Duration must be at least 1 month');
-      return;
+      return false;
     }
 
     setError(null);
+    return true;
+  }
+
+  const onSubmit = () => {
+    if (!validateDuration(form.duration)) return;
+
     // @ts-ignore
     navigation.navigate('Information');
   }
@@ -36,7 +46,7 @@ export default function Duration() {
         <FormTextInput
           style={styles.input}
           value={form.duration.toString()}
-          onChangeText={setDuration}
+          onChangeText={onDurationChange}
           placeholder="Duration"
           inputMode="numeric"
           onSubmitEditing={onSubmit}
@@ -61,13 +71,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     height: 50,
-    width: '50%',
+    width: 200,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
-    fontSize: 16,
+    fontSize: 20,
     color: '#1d1d1f',
+    backgroundColor: '#fff',
   },
   text: {
     fontSize: 16,

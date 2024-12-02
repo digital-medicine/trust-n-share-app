@@ -8,6 +8,11 @@ export const FormProvider = ({ children }) => {
     purposes: [],
     institutions: [],
     duration: 12,
+    privacyLevel: {
+      incentive: 5,
+      highRisk: 50,
+      lowRisk: 50,
+    }
   });
 
   const toggleFormSelected = (category, key) => {
@@ -30,8 +35,27 @@ export const FormProvider = ({ children }) => {
     setForm({ ...form, duration: months });
   }
 
+  const setPrivacyIncentive = (value) => {
+    setForm({ ...form, privacyLevel: { ...form.privacyLevel, incentive: value } });
+  }
+
+  const setPrivacyHighRisk = (value) => {
+    setForm({ ...form, privacyLevel: { ...form.privacyLevel, highRisk: value } });
+  }
+
+  const setPrivacyLowRisk = (value) => {
+    setForm({ ...form, privacyLevel: { ...form.privacyLevel, lowRisk: value } });
+  }
+
   return (
-    <FormContext.Provider value={{ form, toggleFormSelected, setDuration }}>
+    <FormContext.Provider value={{
+      form,
+      toggleFormSelected,
+      setDuration,
+      setPrivacyIncentive,
+      setPrivacyHighRisk,
+      setPrivacyLowRisk,
+    }}>
       {children}
     </FormContext.Provider>
   );
