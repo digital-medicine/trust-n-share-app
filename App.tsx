@@ -16,6 +16,7 @@ import {FormProvider} from './app/contexts/FormContext';
 import Purpose from './app/screens/Share/Purpose.tsx';
 import Institutions from './app/screens/Share/Institutions.tsx';
 import Duration from './app/screens/Share/Duration.tsx';
+import Information from './app/screens/Share/Information.tsx';
 
 function SplashScreen() {
   return (
@@ -52,7 +53,7 @@ const ShareStack = createNativeStackNavigator({
       },
     },
     Information: {
-      screen: () => <Text>Information</Text>,
+      screen: Information,
       options: {
         title: 'Information',
       },
