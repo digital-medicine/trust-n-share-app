@@ -1,14 +1,15 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, GestureResponderEvent } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, GestureResponderEvent, ViewStyle } from 'react-native';
 
 interface PrimaryButtonProps {
   onPress: (event: GestureResponderEvent) => void;
   title: string;
+  style?: ViewStyle; // Optional style prop for customization
 }
 
-const PrimaryButton: React.FC<PrimaryButtonProps> = ({ onPress, title }) => {
+const PrimaryButton: React.FC<PrimaryButtonProps> = ({ onPress, title, style }) => {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
