@@ -14,6 +14,7 @@ export const FormProvider = ({ children }) => {
       lowRisk: 50,
     },
     reputation: 50,
+    incentives: [],
   });
 
   const toggleFormSelected = (category, key) => {

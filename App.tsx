@@ -19,6 +19,7 @@ import Duration from './app/screens/Share/Duration.tsx';
 import Information from './app/screens/Share/Information.tsx';
 import PrivacyLevel from './app/screens/Share/PrivacyLevel.tsx';
 import Reputation from './app/screens/Share/Reputation.tsx';
+import Incentives from './app/screens/Share/Incentives.tsx';
 
 function SplashScreen() {
   return (
@@ -73,7 +74,7 @@ const ShareStack = createNativeStackNavigator({
       },
     },
     Incentives: {
-      screen: () => <Text>Incentives</Text>,
+      screen: Incentives,
       options: {
         title: 'Incentives',
       },

@@ -1,11 +1,13 @@
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
-
-export default function FormListItem({ title, onPress, selected}: {
+interface FormListItemProps {
   title: string;
+  description?: string;
   onPress: () => void;
   selected: boolean;
-}) {
+}
+
+export default function FormListItem({ title, description, onPress, selected }: FormListItemProps) {
   const listItemStyle = [
     styles.listItem,
     selected ? styles.listItemSelected : null,
@@ -14,10 +16,15 @@ export default function FormListItem({ title, onPress, selected}: {
     styles.listItemTitle,
     selected ? styles.listItemTitleSelected : null,
   ];
+  const listItemDescriptionStyle = [
+    styles.listItemDescription,
+    selected ? styles.listItemDescriptionSelected : null,
+  ];
 
   return (
     <TouchableOpacity style={listItemStyle} onPress={onPress}>
       <Text style={listItemTitleStyle}>{title}</Text>
+      {description && <Text style={listItemDescriptionStyle}>{description}</Text>}
     </TouchableOpacity>
   );
 }
@@ -27,6 +34,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#d7d7d7',
     padding: 20,
     borderRadius: 8,
+    gap: 4,
   },
   listItemSelected: {
     backgroundColor: '#4190e0',
@@ -35,6 +43,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   listItemTitleSelected: {
+    color: '#fff',
+  },
+  listItemDescription: {
+    fontSize: 16,
+    color: '#4f4f4f',
+  },
+  listItemDescriptionSelected: {
     color: '#fff',
   },
 });
