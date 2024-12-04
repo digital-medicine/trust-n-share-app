@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Text } from 'react-native';
+import {View, Text, Button} from 'react-native';
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthContext, { AuthProvider } from './app/contexts/AuthContext.js';
@@ -23,6 +23,7 @@ import Incentives from './app/screens/Share/Incentives.tsx';
 import Consumers from './app/screens/Share/Consumers.tsx';
 import Congrats from './app/screens/Share/Congrats.tsx';
 import Compensations from './app/screens/Share/Compensations.tsx';
+import LogoutButton from './app/components/LogoutButton.tsx';
 
 function SplashScreen() {
   return (
@@ -98,14 +99,14 @@ const ShareStack = createNativeStackNavigator({
   }
 });
 
-
 const ProfileStack = createNativeStackNavigator({
   screens: {
     Main: {
       screen: ProfileScreen,
       options: {
         title: 'Profile',
-        headerShown: false,
+        // headerShown: false,
+        headerRight: LogoutButton,
       },
     },
     Compensations: {
