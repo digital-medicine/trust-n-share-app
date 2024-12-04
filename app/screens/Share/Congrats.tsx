@@ -1,10 +1,12 @@
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {useFormContext} from '../../contexts/FormContext';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
+import {useNavigation} from '@react-navigation/native';
 
 
 export default function Congrats() {
   const { form } = useFormContext();
+  const navigation = useNavigation();
 
   const formString = JSON.stringify(form, null, 2);
 
@@ -18,8 +20,8 @@ export default function Congrats() {
         </Text>
 
         <PrimaryButton
-          onPress={() => {}}
-          title="Select compensations"
+          onPress={() => navigation.navigate('Profile', { screen: 'Compensations' })}
+          title="Select Compensations"
           style={{ alignSelf: 'stretch' }}
         />
 

@@ -22,6 +22,7 @@ import Reputation from './app/screens/Share/Reputation.tsx';
 import Incentives from './app/screens/Share/Incentives.tsx';
 import Consumers from './app/screens/Share/Consumers.tsx';
 import Congrats from './app/screens/Share/Congrats.tsx';
+import Compensations from './app/screens/Share/Compensations.tsx';
 
 function SplashScreen() {
   return (
@@ -97,6 +98,37 @@ const ShareStack = createNativeStackNavigator({
   }
 });
 
+
+const ProfileStack = createNativeStackNavigator({
+  screens: {
+    Main: {
+      screen: ProfileScreen,
+      options: {
+        title: 'Profile',
+        headerShown: false,
+      },
+    },
+    Compensations: {
+      screen: Compensations,
+      options: {
+        title: 'Compensations',
+      },
+    },
+    Vouchers: {
+      screen: () => <Text>Vouchers</Text>,
+      options: {
+        title: 'Vouchers',
+      },
+    },
+    Money: {
+      screen: () => <Text>Money</Text>,
+      options: {
+        title: 'Financial Compensation',
+      },
+    },
+  },
+});
+
 const MainTabs = createBottomTabNavigator({
   screenOptions: ({ route }) => ({
     tabBarIcon: ({ focused, color, size }) => {
@@ -131,7 +163,12 @@ const MainTabs = createBottomTabNavigator({
         headerShown: false,
       }
     },
-    Profile: ProfileScreen,
+    Profile: {
+      screen: ProfileStack,
+      options: {
+        headerShown: false,
+      }
+    },
   },
 });
 
