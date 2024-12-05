@@ -3,11 +3,26 @@ import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useFormContext} from '../../contexts/FormContext';
 import {useNavigation} from '@react-navigation/native';
 import FormListItem from '../../components/FormListItem.tsx';
+import {useState} from 'react';
+import ErrorText from '../../components/ErrorText.tsx';
 
 
 export default function Institutions()  {
   const navigation = useNavigation();
   const { form, toggleFormSelected } = useFormContext();
+
+  const [error, setError] = useState<string|null>(null);
+
+  const onSubmit = () => {
+    if (form.institutions.length === 0) {
+      setError('Please select at least one institution.');
+      return;
+    }
+
+    setError(null);
+    // @ts-ignore
+    navigation.navigate('Duration');
+  }
 
   return (
     <FormContainer>
@@ -41,8 +56,10 @@ export default function Institutions()  {
         selected={form.institutions.includes('insurance')}
       />
 
+      <ErrorText error={error} />
+
       {/*@ts-ignore*/}
-      <PrimaryButton onPress={() => navigation.navigate('Duration')} title={'Next'} />
+      <PrimaryButton onPress={onSubmit} title={'Next'} />
     </FormContainer>
   );
 }

@@ -6,6 +6,7 @@ import {useEffect, useState} from 'react';
 import {useHealthData} from '../../contexts/HealthContext';
 import {useFormContext} from '../../contexts/FormContext';
 import FormContainer from '../../components/FormContainer.tsx';
+import ErrorText from '../../components/ErrorText.tsx';
 
 export default function DataSelection() {
   const navigation = useNavigation();
@@ -14,6 +15,8 @@ export default function DataSelection() {
   const { healthData } = useHealthData();
   const [steps, setSteps] = useState<number|null>(null);
   const [energyBurned, setEnergyBurned] = useState<number|null>(null);
+
+  const [error, setError] = useState<string|null>(null);
 
   // Transform health data for display
   useEffect(() => {
@@ -29,6 +32,18 @@ export default function DataSelection() {
       setEnergyBurned(totalEnergyBurned);
     }
   });
+
+  const onSubmit = () => {
+    // validate form
+    if (form.data.length === 0) {
+      setError('Please select at least one data type.');
+      return;
+    }
+
+    setError(null);
+    // @ts-ignore
+    navigation.navigate('Purpose');
+  }
 
   return (
     <FormContainer>
@@ -50,7 +65,9 @@ export default function DataSelection() {
         selected={form.data.includes('energyBurned')}
       />
 
-      <PrimaryButton onPress={() => navigation.navigate('Purpose')} title={'Next'} />
+      <ErrorText error={error} />
+
+      <PrimaryButton onPress={onSubmit} title={'Next'} />
     </FormContainer>
   );
 }

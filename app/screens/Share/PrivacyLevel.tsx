@@ -6,6 +6,7 @@ import FormTextInput from '../../components/FormTextInput.tsx';
 import Slider from '@react-native-community/slider';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useState} from 'react';
+import ErrorText from '../../components/ErrorText.tsx';
 
 export default function PrivacyLevel() {
   const navigation = useNavigation();
@@ -67,7 +68,8 @@ export default function PrivacyLevel() {
           <Text style={styles.euro}>€</Text>
         </View>
 
-        {error && <Text style={{color: 'red', textAlign: 'center'}}>{error}</Text>}
+        {/*{error && <Text style={{color: 'red', textAlign: 'center'}}>{error}</Text>}*/}
+        <ErrorText error={error} />
       </View>
 
       {/* High Risk */}

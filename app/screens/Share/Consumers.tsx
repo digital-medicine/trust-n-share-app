@@ -3,14 +3,25 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {useFormContext} from '../../contexts/FormContext';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useNavigation} from '@react-navigation/native';
+import {useState} from 'react';
+import ErrorText from '../../components/ErrorText.tsx';
 
 export default function Consumers() {
   const {form, toggleFormSelected, submitForm} = useFormContext();
   const navigation = useNavigation();
 
-  function onSubmit() {
-    submitForm();
+  const [error, setError] = useState<string|null>(null);
 
+  function onSubmit() {
+    // validate consumers
+    if (form.consumers.length === 0) {
+      setError('Please select at least one consumer.');
+      return;
+    }
+
+    setError(null);
+
+    submitForm();
     // @ts-ignore
     navigation.navigate('Congrats');
   }
@@ -44,6 +55,8 @@ export default function Consumers() {
         onPress={() => toggleFormSelected('consumers', 'shadycorp')}
         selected={form.consumers.includes('shadycorp')}
       />
+
+      <ErrorText error={error} />
 
       <PrimaryButton onPress={onSubmit} title="Submit" />
     </FormContainer>

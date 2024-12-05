@@ -3,11 +3,26 @@ import FormContainer from '../../components/FormContainer.tsx';
 import FormListItem from '../../components/FormListItem.tsx';
 import {useFormContext} from '../../contexts/FormContext';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
+import {useState} from 'react';
+import ErrorText from '../../components/ErrorText.tsx';
 
 
 export default function Incentives() {
   const navigation = useNavigation();
   const { form, toggleFormSelected } = useFormContext();
+
+  const [error, setError] = useState<string|null>(null);
+
+  const onSubmit = () => {
+    if (form.incentives.length === 0) {
+      setError('Please select at least one incentive.');
+      return;
+    }
+
+    setError(null);
+    // @ts-ignore
+    navigation.navigate('Consumers');
+  }
 
   return (
     <FormContainer>
@@ -46,7 +61,9 @@ export default function Incentives() {
         selected={form.incentives.includes('money')}
       />
 
-      <PrimaryButton onPress={() => navigation.navigate('Consumers')} title={'Next'} />
+      <ErrorText error={error} />
+
+      <PrimaryButton onPress={onSubmit} title={'Next'} />
     </FormContainer>
   )
 }

@@ -4,11 +4,26 @@ import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useFormContext} from '../../contexts/FormContext';
 import {useNavigation} from '@react-navigation/native';
 import FormListItem from '../../components/FormListItem.tsx';
+import {useState} from 'react';
+import ErrorText from '../../components/ErrorText.tsx';
 
 
 export default function Purpose()  {
   const navigation = useNavigation();
   const { form, toggleFormSelected } = useFormContext();
+
+  const [error, setError] = useState<string|null>(null);
+
+  const onSubmit = () => {
+    if (form.purposes.length === 0) {
+      setError('Please select at least one purpose.');
+      return;
+    }
+
+    setError(null);
+    // @ts-ignore
+    navigation.navigate('Institutions');
+  }
 
   return (
     <FormContainer>
@@ -48,7 +63,9 @@ export default function Purpose()  {
         selected={form.purposes.includes('marketing')}
       />
 
-      <PrimaryButton onPress={() => navigation.navigate('Institutions')} title={'Next'} />
+      <ErrorText error={error} />
+
+      <PrimaryButton onPress={onSubmit} title={'Next'} />
     </FormContainer>
   );
 }
