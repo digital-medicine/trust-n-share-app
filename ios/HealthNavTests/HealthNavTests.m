@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface TrustNavigatorTests : XCTestCase
+@interface HealthNavTests : XCTestCase
 
 @end
 
-@implementation TrustNavigatorTests
+@implementation HealthNavTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL (^)(UIView *view))test
 {
