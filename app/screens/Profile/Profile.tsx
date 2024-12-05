@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import PrimaryButton from '../components/PrimaryButton.tsx';
+import PrimaryButton from '../../components/PrimaryButton.tsx';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import {View, Text, Button} from 'react-native';
+import {View, Text} from 'react-native';
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthContext, { AuthProvider } from './app/contexts/AuthContext.js';
@@ -8,7 +8,7 @@ import {LoginContext, useIsLoggedIn, useIsLoggedOut} from './app/contexts/LoginC
 import HomeScreen from './app/screens/Home.tsx';
 import RegisterScreen from './app/screens/Register.tsx';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ProfileScreen from './app/screens/Profile.tsx';
+import ProfileScreen from './app/screens/Profile/Profile.tsx';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DataSelection from './app/screens/Share/DataSelection.tsx';
 import {HealthDataProvider} from './app/contexts/HealthContext';
@@ -22,7 +22,7 @@ import Reputation from './app/screens/Share/Reputation.tsx';
 import Incentives from './app/screens/Share/Incentives.tsx';
 import Consumers from './app/screens/Share/Consumers.tsx';
 import Congrats from './app/screens/Share/Congrats.tsx';
-import Compensations from './app/screens/Share/Compensations.tsx';
+import Compensations from './app/screens/Profile/Compensations.tsx';
 import LogoutButton from './app/components/LogoutButton.tsx';
 
 function SplashScreen() {
