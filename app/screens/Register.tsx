@@ -190,15 +190,17 @@ const styles = StyleSheet.create({
     paddingRight: 30, // to ensure the text is never behind the icon
   },
   datePickerContainer: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#ccc',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
     borderRadius: 8,
   },
   datePickerText: {
+    paddingHorizontal: 8,
     fontSize: 16,
     color: '#1d1d1f',
   },
@@ -209,6 +211,7 @@ const pickerSelectStyles = StyleSheet.create({
     pointerEvents: "none"
   },
   inputIOS: {
+    backgroundColor: 'white',
     height: 50,
     fontSize: 16,
     paddingVertical: 12,
@@ -220,6 +223,7 @@ const pickerSelectStyles = StyleSheet.create({
     paddingRight: 30, // to ensure the text is never behind the icon
   },
   inputAndroid: {
+    backgroundColor: 'white',
     height: 50,
     fontSize: 16,
     paddingHorizontal: 10,

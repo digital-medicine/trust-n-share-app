@@ -18,6 +18,7 @@ export default FormTextInput;
 const styles = StyleSheet.create({
   input: {
     height: 50,
+    backgroundColor: 'white',
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 8,

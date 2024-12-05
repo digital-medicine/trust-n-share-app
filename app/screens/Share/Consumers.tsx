@@ -96,7 +96,9 @@ function Item({ title, score, onPress, selected }: ItemProps) {
 const styles = StyleSheet.create({
   item: {
     alignItems: 'center',
-    backgroundColor: '#d7d7d7',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#ccc',
     padding: 20,
     borderRadius: 8,
     gap: 4,

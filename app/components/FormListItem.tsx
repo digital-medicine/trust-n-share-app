@@ -31,7 +31,9 @@ export default function FormListItem({ title, description, onPress, selected }: 
 
 const styles = StyleSheet.create({
   listItem: {
-    backgroundColor: '#d7d7d7',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#ccc',
     padding: 20,
     borderRadius: 8,
     gap: 4,

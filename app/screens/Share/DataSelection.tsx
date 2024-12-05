@@ -129,7 +129,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#d7d7d7',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#ccc',
     borderRadius: 8,
   },
   listItemSelected: {
