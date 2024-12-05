@@ -10,6 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type errors = {
   form?: string;
+  gender?: string;
   email?: string;
   password?: string;
   firstName?: string;
@@ -21,7 +22,7 @@ type errors = {
 export default function RegisterScreen() {
   const { register } = useContext(AuthContext);
 
-  const [gender, setGender]  = useState('other');
+  const [gender, setGender]  = useState(null);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -29,16 +30,19 @@ export default function RegisterScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [birthDate, setBirthDate] = useState(new Date(946731600000));
 
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [errors, setErrors] = useState({} as errors);
 
   const onDatePickerChange = (event, selectedDate) => {
-    setShowDatePicker(false);
     setBirthDate(selectedDate);
   };
 
   const validate = (): boolean => {
     let newErrors = {};
+
+    // Validate gender
+    if (gender === null) {
+      newErrors = { ...newErrors, gender: 'Please select a gender' };
+    }
 
     // Validate email
     if (!validateEmail(email)) {
@@ -102,6 +106,8 @@ export default function RegisterScreen() {
             return <Ionicons name="caret-down" size={24} color="gray" />;
           }}
         />
+
+        {errors.gender ? <Text style={{ color: 'red' }}>{errors.gender}</Text> : null}
 
         <FormTextInput
           placeholder="First Name"
