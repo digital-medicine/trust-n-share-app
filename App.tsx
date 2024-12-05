@@ -22,7 +22,7 @@ import Reputation from './app/screens/Share/Reputation.tsx';
 import Incentives from './app/screens/Share/Incentives.tsx';
 import Consumers from './app/screens/Share/Consumers.tsx';
 import Congrats from './app/screens/Share/Congrats.tsx';
-import Compensations from './app/screens/Profile/Compensations.tsx';
+import Compensations from './app/screens/Share/Compensations.tsx';
 import LogoutButton from './app/components/LogoutButton.tsx';
 
 function SplashScreen() {
@@ -96,19 +96,6 @@ const ShareStack = createNativeStackNavigator({
         headerShown: false,
       },
     },
-  }
-});
-
-const ProfileStack = createNativeStackNavigator({
-  screens: {
-    Main: {
-      screen: ProfileScreen,
-      options: {
-        title: 'Profile',
-        // headerShown: false,
-        headerRight: LogoutButton,
-      },
-    },
     Compensations: {
       screen: Compensations,
       options: {
@@ -125,6 +112,19 @@ const ProfileStack = createNativeStackNavigator({
       screen: () => <Text>Money</Text>,
       options: {
         title: 'Financial Compensation',
+      },
+    },
+  }
+});
+
+const ProfileStack = createNativeStackNavigator({
+  screens: {
+    Main: {
+      screen: ProfileScreen,
+      options: {
+        title: 'Profile',
+        // headerShown: false,
+        headerRight: LogoutButton,
       },
     },
   },

@@ -29,10 +29,6 @@ export default function ProfileScreen() {
               <InfoItem key={index} title={item.title} data={item.data} />
             ))}
           </InfoBox>
-          <PrimaryButton
-            onPress={() => navigation.navigate('Compensations')}
-            title="Compensations"
-          />
         </Section>
 
         <Section header="Transaction History">

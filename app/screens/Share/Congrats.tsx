@@ -20,7 +20,7 @@ export default function Congrats() {
         </Text>
 
         <PrimaryButton
-          onPress={() => navigation.navigate('Profile', { screen: 'Compensations' })}
+          onPress={() => navigation.navigate('Compensations')}
           title="Select Compensations"
           style={{ alignSelf: 'stretch' }}
         />
