@@ -5,8 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function ProfileScreen() {
-  const navigation = useNavigation();
-
   const infoItems = [
     { title: 'Name', data: 'John Doe' },
     { title: 'Date of birth', data: '2000-01-01' },
@@ -15,9 +13,10 @@ export default function ProfileScreen() {
   ];
 
   const transactions = [
-    { name: 'Rewe', date: '2024-11-05' },
-    { name: 'Rewe', date: '2024-11-05' },
-    { name: 'Rewe', date: '2024-11-05' },
+    { id: 1, name: 'Rewe', date: '2024-11-05' },
+    { id: 2, name: 'DLR', date: '2024-11-20' },
+    { id: 3, name: 'UKB', date: '2024-11-21' },
+    { id: 4, name: 'UKJ', date: '2024-12-02' },
   ];
 
   return (
@@ -110,15 +109,25 @@ function TransactionHistory({ transactions }) {
   return (
     <>
       {transactions.map((transaction, index) => (
-        <TransactionButton key={index} name={transaction.name} date={transaction.date} />
+        <TransactionButton
+          key={transaction.id}
+          id={transaction.id}
+          name={transaction.name}
+          date={transaction.date}
+        />
       ))}
     </>
   );
 }
 
-function TransactionButton({ name, date }) {
+function TransactionButton({ id, name, date }) {
+  const navigation = useNavigation();
+
   return (
-    <TouchableOpacity style={transactionButtonStyles.whiteButton}>
+    <TouchableOpacity
+      style={transactionButtonStyles.whiteButton}
+      onPress={() => navigation.navigate('Transaction', { id, name })}
+    >
       <View style={transactionButtonStyles.whiteButtonLeft}>
         <Text style={transactionButtonStyles.name}>{name}</Text>
         <Text style={transactionButtonStyles.date}>{date}</Text>

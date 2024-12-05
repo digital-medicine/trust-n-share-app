@@ -24,6 +24,7 @@ import Consumers from './app/screens/Share/Consumers.tsx';
 import Congrats from './app/screens/Share/Congrats.tsx';
 import Compensations from './app/screens/Share/Compensations.tsx';
 import LogoutButton from './app/components/LogoutButton.tsx';
+import Transaction from './app/screens/Profile/Transaction.tsx';
 
 function SplashScreen() {
   return (
@@ -127,6 +128,12 @@ const ProfileStack = createNativeStackNavigator({
         headerRight: LogoutButton,
       },
     },
+    Transaction: {
+      screen: Transaction,
+      options: ({ route }) => ({
+        title: route.params.name,
+      }),
+    }
   },
 });
 
