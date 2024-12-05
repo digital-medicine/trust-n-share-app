@@ -1,69 +1,45 @@
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import PrimaryButton from '../components/PrimaryButton.tsx';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
 
+  const infoItems = [
+    { title: 'Name', data: 'John Doe' },
+    { title: 'Date of birth', data: '2000-01-01' },
+    { title: 'Participated studies', data: '4' },
+    { title: 'Money earned', data: '7,50 €' },
+  ];
+
+  const transactions = [
+    { name: 'Rewe', date: '2024-11-05' },
+    { name: 'Rewe', date: '2024-11-05' },
+    { name: 'Rewe', date: '2024-11-05' },
+  ];
+
   return (
     <ScrollView style={styles.safeArea}>
       <View style={styles.container}>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.header}>Info</Text>
-
-          <View style={styles.infoBox}>
-            <View style={styles.infoItem}>
-              <Text style={styles.infoItemTitle}>Name</Text>
-              <Text style={styles.infoItemData}>John Doe</Text>
-            </View>
-
-            <View style={styles.infoItem}>
-              <Text style={styles.infoItemTitle}>Date of birth</Text>
-              <Text style={styles.infoItemData}>2000-01-01</Text>
-            </View>
-
-            <View style={styles.infoItem}>
-              <Text style={styles.infoItemTitle}>Participated studies</Text>
-              <Text style={styles.infoItemData}>4</Text>
-            </View>
-
-            <View style={styles.infoItem}>
-              <Text style={styles.infoItemTitle}>Money earned</Text>
-              <Text style={styles.infoItemData}>7,50 €</Text>
-            </View>
-          </View>
-
+        <Section header="Info">
+          <InfoBox>
+            {infoItems.map((item, index) => (
+              <InfoItem key={index} title={item.title} data={item.data} />
+            ))}
+          </InfoBox>
           <PrimaryButton
             onPress={() => navigation.navigate('Compensations')}
-            title='Compensations'
+            title="Compensations"
           />
-        </View>
+        </Section>
 
-        <View style={styles.sectionContainer}>
-          <Text style={styles.header}>Transaction history</Text>
-
-          <TransactionButton name="Rewe" date="2024-11-05" />
-          <TransactionButton name="Rewe" date="2024-11-05" />
-          <TransactionButton name="Rewe" date="2024-11-05" />
-        </View>
+        <Section header="Transaction History">
+          <TransactionHistory transactions={transactions} />
+        </Section>
       </View>
     </ScrollView>
-  );
-}
-
-function TransactionButton({name, date}: {name: string, date: string}) {
-
-  return (
-    <TouchableOpacity style={styles.whiteButton}>
-      <View style={styles.whiteButtonLeft}>
-        <Text style={styles.infoItemData}>{name}</Text>
-        <Text style={styles.infoItemTitle}>{date}</Text>
-      </View>
-      <Ionicons name="chevron-forward" size={24} color="black" />
-    </TouchableOpacity>
   );
 }
 
@@ -72,23 +48,55 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    // padding: 20,
+    paddingHorizontal: 20,
+  },
+});
+
+function Section({ header, children }) {
+  return (
+    <View style={sectionStyles.sectionContainer}>
+      <Text style={sectionStyles.header}>{header}</Text>
+      {children}
+    </View>
+  );
+}
+
+const sectionStyles = StyleSheet.create({
+  sectionContainer: {
+    gap: 16,
   },
   header: {
+    paddingTop: 30,
+    paddingBottom: 14,
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  sectionContainer: {
-    padding: 20,
-    gap: 20,
-  },
+});
+
+function InfoBox({ children }) {
+  return <View style={infoBoxStyles.infoBox}>{children}</View>;
+}
+
+const infoBoxStyles = StyleSheet.create({
   infoBox: {
     backgroundColor: '#d7d7d7',
     padding: 20,
     borderRadius: 8,
     gap: 12,
   },
+});
+
+function InfoItem({ title, data }) {
+  return (
+    <View style={infoItemStyles.infoItem}>
+      <Text style={infoItemStyles.infoItemTitle}>{title}</Text>
+      <Text style={infoItemStyles.infoItemData}>{data}</Text>
+    </View>
+  );
+}
+
+const infoItemStyles = StyleSheet.create({
   infoItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -100,19 +108,54 @@ const styles = StyleSheet.create({
   infoItemData: {
     fontSize: 18,
   },
+});
+
+function TransactionHistory({ transactions }) {
+  return (
+    <>
+      {transactions.map((transaction, index) => (
+        <TransactionButton key={index} name={transaction.name} date={transaction.date} />
+      ))}
+    </>
+  );
+}
+
+function TransactionButton({ name, date }) {
+  return (
+    <TouchableOpacity style={transactionButtonStyles.whiteButton}>
+      <View style={transactionButtonStyles.whiteButtonLeft}>
+        <Text style={transactionButtonStyles.name}>{name}</Text>
+        <Text style={transactionButtonStyles.date}>{date}</Text>
+      </View>
+      <Ionicons name="chevron-forward" size={24} color="black" />
+    </TouchableOpacity>
+  );
+}
+
+const transactionButtonStyles = StyleSheet.create({
   whiteButton: {
     backgroundColor: 'white',
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center', // Ensures vertical alignment for children
   },
   whiteButtonLeft: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center', // Ensures the Text components are vertically aligned
+  },
+  name: {
+    fontSize: 18,
+  },
+  date: {
     paddingRight: 20,
-  }
-})
+    fontSize: 18,
+    color: '#6c6c6c',
+  },
+});
