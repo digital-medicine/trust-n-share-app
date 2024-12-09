@@ -120,29 +120,25 @@ async function fetchHealthConnectData(): Promise<HealthData> {
 
   // initialize the client
   const isInitialized = await initialize();
-  console.log("isInitialized:", isInitialized);
+  if (!isInitialized) {
+    throw new Error('Could not initialize Health Connect');
+  }
 
   // request permissions
   const grantedPermissions = await requestPermission([
     { accessType: 'read', recordType: 'ActiveCaloriesBurned' },
     { accessType: 'read', recordType: 'Steps' },
   ]);
-  console.log("grantedPermissions:", grantedPermissions);
-
-  // TODO check if granted
+  const permissionsOkay = ["Steps", "ActiveCaloriesBurned"]
+    .every(recordType => grantedPermissions
+      .map(permission => permission.recordType)
+      .includes(recordType)
+    );
+  if (!permissionsOkay) {
+    throw new Error('Could not grant permissions');
+  }
 
   // Read steps
-
-  readRecords('Steps', {
-    timeRangeFilter: {
-      operator: 'between',
-      startTime: '2023-01-09T12:00:00.405Z',
-      endTime: '2024-12-09T23:53:15.405Z',
-    },
-  }).then(({ records }) => {
-    console.log('Retrieved records: ', JSON.stringify({ records }, null, 2)); // Retrieved records:  {"records":[{"startTime":"2023-01-09T12:00:00.405Z","endTime":"2023-01-09T23:53:15.405Z","energy":{"inCalories":15000000,"inJoules":62760000.00989097,"inKilojoules":62760.00000989097,"inKilocalories":15000},"metadata":{"id":"239a8cfd-990d-42fc-bffc-c494b829e8e1","lastModifiedTime":"2023-01-17T21:06:23.335Z","clientRecordId":null,"dataOrigin":"com.healthconnectexample","clientRecordVersion":0,"device":0}}]}
-  });
-
   const stepsResult = await aggregateGroupByDuration({
     recordType: 'Steps',
     timeRangeFilter: {
@@ -155,35 +151,13 @@ async function fetchHealthConnectData(): Promise<HealthData> {
       length: 1,
     },
   });
-  console.log("stepsResult:", stepsResult);
   data.steps = stepsResult.map(entry => {
     return {
-      date: new Date(entry.startTime).toISOString().split('T')[0],
+      date: new Date(entry.endTime).toISOString().split('T')[0],
       value: entry.result.COUNT_TOTAL,
     };
   });
 
-  // Read active calories
-  // aggregateGroupByDuration({
-  //   recordType: 'ActiveCaloriesBurned',
-  //   timeRangeFilter: {
-  //     operator: 'between',
-  //     startTime: getStartDateAWeekAgo(),
-  //     endTime: new Date().toISOString(),
-  //   },
-  //   timeRangeSlicer: {
-  //     duration: 'DAYS',
-  //     length: 1,
-  //   },
-  // }).then((result) => {
-  //   const energyBurned = result.map(entry => {
-  //     return {
-  //       date: new Date(entry.startTime).toISOString().split('T')[0],
-  //       value: entry.result.ACTIVE_CALORIES_TOTAL.inKilocalories,
-  //     };
-  //   });
-  //   data.energyBurned = energyBurned;
-  // });
   const energyBurnedResult = await aggregateGroupByDuration({
     recordType: 'ActiveCaloriesBurned',
     timeRangeFilter: {
@@ -198,11 +172,10 @@ async function fetchHealthConnectData(): Promise<HealthData> {
   });
   data.energyBurned = energyBurnedResult.map(entry => {
     return {
-      date: new Date(entry.startTime).toISOString().split('T')[0],
+      date: new Date(entry.endTime).toISOString().split('T')[0],
       value: entry.result.ACTIVE_CALORIES_TOTAL.inKilocalories,
     };
   });
 
-  console.log("Health Connect result:", data);
   return data;
 }
