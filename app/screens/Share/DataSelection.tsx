@@ -22,13 +22,13 @@ export default function DataSelection() {
   useEffect(() => {
     // total steps
     if (healthData.steps && healthData.steps.length > 0) {
-      const totalSteps = healthData.steps.reduce((acc, entry) => acc + entry.value, 0);
+      const totalSteps = Math.round(healthData.steps.reduce((acc, entry) => acc + entry.value, 0));
       setSteps(totalSteps);
     }
 
     // total energy burned
     if (healthData.energyBurned && healthData.energyBurned.length > 0) {
-      const totalEnergyBurned = healthData.energyBurned.reduce((acc, entry) => acc + entry.value, 0);
+      const totalEnergyBurned = Math.round(healthData.energyBurned.reduce((acc, entry) => acc + entry.value, 0));
       setEnergyBurned(totalEnergyBurned);
     }
   });

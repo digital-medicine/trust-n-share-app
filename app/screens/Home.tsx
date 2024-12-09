@@ -49,7 +49,7 @@ export default function HomeScreen() {
         });
       }
       const labels = stepsChartDataTemp.map((entry) => entry.label);
-      const data = stepsChartDataTemp.map((entry) => entry.value);
+      const data = stepsChartDataTemp.map((entry) => Math.round(entry.value));
       setStepsChartData({ labels, datasets: [{ data }] });
     }
 
