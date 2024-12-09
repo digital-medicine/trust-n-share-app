@@ -45,7 +45,7 @@ export default function Compensations() {
           ? <Box
             title='Purpose of data use'
             description='Understand how your data will be used and for what purposes.'
-            button={() => navigation.navigate('Purpose')}
+            button={() => navigation.navigate('PurposeResults')}
           />
           : null
         }

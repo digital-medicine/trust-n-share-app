@@ -115,6 +115,18 @@ const ShareStack = createNativeStackNavigator({
         title: 'Financial Compensation',
       },
     },
+    StudyResults: {
+      screen: () => <Text>StudyResults</Text>,
+      options: {
+        title: 'Study results',
+      },
+    },
+    PurposeResults: {
+      screen: () => <Text>Purpose</Text>,
+      options: {
+        title: 'Purpose',
+      },
+    },
   }
 });
 
