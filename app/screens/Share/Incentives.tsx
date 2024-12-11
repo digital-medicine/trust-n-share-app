@@ -5,11 +5,13 @@ import {useFormContext} from '../../contexts/FormContext';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
+import {useFormOptions} from '../../contexts/FormOptionsContext';
 
 
 export default function Incentives() {
   const navigation = useNavigation();
   const { form, toggleFormSelected } = useFormContext();
+  const { formOptions } = useFormOptions();
 
   const [error, setError] = useState<string|null>(null);
 
@@ -26,7 +28,16 @@ export default function Incentives() {
 
   return (
     <FormContainer>
-      <FormListItem
+      {formOptions.incentives.map((incentive) => (
+        <FormListItem
+          key={incentive._id}
+          title={incentive.name}
+          onPress={() => toggleFormSelected('incentives', incentive._id)}
+          selected={form.incentives.includes(incentive._id)}
+        />
+      ))}
+
+      {/*<FormListItem
         title="Vouchers"
         description="Receive vouchers for various stores and services as a token of appreciation"
         onPress={() => toggleFormSelected('incentives', 'vouchers')}
@@ -59,7 +70,7 @@ export default function Incentives() {
         description="Recieve a final compensation for your valuable participation"
         onPress={() => toggleFormSelected('incentives', 'money')}
         selected={form.incentives.includes('money')}
-      />
+      />*/}
 
       <ErrorText error={error} />
 

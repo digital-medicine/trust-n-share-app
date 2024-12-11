@@ -25,6 +25,7 @@ import Congrats from './app/screens/Share/Congrats.tsx';
 import Compensations from './app/screens/Share/Compensations.tsx';
 import LogoutButton from './app/components/LogoutButton.tsx';
 import Transaction from './app/screens/Profile/Transaction.tsx';
+import {FormOptionsProvider} from './app/contexts/FormOptionsContext';
 
 function SplashScreen() {
   return (
@@ -232,9 +233,11 @@ function AppContent() {
   return (
     <LoginContext.Provider value={isLoggedIn}>
       <HealthDataProvider>
-        <FormProvider>
-          <Navigation />
-        </FormProvider>
+        <FormOptionsProvider>
+          <FormProvider>
+            <Navigation />
+          </FormProvider>
+        </FormOptionsProvider>
       </HealthDataProvider>
     </LoginContext.Provider>
   );

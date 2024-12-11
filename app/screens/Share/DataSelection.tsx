@@ -7,31 +7,57 @@ import {useHealthData} from '../../contexts/HealthContext';
 import {useFormContext} from '../../contexts/FormContext';
 import FormContainer from '../../components/FormContainer.tsx';
 import ErrorText from '../../components/ErrorText.tsx';
+import {getIncentives, getPurposes} from '../../utils/restApi.ts';
+import {useFormOptions} from '../../contexts/FormOptionsContext';
 
 export default function DataSelection() {
   const navigation = useNavigation();
   const { form, toggleFormSelected } = useFormContext();
-
+  const { formOptions, setIncentives, setPurposes } = useFormOptions();
   const { healthData } = useHealthData();
+
+  const [loading, setLoading] = useState(true);
   const [steps, setSteps] = useState<number|null>(null);
   const [energyBurned, setEnergyBurned] = useState<number|null>(null);
 
   const [error, setError] = useState<string|null>(null);
 
-  // Transform health data for display
+  // Fetch form options and aggregate health data for display
   useEffect(() => {
-    // total steps
+    // aggregate total steps
     if (healthData.steps && healthData.steps.length > 0) {
       const totalSteps = Math.round(healthData.steps.reduce((acc, entry) => acc + entry.value, 0));
       setSteps(totalSteps);
     }
 
-    // total energy burned
+    // aggregate total energy burned
     if (healthData.energyBurned && healthData.energyBurned.length > 0) {
       const totalEnergyBurned = Math.round(healthData.energyBurned.reduce((acc, entry) => acc + entry.value, 0));
       setEnergyBurned(totalEnergyBurned);
     }
-  });
+
+    const fetchFormOptions = async () => {
+      // fetch incentives
+      const incentivesResponse = await getIncentives();
+      if (incentivesResponse.status !== 200) {
+        setError(incentivesResponse.json.message);
+      }
+      setIncentives(incentivesResponse.json.incentiveTypes);
+
+      // fetch purposes
+      const purposesResponse = await getPurposes();
+      if (purposesResponse.status !== 200) {
+        setError(purposesResponse.json.message);
+      }
+      setPurposes(purposesResponse.json.organizations);
+    }
+    fetchFormOptions().then(() => {
+      setLoading(false);
+      console.log("formOptions", formOptions);
+    });
+
+
+  }, []);
 
   const onSubmit = () => {
     // validate form
