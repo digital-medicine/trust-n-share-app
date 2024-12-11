@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState, useMemo } from 'react';
 import * as Keychain from 'react-native-keychain';
-import Config from 'react-native-config';
+import {postLogin} from '../utils/restApi';
 
 // Create the AuthContext
 const AuthContext = createContext({
@@ -82,25 +82,4 @@ export const AuthProvider = ({ children }) => {
 
 export default AuthContext;
 
-const postLogin = async (email, password) => {
-  const response = await fetch(
-    Config.API_URL + '/auth/signin',
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: email,
-        password: password,
-      }),
-    }
-  );
-  console.log(response);
-  const json = await response.json();
-  return {
-    status: response.status,
-    json,
-  }
-}
+
