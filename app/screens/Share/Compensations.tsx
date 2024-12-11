@@ -14,7 +14,7 @@ export default function Compensations() {
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.header}>Select your compensation</Text>
 
-        {form.incentives.includes('vouchers')
+        {/*{form.incentives.includes('vouchers')
           ? <Box
             title='Vouchers'
             description='Receive vouchers for various stores and services as a token of appreciation.'
@@ -57,7 +57,38 @@ export default function Compensations() {
             button={() => navigation.navigate('Money')}
           />
           : null
-        }
+        }*/}
+
+        <Box
+          title='Vouchers'
+          description='Receive vouchers for various stores and services as a token of appreciation.'
+          button={() => navigation.navigate('Vouchers')}
+        />
+
+        <Box
+          title='Results of the study'
+          description='Get exclusive access to the results of the study you participated in.'
+          button={() => navigation.navigate('StudyResults')}
+        />
+
+        <Box
+          title='Donations for institutes'
+          description='Contribute to educational and research institutes through your participation.'
+          button={null}
+        />
+
+        <Box
+          title='Purpose of data use'
+          description='Understand how your data will be used and for what purposes.'
+          button={() => navigation.navigate('PurposeResults')}
+        />
+
+        <Box
+          title='Financial compensation'
+          description='Receive a final compensation for your valuable participation.'
+          button={() => navigation.navigate('Money')}
+        />
+
       </ScrollView>
     </SafeAreaView>
   )
