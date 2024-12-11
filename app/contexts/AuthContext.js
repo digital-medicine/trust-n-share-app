@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState, useMemo } from 'react';
 import * as Keychain from 'react-native-keychain';
+import Config from 'react-native-config';
 
 // Create the AuthContext
 const AuthContext = createContext({
@@ -38,12 +39,24 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const authContextValue = useMemo(() => ({
-    login: async (email, password) => {
-      // TODO: Login using API
-      const token = 'dummy-auth-token';
+    login: async (username, password) => {
+      const response = await postLogin(username, password);
+      if (response.status !== 200) {
+        throw new Error(response.json.message  || "Login failed");
+      }
 
-      await Keychain.setGenericPassword('HealthNavApp', token);
-      setUserToken(token);
+      // Get tokens
+      const { accessToken, refreshToken } = response.json;
+      if (!accessToken || !refreshToken) {
+        throw new Error("Tokens not received from server");
+      }
+
+      // Store tokens
+      await Keychain.setGenericPassword(
+        'HealthNavApp',
+        JSON.stringify({ accessToken, refreshToken })
+      );
+      setUserToken(accessToken);
     },
     register: async (gender, firstName, lastName, email, password, birthDate) => {
       // TODO: Register using API
@@ -68,3 +81,26 @@ export const AuthProvider = ({ children }) => {
 };
 
 export default AuthContext;
+
+const postLogin = async (email, password) => {
+  const response = await fetch(
+    Config.API_URL + '/auth/signin',
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: email,
+        password: password,
+      }),
+    }
+  );
+  console.log(response);
+  const json = await response.json();
+  return {
+    status: response.status,
+    json,
+  }
+}

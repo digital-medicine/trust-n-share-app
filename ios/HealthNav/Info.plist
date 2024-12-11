@@ -76,5 +76,21 @@
     <string>Read and understand health data.</string>
     <key>NSHealthUpdateUsageDescription</key>
     <string>Share workout data with other apps.</string>
+
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>87.106.82.135</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+                <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+                <key>NSTemporaryExceptionMinimumTLSVersion</key>
+                <string>TLSv1.0</string>
+            </dict>
+        </dict>
+    </dict>
 </dict>
 </plist>

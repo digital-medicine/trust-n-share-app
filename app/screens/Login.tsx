@@ -10,27 +10,26 @@ import PrimaryButton from '../components/PrimaryButton.tsx';
 import FormTextInput from '../components/FormTextInput.tsx';
 import Link from '../components/Link.tsx';
 import {useNavigation} from '@react-navigation/native';
-import {validateEmail} from '../utils/validateEmail.ts';
 
 type errors = {
   form?: string;
-  email?: string;
+  username?: string;
   password?: string;
 }
 
 export default function LoginScreen() {
   const { login } = React.useContext(AuthContext);
 
-  const [email, setEmail] = React.useState('');
+  const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errors, setErrors] = React.useState({} as errors);
 
   const validate = (): boolean => {
     let newErrors = {};
 
-    // Validate email
-    if (!validateEmail(email)) {
-      newErrors = { ...newErrors, email: 'Invalid email address' };
+    // Validate username
+    if (username.length === 0) {
+      newErrors = { ...newErrors, username: 'Username must not be empty' };
     }
 
     // Validate password
@@ -46,7 +45,7 @@ export default function LoginScreen() {
     if (!validate()) return;
 
     try {
-      await login(email, password);
+      await login(username, password);
     } catch (e) {
       console.log(e);
       setErrors({form: e.message});
@@ -63,14 +62,13 @@ export default function LoginScreen() {
         {errors.form ? <Text style={{ color: 'red' }}>{errors.form}</Text> : null}
 
         <FormTextInput
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
           autoCapitalize="none"
         />
 
-        {errors.email ? <Text style={{ color: 'red' }}>{errors.email}</Text> : null}
+        {errors.username ? <Text style={{ color: 'red' }}>{errors.username}</Text> : null}
 
         <FormTextInput
           placeholder="Password"
