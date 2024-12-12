@@ -73,23 +73,28 @@ export default function DataSelection() {
 
   return (
     <FormContainer>
-      <ListItem
-        title={'Steps'}
-        dataDescription={'Total steps'}
-        data={steps}
-        icon={'footsteps'}
-        onPress={() => toggleFormSelected('data', 'steps')}
-        selected={form.data.includes('steps')}
-      />
-
-      <ListItem
-        title={'Energy Burned'}
-        dataDescription={'Total energy burned'}
-        data={energyBurned}
-        icon={'flame'}
-        onPress={() => toggleFormSelected('data', 'energyBurned')}
-        selected={form.data.includes('energyBurned')}
-      />
+      {loading ? (
+        <Text style={styles.loading}>Loading ...</Text>
+      ) : (
+        <>
+          <ListItem
+            title={'Steps'}
+            dataDescription={'Total steps'}
+            data={steps}
+            icon={'footsteps'}
+            onPress={() => toggleFormSelected('data', 'steps')}
+            selected={form.data.includes('steps')}
+          />
+          <ListItem
+            title={'Energy Burned'}
+            dataDescription={'Total energy burned'}
+            data={energyBurned}
+            icon={'flame'}
+            onPress={() => toggleFormSelected('data', 'energyBurned')}
+            selected={form.data.includes('energyBurned')}
+          />
+        </>
+      )}
 
       <ErrorText error={error} />
 
@@ -188,4 +193,9 @@ const styles = StyleSheet.create({
   listItemDataSelected: {
     color: '#fff',
   },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
