@@ -39,15 +39,15 @@ export default function DataSelection() {
     const fetchFormOptions = async () => {
       // fetch incentives
       const incentivesResponse = await getIncentives();
-      if (incentivesResponse.status !== 200) {
-        setError(incentivesResponse.json.message);
+      if (incentivesResponse.error) {
+        setError(incentivesResponse.error);
       }
       setIncentives(incentivesResponse.json.incentiveTypes);
 
       // fetch purposes
       const purposesResponse = await getPurposes();
-      if (purposesResponse.status !== 200) {
-        setError(purposesResponse.json.message);
+      if (purposesResponse.error) {
+        setError(purposesResponse.error);
       }
       setPurposes(purposesResponse.json.organizations);
     }

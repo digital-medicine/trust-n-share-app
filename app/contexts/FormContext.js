@@ -59,8 +59,8 @@ export const FormProvider = ({ children }) => {
   const submitForm = async (userId) => {
     // Fetch user data because it's needed for the form submission
     const userData = await getUser(userId);
-    if (userData.status !== 200) {
-      throw new Error(userData.json.message || "Failed to get user data");
+    if (userData.error) {
+      throw new Error(userData.error);
     }
 
     // Prepare form data
@@ -82,8 +82,8 @@ export const FormProvider = ({ children }) => {
 
     // Submit
     const submitResponse = await putUser(submitForm);
-    if (submitResponse.status !== 200) {
-      throw new Error(submitResponse.json.message || "Failed to submit form data");
+    if (submitResponse.error) {
+      throw new Error(submitResponse.error);
     }
   }
 
