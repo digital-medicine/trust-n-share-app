@@ -63,8 +63,9 @@ async function request(
 
     // Handle non-2xx HTTP statuses
     if (!response.ok) {
-      const errorText = `HTTP error ${response.status}`;
-      console.log(errorText, response.json());
+      const responseJson = await response.json();
+      const errorText = `HTTP error ${response.status}: ${responseJson.message}`;
+      console.log(errorText);
       return {
         status: response.status,
         json: null,
@@ -137,4 +138,8 @@ export async function getUser(userId: string) {
 
 export async function putUser(form: object) {
   return request('/test/user/' + form._id, 'PUT', form);
+}
+
+export async function getConsumers() {
+  return request('/test/consumer', 'GET');
 }

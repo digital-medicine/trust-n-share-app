@@ -3,21 +3,45 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {useFormContext} from '../../contexts/FormContext';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useNavigation} from '@react-navigation/native';
-import {useContext, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
 import AuthContext from '../../contexts/AuthContext';
+import {getConsumers} from '../../utils/restApi.ts';
 
 export default function Consumers() {
-  const {form, toggleFormSelected, submitForm} = useFormContext();
+  const { form, toggleFormSelected, submitForm } = useFormContext();
   const navigation = useNavigation();
-  const {userId} = useContext(AuthContext); // TODO: get from user store when implemented
+  const { userId } = useContext(AuthContext); // TODO: get from user store when implemented
 
-  const [error, setError] = useState<string|null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [consumers, setConsumers] = useState([
+    { title: "Uniklinik Bonn", score: 100, id: "ukb" },
+    { title: "Uniklinik Jena", score: 100, id: "ukj" },
+    { title: "CredibleCorp", score: 50, id: "crediblecorp" },
+    { title: "ShadyCorp", score: 10, id: "shadycorp" },
+  ]); // TODO: initialize with empty array when fetched from API
+
+  useEffect(() => {
+    const fetchConsumers = async () => {
+      // Fetch consumers
+      const response = await getConsumers();
+      console.log("Consumers Response", response);
+      if (response.error) {
+        setError(response.error);
+        return;
+      }
+      setConsumers(response.json.consumers);
+    }
+    fetchConsumers().finally(() => {
+      setLoading(false);
+    });
+  }, []);
 
   function onSubmit() {
-    // validate consumers
     if (form.consumers.length === 0) {
-      setError('Please select at least one consumer.');
+      setError("Please select at least one consumer.");
       return;
     }
 
@@ -27,9 +51,9 @@ export default function Consumers() {
       .then(() => {
         console.log("Submitted!");
         // @ts-ignore
-        navigation.navigate('Congrats');
+        navigation.navigate("Congrats");
       })
-      .catch(e => {
+      .catch((e) => {
         const message = "Could not submit: " + e.message;
         console.error(message);
         setError(message);
@@ -38,33 +62,17 @@ export default function Consumers() {
 
   return (
     <FormContainer>
-      <Item
-        title="Uniklinik Bonn"
-        score={100}
-        onPress={() => toggleFormSelected('consumers', 'ukb')}
-        selected={form.consumers.includes('ukb')}
-      />
-
-      <Item
-        title="Uniklinik Jena"
-        score={100}
-        onPress={() => toggleFormSelected('consumers', 'ukj')}
-        selected={form.consumers.includes('ukj')}
-      />
-
-      <Item
-        title="CredibleCorp"
-        score={50}
-        onPress={() => toggleFormSelected('consumers', 'crediblecorp')}
-        selected={form.consumers.includes('crediblecorp')}
-      />
-
-      <Item
-        title="ShadyCorp"
-        score={10}
-        onPress={() => toggleFormSelected('consumers', 'shadycorp')}
-        selected={form.consumers.includes('shadycorp')}
-      />
+      {loading
+        ? <Text>Loading...</Text>
+        : consumers.map((item) => (
+          <Item
+            key={item.id}
+            title={item.title}
+            score={item.score}
+            onPress={() => toggleFormSelected("consumers", item.id)}
+            selected={form.consumers.includes(item.id)}
+          />
+        ))}
 
       <ErrorText error={error} />
 
