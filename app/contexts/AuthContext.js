@@ -1,10 +1,11 @@
 import React, { createContext, useEffect, useState, useMemo } from 'react';
 import * as Keychain from 'react-native-keychain';
 import {postLogin} from '../utils/restApi';
+import {useTokensStore} from '../stores/tokens';
 
 // Create the AuthContext
 const AuthContext = createContext({
-  login: async (email, password) => {},
+  login: async (username, password) => {},
   register: async (gender, firstName, lastName, email, password, birthDate) => {},
   logout: async () => {},
   isLoading: true,
@@ -16,23 +17,28 @@ const AuthContext = createContext({
 // Define the AuthProvider
 export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [accessToken, setAccessToken] = useState(null);
   const [userId, setUserId] = useState(null);
+  const { accessToken, setAccessToken, refreshToken, setRefreshToken } = useTokensStore();
 
   useEffect(() => {
+    console.log('AuthContext: Fetching credentials');
+
     const fetchCredentials = async () => {
       try {
         const credentials = await Keychain.getGenericPassword();
         if (credentials) {
           console.log('Credentials successfully loaded for user ' + credentials.username);
           setAccessToken(JSON.parse(credentials.password).accessToken);
+          setRefreshToken(JSON.parse(credentials.password).refreshToken);
         } else {
           console.log('No credentials stored');
           setAccessToken(null);
+          setRefreshToken(null);
         }
       } catch (error) {
         console.error("Failed to access Keychain", error);
         setAccessToken(null);
+        setRefreshToken(null);
       } finally {
         setIsLoading(false);
       }
@@ -49,17 +55,22 @@ export const AuthProvider = ({ children }) => {
       }
 
       // Get tokens
-      const { accessToken, refreshToken } = response.json;
-      if (!accessToken || !refreshToken) {
+      const newAccessToken = response.json.accessToken;
+      const newRefreshToken = response.json.refreshToken;
+      if (!newAccessToken || !newRefreshToken) {
         throw new Error("Tokens not received from server");
       }
 
       // Store tokens
       await Keychain.setGenericPassword(
         'HealthNavApp',
-        JSON.stringify({ accessToken, refreshToken })
+        JSON.stringify({
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+        })
       );
-      setAccessToken(accessToken);
+      setAccessToken(newAccessToken);
+      setRefreshToken(newRefreshToken);
 
       // Store user ID
       setUserId(response.json.id);
@@ -76,10 +87,10 @@ export const AuthProvider = ({ children }) => {
       setAccessToken(null);
     },
     isLoading,
-    isLoggedIn: !!accessToken,
+    isLoggedIn: accessToken !== null,
     userId,
     accessToken,
-  }), [accessToken, userId, isLoading]);
+  }), [accessToken, refreshToken, userId, isLoading]);
 
   return (
     <AuthContext.Provider value={authContextValue}>
