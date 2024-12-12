@@ -9,12 +9,15 @@ const AuthContext = createContext({
   logout: async () => {},
   isLoading: true,
   isLoggedIn: false,
+  userId: null,
+  accessToken: null,
 });
 
 // Define the AuthProvider
 export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [userToken, setUserToken] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const fetchCredentials = async () => {
@@ -22,14 +25,14 @@ export const AuthProvider = ({ children }) => {
         const credentials = await Keychain.getGenericPassword();
         if (credentials) {
           console.log('Credentials successfully loaded for user ' + credentials.username);
-          setUserToken(credentials.password);
+          setAccessToken(JSON.parse(credentials.password).accessToken);
         } else {
           console.log('No credentials stored');
-          setUserToken(null);
+          setAccessToken(null);
         }
       } catch (error) {
         console.error("Failed to access Keychain", error);
-        setUserToken(null);
+        setAccessToken(null);
       } finally {
         setIsLoading(false);
       }
@@ -56,22 +59,27 @@ export const AuthProvider = ({ children }) => {
         'HealthNavApp',
         JSON.stringify({ accessToken, refreshToken })
       );
-      setUserToken(accessToken);
+      setAccessToken(accessToken);
+
+      // Store user ID
+      setUserId(response.json.id);
     },
     register: async (gender, firstName, lastName, email, password, birthDate) => {
       // TODO: Register using API
       const token = 'dummy-auth-token';
 
       await Keychain.setGenericPassword('HealthNavApp', token);
-      setUserToken(token);
+      setAccessToken(token);
     },
     logout: async () => {
       await Keychain.resetGenericPassword();
-      setUserToken(null);
+      setAccessToken(null);
     },
     isLoading,
-    isLoggedIn: !!userToken,
-  }), [userToken, isLoading]);
+    isLoggedIn: !!accessToken,
+    userId,
+    accessToken,
+  }), [accessToken, userId, isLoading]);
 
   return (
     <AuthContext.Provider value={authContextValue}>

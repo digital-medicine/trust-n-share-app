@@ -3,12 +3,14 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {useFormContext} from '../../contexts/FormContext';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
+import AuthContext from '../../contexts/AuthContext';
 
 export default function Consumers() {
   const {form, toggleFormSelected, submitForm} = useFormContext();
   const navigation = useNavigation();
+  const {userId, accessToken} = useContext(AuthContext);
 
   const [error, setError] = useState<string|null>(null);
 
@@ -21,9 +23,18 @@ export default function Consumers() {
 
     setError(null);
 
-    submitForm();
-    // @ts-ignore
-    navigation.navigate('Congrats');
+    console.log("Submitting ...", accessToken);
+    submitForm(userId, accessToken)
+      .then(() => {
+        console.log("Submitted!");
+        // @ts-ignore
+        navigation.navigate('Congrats');
+      })
+      .catch(e => {
+        const message = "Could not submit: " + e.message;
+        console.error(message);
+        setError(message);
+      });
   }
 
   return (

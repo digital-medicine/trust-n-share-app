@@ -1,4 +1,6 @@
 import React, { createContext, useState, useContext } from 'react';
+import AuthContext from './AuthContext';
+import {getUser, putUser} from '../utils/restApi';
 
 const FormContext = createContext();
 
@@ -54,10 +56,35 @@ export const FormProvider = ({ children }) => {
     setForm({ ...form, reputation: value });
   }
 
-  const submitForm = () => {
-    console.log(form);
+  const submitForm = async (userId, accessToken) => {
+    // Fetch user data because it's needed for the form submission
+    const userData = await getUser(userId, accessToken);
+    if (userData.status !== 200) {
+      throw new Error(userData.json.message || "Failed to get user data");
+    }
 
-    // TODO
+    // Prepare form data
+    const submitForm = {
+      donorInfo: {
+        privacyLow: form.privacyLevel.lowRisk,
+        privacyHigh: form.privacyLevel.highRisk,
+        privacyNone: form.privacyLevel.incentive,
+        incentiveTypes: form.incentives,
+        reputation: form.reputation,
+        sharing: form.purposes,
+      },
+      _id: userId,
+      username: userData.json.username,
+      email: userData.json.email,
+      active: true,
+      roles: userData.json.roles,
+    }
+
+    // Submit
+    const submitResponse = await putUser(submitForm, accessToken);
+    if (submitResponse.status !== 200) {
+      throw new Error(submitResponse.json.message || "Failed to submit form data");
+    }
   }
 
   return (
