@@ -10,7 +10,7 @@ import AuthContext from '../../contexts/AuthContext';
 export default function Consumers() {
   const {form, toggleFormSelected, submitForm} = useFormContext();
   const navigation = useNavigation();
-  const {userId, accessToken} = useContext(AuthContext);
+  const {userId} = useContext(AuthContext); // TODO: get from user store when implemented
 
   const [error, setError] = useState<string|null>(null);
 
@@ -23,8 +23,7 @@ export default function Consumers() {
 
     setError(null);
 
-    console.log("Submitting ...", accessToken);
-    submitForm(userId, accessToken)
+    submitForm(userId)
       .then(() => {
         console.log("Submitted!");
         // @ts-ignore

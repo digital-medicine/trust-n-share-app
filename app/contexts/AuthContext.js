@@ -89,8 +89,7 @@ export const AuthProvider = ({ children }) => {
     isLoading,
     isLoggedIn: accessToken !== null,
     userId,
-    accessToken,
-  }), [accessToken, refreshToken, userId, isLoading]);
+  }), [accessToken, userId, isLoading]);
 
   return (
     <AuthContext.Provider value={authContextValue}>

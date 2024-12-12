@@ -131,10 +131,10 @@ export async function getPurposes() {
   return request('/test/organizations');
 }
 
-export async function getUser(userId: string, accessToken: string) {
+export async function getUser(userId: string) {
   return request('/test/user/' + userId);
 }
 
-export async function putUser(form: object, accessToken: string) {
+export async function putUser(form: object) {
   return request('/test/user/' + form._id, 'PUT', form);
 }
