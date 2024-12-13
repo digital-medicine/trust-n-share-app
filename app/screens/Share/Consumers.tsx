@@ -32,7 +32,7 @@ export default function Consumers() {
         setError(response.error);
         return;
       }
-      setConsumers(response.json.consumers);
+      setConsumers(response.json.consumer);
     }
     fetchConsumers().finally(() => {
       setLoading(false);
@@ -66,11 +66,11 @@ export default function Consumers() {
         ? <Text>Loading...</Text>
         : consumers.map((item) => (
           <Item
-            key={item.id}
-            title={item.title}
-            score={item.score}
-            onPress={() => toggleFormSelected("consumers", item.id)}
-            selected={form.consumers.includes(item.id)}
+            key={item._id}
+            title={item.username}
+            score={item.consumerInfo.reputation}
+            onPress={() => toggleFormSelected("consumers", item._id)}
+            selected={form.consumers.includes(item._id)}
           />
         ))}
 
@@ -149,20 +149,20 @@ function getTrafficLightColor(score: number): string {
     return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
   }
 
-  // Clamp the score between 0 and 100
-  score = Math.max(0, Math.min(100, score));
+  // Clamp
+  score = Math.max(0, Math.min(10, score));
 
   let red: number;
   let green: number;
   let blue = 0;
 
-  if (score <= 50) {
+  if (score <= 5) {
     // From red to yellow
     red = 255;
-    green = Math.round((score / 50) * 255);
+    green = Math.round((score / 5) * 255);
   } else {
     // From yellow to green
-    red = Math.round(255 - ((score - 50) / 50) * 255);
+    red = Math.round(255 - ((score - 5) / 5) * 255);
     green = 255;
   }
 
