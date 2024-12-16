@@ -2,10 +2,13 @@ import {useEffect, useState} from 'react';
 import {Dimensions, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BarChart} from 'react-native-chart-kit';
-import {useHealthData} from '../contexts/HealthContext';
+import {useHealthStore} from '../stores/health.ts';
 
 export default function HomeScreen() {
-  const { healthData, fetchHealth, healthLoading } = useHealthData();
+  const healthData = useHealthStore(state => state.healthData);
+  const fetchHealth = useHealthStore(state => state.fetchHealth);
+  const healthLoading = useHealthStore(state => state.healthLoading);
+
   const [stepsToday, setStepsToday] = useState<number|null>(null);
   const [energyBurnedToday, setEnergyBurnedToday] = useState<number|null>(null);
   const [stepsChartData, setStepsChartData] = useState<{labels: string[], datasets: {}}>(

@@ -3,19 +3,19 @@ import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useEffect, useState} from 'react';
-import {useHealthData} from '../../contexts/HealthContext';
 import FormContainer from '../../components/FormContainer.tsx';
 import ErrorText from '../../components/ErrorText.tsx';
 import {getIncentives, getPurposes} from '../../utils/restApi.ts';
 import {useFormOptions} from '../../contexts/FormOptionsContext';
 import {useFormStore} from '../../stores/form.ts';
+import {useHealthStore} from '../../stores/health.ts';
 
 export default function DataSelection() {
   const navigation = useNavigation();
   const form = useFormStore(state => state.form);
   const toggleFormSelected = useFormStore(state => state.toggleFormSelected);
   const { formOptions, setIncentives, setPurposes } = useFormOptions();
-  const { healthData } = useHealthData();
+  const healthData = useHealthStore(state => state.healthData);
 
   const [loading, setLoading] = useState(true);
   const [steps, setSteps] = useState<number|null>(null);

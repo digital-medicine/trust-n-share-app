@@ -9,7 +9,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileScreen from './app/screens/Profile/Profile.tsx';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DataSelection from './app/screens/Share/DataSelection.tsx';
-import {HealthDataProvider} from './app/contexts/HealthContext';
 import Purpose from './app/screens/Share/Purpose.tsx';
 import Institutions from './app/screens/Share/Institutions.tsx';
 import Duration from './app/screens/Share/Duration.tsx';
@@ -242,11 +241,9 @@ function App() {
   // );
 
   return (
-      <HealthDataProvider>
         <FormOptionsProvider>
           <Navigation />
         </FormOptionsProvider>
-      </HealthDataProvider>
   );
 }
 
