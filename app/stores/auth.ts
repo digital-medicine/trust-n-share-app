@@ -1,11 +1,27 @@
 import { create } from 'zustand';
 import * as Keychain from 'react-native-keychain';
-import { postLogin } from '../utils/restApi';
+import {getUser, postLogin} from '../utils/restApi';
+
+interface User {
+  donorInfo: {
+    privacyLow: number;
+    privacyHigh: number;
+    privacyNone: number;
+    incentiveTypes: string[];
+    reputation: number;
+    sharing: string[];
+  };
+  _id: string;
+  username: string;
+  email: string;
+  active: boolean;
+  roles: string[];
+}
 
 interface AuthState {
   isLoading: boolean;
   isLoggedIn: boolean;
-  userId: string | null;
+  user: User | null;
   accessToken: string | null;
   setAccessToken: (token: string) => void;
   refreshToken: string | null;
@@ -26,7 +42,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set, get) => ({
   isLoading: true,
   isLoggedIn: false,
-  userId: null,
+  user: null,
   accessToken: null,
   refreshToken: null,
 
@@ -65,8 +81,25 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Update auth store state
     set({
       accessToken: newAccessToken,
-      userId: userId,
       isLoggedIn: true,
+    });
+
+    // Fetch user data in the background
+    getUser(userId).then(response => {
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      set({
+        user: {
+          donorInfo: response.json.donorInfo,
+          _id: response.json._id,
+          username: response.json.username,
+          email: response.json.email,
+          active: response.json.active,
+          roles: response.json.roles,
+        },
+      });
     });
   },
 

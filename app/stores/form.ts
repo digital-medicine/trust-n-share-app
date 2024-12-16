@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { getUser, putUser } from '../utils/restApi';
+import {useAuthStore} from './auth.ts';
 
 interface PrivacyLevel {
   incentive: number;
@@ -26,7 +27,7 @@ interface FormStore {
   setPrivacyHighRisk: (value: number) => void;
   setPrivacyLowRisk: (value: number) => void;
   setReputation: (value: number) => void;
-  submitForm: (userId: string) => Promise<void>;
+  submitForm: () => Promise<void>;
 }
 
 const initialState: FormState = {
@@ -106,14 +107,13 @@ export const useFormStore = create<FormStore>((set, get) => ({
     set({ form: { ...form, reputation: value } });
   },
 
-  submitForm: async (userId: string) => {
+  submitForm: async () => {
     const { form } = get();
 
     // Fetch user data because it's needed for the form submission
-    // TODO: Get from store
-    const userData = await getUser(userId);
-    if (userData.error) {
-      throw new Error(userData.error);
+    const user = useAuthStore.getState().user;
+    if (!user) {
+      throw new Error('User not found');
     }
 
     // Prepare form data
@@ -126,11 +126,11 @@ export const useFormStore = create<FormStore>((set, get) => ({
         reputation: form.reputation,
         sharing: form.purposes,
       },
-      _id: userId,
-      username: userData.json.username,
-      email: userData.json.email,
+      _id: user._id,
+      username: user.username,
+      email: user.email,
       active: true,
-      roles: userData.json.roles,
+      roles: user.roles,
     };
 
     // Submit

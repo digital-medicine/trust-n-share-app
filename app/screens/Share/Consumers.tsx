@@ -13,7 +13,6 @@ export default function Consumers() {
   const toggleFormSelected = useFormStore(state => state.toggleFormSelected);
   const submitForm = useFormStore(state => state.submitForm);
   const navigation = useNavigation();
-  const userId = useAuthStore(state => state.userId);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +48,7 @@ export default function Consumers() {
 
     setError(null);
 
-    submitForm(userId)
+    submitForm()
       .then(() => {
         console.log("Submitted!");
         // @ts-ignore
