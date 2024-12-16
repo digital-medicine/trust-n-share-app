@@ -1,5 +1,4 @@
 import {useNavigation} from '@react-navigation/native';
-import {useFormContext} from '../../contexts/FormContext';
 import FormContainer from '../../components/FormContainer.tsx';
 import {StyleSheet, Text, View} from 'react-native';
 import FormTextInput from '../../components/FormTextInput.tsx';
@@ -8,15 +7,15 @@ import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useEffect, useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
 import {getPrivacyLowRisk, getPrivacyHighRisk} from '../../utils/restApi.ts';
+import {useFormStore} from '../../stores/form.ts';
 
 export default function PrivacyLevel() {
   const navigation = useNavigation();
-  const {
-    form,
-    setPrivacyIncentive,
-    setPrivacyHighRisk,
-    setPrivacyLowRisk,
-  } = useFormContext();
+
+  const form = useFormStore(state => state.form);
+  const setPrivacyIncentive = useFormStore(state => state.setPrivacyIncentive);
+  const setPrivacyHighRisk = useFormStore(state => state.setPrivacyHighRisk);
+  const setPrivacyLowRisk = useFormStore(state => state.setPrivacyLowRisk);
 
   const [privacyHighRiskBounds, setPrivacyHighRiskBounds] = useState<{min: number, max: number}|null>(null);
   const [privacyLowRiskBounds, setPrivacyLowRiskBounds] = useState<{min: number, max: number}|null>(null);

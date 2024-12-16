@@ -3,7 +3,6 @@ import {View, Text} from 'react-native';
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './app/screens/Login.tsx';
-import {LoginContext, useIsLoggedIn, useIsLoggedOut} from './app/contexts/LoginContext.js';
 import HomeScreen from './app/screens/Home.tsx';
 import RegisterScreen from './app/screens/Register.tsx';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -11,7 +10,6 @@ import ProfileScreen from './app/screens/Profile/Profile.tsx';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DataSelection from './app/screens/Share/DataSelection.tsx';
 import {HealthDataProvider} from './app/contexts/HealthContext';
-import {FormProvider} from './app/contexts/FormContext';
 import Purpose from './app/screens/Share/Purpose.tsx';
 import Institutions from './app/screens/Share/Institutions.tsx';
 import Duration from './app/screens/Share/Duration.tsx';
@@ -244,15 +242,11 @@ function App() {
   // );
 
   return (
-    <LoginContext.Provider value={isLoggedIn}>
       <HealthDataProvider>
         <FormOptionsProvider>
-          <FormProvider>
-            <Navigation />
-          </FormProvider>
+          <Navigation />
         </FormOptionsProvider>
       </HealthDataProvider>
-    </LoginContext.Provider>
   );
 }
 

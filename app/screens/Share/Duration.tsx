@@ -1,14 +1,15 @@
 import {useNavigation} from '@react-navigation/native';
-import {useFormContext} from '../../contexts/FormContext';
 import FormContainer from '../../components/FormContainer.tsx';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import FormTextInput from '../../components/FormTextInput.tsx';
 import {StyleSheet, Text, View} from 'react-native';
 import {useState} from 'react';
+import {useFormStore} from '../../stores/form.ts';
 
 export default function Duration() {
   const navigation = useNavigation();
-  const { form, setDuration } = useFormContext();
+  const form = useFormStore(state => state.form);
+  const setDuration = useFormStore(state => state.setDuration);
 
   const [error, setError] = useState<string|null>(null);
 

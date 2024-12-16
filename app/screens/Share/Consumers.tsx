@@ -1,15 +1,17 @@
 import FormContainer from '../../components/FormContainer.tsx';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {useFormContext} from '../../contexts/FormContext';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
 import {getConsumers} from '../../utils/restApi.ts';
 import {useAuthStore} from '../../stores/auth.ts';
+import {useFormStore} from '../../stores/form.ts';
 
 export default function Consumers() {
-  const { form, toggleFormSelected, submitForm } = useFormContext();
+  const form = useFormStore(state => state.form);
+  const toggleFormSelected = useFormStore(state => state.toggleFormSelected);
+  const submitForm = useFormStore(state => state.submitForm);
   const navigation = useNavigation();
   const userId = useAuthStore(state => state.userId);
 

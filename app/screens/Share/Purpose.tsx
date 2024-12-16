@@ -1,17 +1,17 @@
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import FormContainer from '../../components/FormContainer.tsx';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
-import {useFormContext} from '../../contexts/FormContext';
 import {useNavigation} from '@react-navigation/native';
 import FormListItem from '../../components/FormListItem.tsx';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
 import {useFormOptions} from '../../contexts/FormOptionsContext';
+import {useFormStore} from '../../stores/form.ts';
 
 
 export default function Purpose()  {
   const navigation = useNavigation();
-  const { form, toggleFormSelected } = useFormContext();
+  const form = useFormStore(state => state.form);
+  const toggleFormSelected = useFormStore(state => state.toggleFormSelected);
   const { formOptions } = useFormOptions();
 
   const [error, setError] = useState<string|null>(null);

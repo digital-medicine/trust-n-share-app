@@ -2,12 +2,12 @@ import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import React from 'react';
-import {useFormContext} from '../../contexts/FormContext';
+import {useFormStore} from '../../stores/form.ts';
 
 
 export default function Compensations() {
   const navigation = useNavigation();
-  const { form } = useFormContext();
+  const form = useFormStore(state => state.form);
 
   return (
     <SafeAreaView>

@@ -1,17 +1,15 @@
 import FormContainer from '../../components/FormContainer.tsx';
 import {useNavigation} from '@react-navigation/native';
-import {useFormContext} from '../../contexts/FormContext';
 import {StyleSheet, Text, View} from 'react-native';
 import Slider from '@react-native-community/slider';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
+import {useFormStore} from '../../stores/form.ts';
 
 
 export default function Reputation() {
   const navigation = useNavigation();
-  const {
-    form,
-    setReputation,
-  } = useFormContext();
+  const form = useFormStore(state => state.form);
+  const setReputation = useFormStore(state => state.setReputation);
 
   return (
     <FormContainer>

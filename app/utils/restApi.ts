@@ -1,5 +1,6 @@
 import Config from 'react-native-config';
 import {useTokensStore} from '../stores/tokens';
+import {useAuthStore} from '../stores/auth.ts';
 
 async function request(
   url: string,
@@ -9,6 +10,7 @@ async function request(
   console.log("getWebApi", url);
 
   const { accessToken, refreshToken, setAccessToken } = useTokensStore.getState();
+  const { logout } = useAuthStore.getState();
 
   try {
     // Send the request
@@ -54,8 +56,7 @@ async function request(
       } else {
         // Handle expired refresh token
         console.error("Failed to refresh token: " + refreshJson.message);
-
-        // TODO
+        await logout();
       }
     }
 

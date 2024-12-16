@@ -1,16 +1,17 @@
 import { useNavigation } from '@react-navigation/native';
 import FormContainer from '../../components/FormContainer.tsx';
 import FormListItem from '../../components/FormListItem.tsx';
-import {useFormContext} from '../../contexts/FormContext';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
 import {useFormOptions} from '../../contexts/FormOptionsContext';
+import {useFormStore} from '../../stores/form.ts';
 
 
 export default function Incentives() {
   const navigation = useNavigation();
-  const { form, toggleFormSelected } = useFormContext();
+  const form = useFormStore(state => state.form);
+  const toggleFormSelected = useFormStore(state => state.toggleFormSelected);
   const { formOptions } = useFormOptions();
 
   const [error, setError] = useState<string|null>(null);

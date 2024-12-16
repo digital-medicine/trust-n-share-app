@@ -4,15 +4,16 @@ import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useEffect, useState} from 'react';
 import {useHealthData} from '../../contexts/HealthContext';
-import {useFormContext} from '../../contexts/FormContext';
 import FormContainer from '../../components/FormContainer.tsx';
 import ErrorText from '../../components/ErrorText.tsx';
 import {getIncentives, getPurposes} from '../../utils/restApi.ts';
 import {useFormOptions} from '../../contexts/FormOptionsContext';
+import {useFormStore} from '../../stores/form.ts';
 
 export default function DataSelection() {
   const navigation = useNavigation();
-  const { form, toggleFormSelected } = useFormContext();
+  const form = useFormStore(state => state.form);
+  const toggleFormSelected = useFormStore(state => state.toggleFormSelected);
   const { formOptions, setIncentives, setPurposes } = useFormOptions();
   const { healthData } = useHealthData();
 
