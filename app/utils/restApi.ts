@@ -52,12 +52,10 @@ async function request(
           body: body ? JSON.stringify(body) : null,
         });
       } else {
+        // Handle expired refresh token
         console.error("Failed to refresh token: " + refreshJson.message);
-        return {
-          status: refreshResponse.status,
-          json: null,
-          error: refreshJson.message,
-        };
+
+        // TODO
       }
     }
 
@@ -142,4 +140,51 @@ export async function putUser(form: object) {
 
 export async function getConsumers() {
   return request('/test/consumer', 'GET');
+}
+
+export async function getPrivacyHighRisk(privacyNone: number) {
+  console.log("getPrivacyHighRisk1", privacyNone);
+  const response = await fetch(
+    Config.PRIVACY_API_URL + '/privacyLow',
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        privacyNone,
+      }),
+    }
+  );
+  console.log("getPrivacyHighRisk2", response);
+  const json = await response.json();
+  console.log("getPrivacyHighRisk3", json);
+  return {
+    status: response.status,
+    json,
+  }
+}
+
+export async function getPrivacyLowRisk(privacyNone: number, privacyLow: number) {
+  console.log("getPrivacyLowRisk", privacyNone, privacyLow);
+  const response = await fetch(
+    Config.PRIVACY_API_URL + '/privacyHigh',
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        privacyNone,
+        privacyLow,
+      }),
+    }
+  );
+  const json = await response.json();
+  return {
+    status: response.status,
+    json,
+  }
 }

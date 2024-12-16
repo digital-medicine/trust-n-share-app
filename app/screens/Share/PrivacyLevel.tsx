@@ -5,8 +5,9 @@ import {StyleSheet, Text, View} from 'react-native';
 import FormTextInput from '../../components/FormTextInput.tsx';
 import Slider from '@react-native-community/slider';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
+import {getPrivacyLowRisk, getPrivacyHighRisk} from '../../utils/restApi.ts';
 
 export default function PrivacyLevel() {
   const navigation = useNavigation();
@@ -17,24 +18,70 @@ export default function PrivacyLevel() {
     setPrivacyLowRisk,
   } = useFormContext();
 
+  const [privacyHighRiskBounds, setPrivacyHighRiskBounds] = useState<{min: number, max: number}|null>(null);
+  const [privacyLowRiskBounds, setPrivacyLowRiskBounds] = useState<{min: number, max: number}|null>(null);
+  const [incentiveError, setIncentiveError] = useState<string|null>(null);
   const [error, setError] = useState<string|null>(null);
+
+  useEffect(() => {
+    fetchPrivacyHighRiskBounds();
+    fetchPrivacyLowRiskBounds();
+  }, []);
+
+  const fetchPrivacyHighRiskBounds = () => {
+    getPrivacyHighRisk(form.privacyLevel.incentive)
+      .then(response => {
+        if (response.status !== 200) {
+          setError(response.json.message);
+          return;
+        }
+
+        console.log(response.json);
+        setPrivacyHighRiskBounds(response.json);
+      })
+      .catch(e => {
+        console.error("getPrivacyHighRisk error", e.toString());
+        setError(e.message);
+      });
+  }
+
+  const fetchPrivacyLowRiskBounds = () => {
+    getPrivacyLowRisk(form.privacyLevel.incentive, form.privacyLevel.lowRisk)
+      .then(response => {
+        if (response.status !== 200) {
+          setError(response.json.message);
+          return;
+        }
+
+        console.log(response.json);
+        setPrivacyLowRiskBounds(response.json);
+      })
+      .catch(e => {
+        console.error(e);
+        setError(e.message);
+      });
+  }
 
   const onIncentiveChange = (incentive) => {
     validateIncentive(incentive);
+
+    fetchPrivacyHighRiskBounds();
+    fetchPrivacyLowRiskBounds();
+
     setPrivacyIncentive(incentive);
-  }
+  };
 
   const validateIncentive = (incentive: number) => {
     if (isNaN(incentive)) {
-      setError('Incentive must be a number');
+      setIncentiveError('Incentive must be a number');
       return false;
     }
     if (incentive < 0) {
-      setError('Incentive must be positive');
+      setIncentiveError('Incentive must be positive');
       return false;
     }
 
-    setError(null);
+    setIncentiveError(null);
     return true;
   }
 
@@ -47,6 +94,8 @@ export default function PrivacyLevel() {
 
   return (
     <FormContainer>
+      <ErrorText error={error} />
+
       {/* Incentives */}
       <View style={styles.box}>
         <Text style={styles.boxHeader}>Incentives for original data</Text>
@@ -69,7 +118,7 @@ export default function PrivacyLevel() {
         </View>
 
         {/*{error && <Text style={{color: 'red', textAlign: 'center'}}>{error}</Text>}*/}
-        <ErrorText error={error} />
+        <ErrorText error={incentiveError} />
       </View>
 
       {/* High Risk */}
@@ -85,14 +134,17 @@ export default function PrivacyLevel() {
           {form.privacyLevel.highRisk} %
         </Text>
 
-        <Slider
-          style={{ width: '100%' }}
-          minimumValue={0}
-          maximumValue={100}
-          step={1}
-          value={form.privacyLevel.highRisk}
-          onValueChange={setPrivacyHighRisk}
-        />
+        {privacyHighRiskBounds !== null
+          ? <Slider
+            style={{ width: '100%' }}
+            minimumValue={privacyHighRiskBounds.min}
+            maximumValue={privacyHighRiskBounds.max}
+            value={form.privacyLevel.highRisk}
+            onValueChange={setPrivacyHighRisk}
+          />
+
+          : <Text style={styles.loading}>Loading ...</Text>
+        }
       </View>
 
       {/* Low Risk */}
@@ -108,14 +160,17 @@ export default function PrivacyLevel() {
           {form.privacyLevel.lowRisk} %
         </Text>
 
-        <Slider
-          style={{ width: '100%' }}
-          minimumValue={0}
-          maximumValue={100}
-          step={1}
-          value={form.privacyLevel.lowRisk}
-          onValueChange={setPrivacyLowRisk}
-        />
+        {privacyLowRiskBounds !== null
+          ? <Slider
+            style={{ width: '100%' }}
+            minimumValue={privacyLowRiskBounds.min}
+            maximumValue={privacyLowRiskBounds.max}
+            value={form.privacyLevel.lowRisk}
+            onValueChange={setPrivacyLowRisk}
+          />
+
+          : <Text style={styles.loading}>Loading ...</Text>
+        }
       </View>
 
       <PrimaryButton onPress={onSubmit} title={'Next'} />
@@ -168,5 +223,9 @@ const styles = StyleSheet.create({
   riskText: {
     fontSize: 20,
     textAlign: 'center',
+  },
+  loading: {
+    alignSelf: 'center',
+    color: '#5e5e5e',
   }
 });
