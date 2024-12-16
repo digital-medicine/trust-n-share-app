@@ -3,14 +3,10 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useAuthStore} from '../../stores/auth.ts';
 
 export default function ProfileScreen() {
-  const infoItems = [
-    { title: 'Name', data: 'John Doe' },
-    { title: 'Date of birth', data: '2000-01-01' },
-    { title: 'Participated studies', data: '4' },
-    { title: 'Money earned', data: '7,50 €' },
-  ];
+  const user = useAuthStore(state => state.user);
 
   const transactions = [
     { id: 1, name: 'Rewe', date: '2024-11-05' },
@@ -24,9 +20,8 @@ export default function ProfileScreen() {
       <View style={styles.container}>
         <Section header="Info">
           <InfoBox>
-            {infoItems.map((item, index) => (
-              <InfoItem key={index} title={item.title} data={item.data} />
-            ))}
+            <InfoItem title="Name" data={user?.username} />
+            <InfoItem title="Email" data={user?.email} />
           </InfoBox>
         </Section>
 
@@ -82,11 +77,11 @@ const infoBoxStyles = StyleSheet.create({
   },
 });
 
-function InfoItem({ title, data }) {
+function InfoItem({ title, data }: { title: string; data: string|undefined }) {
   return (
     <View style={infoItemStyles.infoItem}>
       <Text style={infoItemStyles.infoItemTitle}>{title}</Text>
-      <Text style={infoItemStyles.infoItemData}>{data}</Text>
+      <Text style={infoItemStyles.infoItemData}>{data ?? 'No data'}</Text>
     </View>
   );
 }
