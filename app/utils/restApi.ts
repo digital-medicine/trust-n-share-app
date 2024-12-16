@@ -1,5 +1,4 @@
 import Config from 'react-native-config';
-import {useTokensStore} from '../stores/tokens';
 import {useAuthStore} from '../stores/auth.ts';
 
 async function request(
@@ -9,7 +8,7 @@ async function request(
 ): Promise<{ status: number; json: object | null; error: string | null }> {
   console.log("getWebApi", url);
 
-  const { accessToken, refreshToken, setAccessToken } = useTokensStore.getState();
+  const { accessToken, refreshToken, setAccessToken } = useAuthStore.getState();
   const { logout } = useAuthStore.getState();
 
   try {

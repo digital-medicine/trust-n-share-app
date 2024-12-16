@@ -1,13 +1,15 @@
 import { create } from 'zustand';
 import * as Keychain from 'react-native-keychain';
 import { postLogin } from '../utils/restApi';
-import { useTokensStore } from './tokens';
 
 interface AuthState {
   isLoading: boolean;
   isLoggedIn: boolean;
   userId: string | null;
   accessToken: string | null;
+  setAccessToken: (token: string) => void;
+  refreshToken: string | null;
+  setRefreshToken: (token: string) => void;
   login: (username: string, password: string) => Promise<void>;
   register: (
     gender: string,
@@ -26,9 +28,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoggedIn: false,
   userId: null,
   accessToken: null,
+  refreshToken: null,
+
+  setAccessToken: (token: string) => {
+    set({ accessToken: token });
+  },
+
+  setRefreshToken: (token: string) => {
+    set({ refreshToken: token });
+  },
 
   login: async (username: string, password: string) => {
-    const { setAccessToken, setRefreshToken } = useTokensStore.getState();
     const response = await postLogin(username, password);
 
     if (response.status !== 200) {
@@ -52,10 +62,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       })
     );
 
-    // Update tokens in zustand token store
-    setAccessToken(newAccessToken);
-    setRefreshToken(newRefreshToken);
-
     // Update auth store state
     set({
       accessToken: newAccessToken,
@@ -72,16 +78,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     password: string,
     birthDate: string
   ) => {
-    const { setAccessToken } = useTokensStore.getState();
     // TODO: Implement actual register API call
     // Assuming a dummy token returned from a registration endpoint
     const token = 'dummy-auth-token';
 
     // Store the token
     await Keychain.setGenericPassword('HealthNavApp', token);
-    setAccessToken(token);
 
-    // Update auth store state
     set({
       accessToken: token,
       isLoggedIn: true,
@@ -89,12 +92,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: async () => {
-    const { setAccessToken, setRefreshToken } = useTokensStore.getState();
-    await Keychain.resetGenericPassword();
-    setAccessToken(null);
-    setRefreshToken(null);
+    console.log("Logging out");
 
-    // Update auth store state
+    await Keychain.resetGenericPassword();
+
     set({
       accessToken: null,
       userId: null,
@@ -103,25 +104,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   fetchCredentials: async () => {
-    const { setAccessToken, setRefreshToken } = useTokensStore.getState();
-
     try {
       const credentials = await Keychain.getGenericPassword();
       if (credentials) {
         const storedData = JSON.parse(credentials.password);
-        setAccessToken(storedData.accessToken);
-        setRefreshToken(storedData.refreshToken);
 
         set({
           accessToken: storedData.accessToken,
+          refreshToken: storedData.refreshToken,
           isLoggedIn: storedData.accessToken !== null,
           isLoading: false,
         });
       } else {
         // No credentials found
-        setAccessToken(null);
-        setRefreshToken(null);
-
         set({
           accessToken: null,
           isLoggedIn: false,
@@ -130,11 +125,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
     } catch (error) {
       console.error("Failed to access Keychain", error);
-      setAccessToken(null);
-      setRefreshToken(null);
-
       set({
         accessToken: null,
+        refreshToken: null,
         isLoggedIn: false,
         isLoading: false,
       });
