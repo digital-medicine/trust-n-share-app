@@ -143,7 +143,8 @@ export async function getConsumers() {
 }
 
 export async function getPrivacyHighRisk(privacyNone: number) {
-  console.log("getPrivacyHighRisk1", privacyNone);
+  console.log("getPrivacyHighRisk", privacyNone);
+
   const response = await fetch(
     Config.PRIVACY_API_URL + '/privacyLow',
     {
@@ -152,14 +153,9 @@ export async function getPrivacyHighRisk(privacyNone: number) {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        privacyNone,
-      }),
-    }
-  );
-  console.log("getPrivacyHighRisk2", response);
+      body: JSON.stringify({ privacyNone: 50 }),
+    });
   const json = await response.json();
-  console.log("getPrivacyHighRisk3", json);
   return {
     status: response.status,
     json,
@@ -168,6 +164,7 @@ export async function getPrivacyHighRisk(privacyNone: number) {
 
 export async function getPrivacyLowRisk(privacyNone: number, privacyLow: number) {
   console.log("getPrivacyLowRisk", privacyNone, privacyLow);
+
   const response = await fetch(
     Config.PRIVACY_API_URL + '/privacyHigh',
     {
@@ -176,12 +173,8 @@ export async function getPrivacyLowRisk(privacyNone: number, privacyLow: number)
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        privacyNone,
-        privacyLow,
-      }),
-    }
-  );
+      body: JSON.stringify({ privacyNone: 50, privacyLow: 50 }),
+    });
   const json = await response.json();
   return {
     status: response.status,

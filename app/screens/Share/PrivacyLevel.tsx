@@ -35,8 +35,12 @@ export default function PrivacyLevel() {
           return;
         }
 
-        console.log(response.json);
-        setPrivacyHighRiskBounds(response.json);
+        const min = response.json.data[0];
+        const max = response.json.data[1];
+        setPrivacyHighRiskBounds({
+          min,
+          max,
+        });
       })
       .catch(e => {
         console.error("getPrivacyHighRisk error", e.toString());
@@ -52,8 +56,12 @@ export default function PrivacyLevel() {
           return;
         }
 
-        console.log(response.json);
-        setPrivacyLowRiskBounds(response.json);
+        const min = response.json.data[0];
+        const max = response.json.data[1];
+        setPrivacyLowRiskBounds({
+            min,
+            max,
+          });
       })
       .catch(e => {
         console.error(e);
@@ -64,10 +72,10 @@ export default function PrivacyLevel() {
   const onIncentiveChange = (incentive) => {
     validateIncentive(incentive);
 
+    setPrivacyIncentive(incentive);
+
     fetchPrivacyHighRiskBounds();
     fetchPrivacyLowRiskBounds();
-
-    setPrivacyIncentive(incentive);
   };
 
   const validateIncentive = (incentive: number) => {
