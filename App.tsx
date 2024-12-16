@@ -21,7 +21,6 @@ import Congrats from './app/screens/Share/Congrats.tsx';
 import Compensations from './app/screens/Share/Compensations.tsx';
 import LogoutButton from './app/components/LogoutButton.tsx';
 import Transaction from './app/screens/Profile/Transaction.tsx';
-import {FormOptionsProvider} from './app/contexts/FormOptionsContext';
 import {useAuthStore} from './app/stores/auth.ts';
 
 function SplashScreen() {
@@ -236,14 +235,8 @@ function App() {
     );
   }
 
-  // return (
-  //   <Navigation />
-  // );
-
   return (
-        <FormOptionsProvider>
-          <Navigation />
-        </FormOptionsProvider>
+    <Navigation />
   );
 }
 

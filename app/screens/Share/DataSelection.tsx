@@ -6,16 +6,17 @@ import {useEffect, useState} from 'react';
 import FormContainer from '../../components/FormContainer.tsx';
 import ErrorText from '../../components/ErrorText.tsx';
 import {getIncentives, getPurposes} from '../../utils/restApi.ts';
-import {useFormOptions} from '../../contexts/FormOptionsContext';
 import {useFormStore} from '../../stores/form.ts';
 import {useHealthStore} from '../../stores/health.ts';
+import {useFormOptionsStore} from '../../stores/formOptions.ts';
 
 export default function DataSelection() {
   const navigation = useNavigation();
   const form = useFormStore(state => state.form);
   const toggleFormSelected = useFormStore(state => state.toggleFormSelected);
-  const { formOptions, setIncentives, setPurposes } = useFormOptions();
   const healthData = useHealthStore(state => state.healthData);
+  const setIncentives = useFormOptionsStore(state => state.setIncentives);
+  const setPurposes = useFormOptionsStore(state => state.setPurposes);
 
   const [loading, setLoading] = useState(true);
   const [steps, setSteps] = useState<number|null>(null);
