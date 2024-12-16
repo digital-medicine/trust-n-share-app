@@ -1,9 +1,9 @@
 import { Button, Alert } from 'react-native';
 import React from 'react';
-import AuthContext from '../contexts/AuthContext';
+import {useAuthStore} from '../stores/auth.ts';
 
 export default function LogoutButton() {
-  const { logout } = React.useContext(AuthContext);
+  const logout = useAuthStore(state => state.logout);
 
   const handleLogout = () => {
     Alert.alert(

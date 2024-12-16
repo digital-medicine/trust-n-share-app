@@ -1,4 +1,3 @@
-import AuthContext from '../contexts/AuthContext';
 import React from 'react';
 import {
   Text,
@@ -10,6 +9,7 @@ import PrimaryButton from '../components/PrimaryButton.tsx';
 import FormTextInput from '../components/FormTextInput.tsx';
 import Link from '../components/Link.tsx';
 import {useNavigation} from '@react-navigation/native';
+import {useAuthStore} from '../stores/auth.ts';
 
 type errors = {
   form?: string;
@@ -18,7 +18,7 @@ type errors = {
 }
 
 export default function LoginScreen() {
-  const { login } = React.useContext(AuthContext);
+  const login = useAuthStore(state => state.login);
 
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');

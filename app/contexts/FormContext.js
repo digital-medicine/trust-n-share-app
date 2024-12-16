@@ -1,5 +1,4 @@
 import React, { createContext, useState, useContext } from 'react';
-import AuthContext from './AuthContext';
 import {getUser, putUser} from '../utils/restApi';
 
 const FormContext = createContext();

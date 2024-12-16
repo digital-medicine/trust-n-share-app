@@ -3,10 +3,10 @@ import {useContext, useState} from 'react';
 import FormTextInput from '../components/FormTextInput.tsx';
 import RNPickerSelect from 'react-native-picker-select';
 import PrimaryButton from '../components/PrimaryButton.tsx';
-import AuthContext from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {validateEmail} from '../utils/validateEmail.ts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useAuthStore} from '../stores/auth.ts';
 
 type errors = {
   form?: string;
@@ -20,7 +20,7 @@ type errors = {
 }
 
 export default function RegisterScreen() {
-  const { register } = useContext(AuthContext);
+  const register = useAuthStore(state => state.register);
 
   const [gender, setGender]  = useState(null);
   const [firstName, setFirstName] = useState('');

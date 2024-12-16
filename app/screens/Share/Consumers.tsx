@@ -3,15 +3,15 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {useFormContext} from '../../contexts/FormContext';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useNavigation} from '@react-navigation/native';
-import {useContext, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
-import AuthContext from '../../contexts/AuthContext';
 import {getConsumers} from '../../utils/restApi.ts';
+import {useAuthStore} from '../../stores/auth.ts';
 
 export default function Consumers() {
   const { form, toggleFormSelected, submitForm } = useFormContext();
   const navigation = useNavigation();
-  const { userId } = useContext(AuthContext); // TODO: get from user store when implemented
+  const userId = useAuthStore(state => state.userId);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

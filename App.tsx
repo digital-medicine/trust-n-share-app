@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React, {useContext, useEffect} from 'react';
 import {View, Text} from 'react-native';
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AuthContext, { AuthProvider } from './app/contexts/AuthContext.js';
 import LoginScreen from './app/screens/Login.tsx';
 import {LoginContext, useIsLoggedIn, useIsLoggedOut} from './app/contexts/LoginContext.js';
 import HomeScreen from './app/screens/Home.tsx';
@@ -26,6 +25,7 @@ import Compensations from './app/screens/Share/Compensations.tsx';
 import LogoutButton from './app/components/LogoutButton.tsx';
 import Transaction from './app/screens/Profile/Transaction.tsx';
 import {FormOptionsProvider} from './app/contexts/FormOptionsContext';
+import {useAuthStore} from './app/stores/auth.ts';
 
 function SplashScreen() {
   return (
@@ -196,7 +196,7 @@ const MainTabs = createBottomTabNavigator({
 const RootStack = createNativeStackNavigator({
   groups: {
     Main: {
-      if: useIsLoggedIn,
+      if: () => useAuthStore((state) => state.isLoggedIn),
       screens: {
         MainTabs: {
           screen: MainTabs,
@@ -207,7 +207,7 @@ const RootStack = createNativeStackNavigator({
       },
     },
     Auth: {
-      if: useIsLoggedOut,
+      if: () => !useAuthStore((state) => state.isLoggedIn),
       screens: {
         Login: {
           screen: LoginScreen,
@@ -223,12 +223,25 @@ const RootStack = createNativeStackNavigator({
 
 const Navigation = createStaticNavigation(RootStack);
 
-function AppContent() {
-  const { isLoading, isLoggedIn } = useContext(AuthContext);
+function App() {
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const fetchCredentials = useAuthStore(state => state.fetchCredentials);
+
+  useEffect(() => {
+    // Load credentials on app startup
+    fetchCredentials();
+  }, [fetchCredentials]);
 
   if (isLoading) {
-    return <SplashScreen />;
+    return (
+      <SplashScreen />
+    );
   }
+
+  // return (
+  //   <Navigation />
+  // );
 
   return (
     <LoginContext.Provider value={isLoggedIn}>
@@ -240,14 +253,6 @@ function AppContent() {
         </FormOptionsProvider>
       </HealthDataProvider>
     </LoginContext.Provider>
-  );
-}
-
-function App() {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
   );
 }
 
