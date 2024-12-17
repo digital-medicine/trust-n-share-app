@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { getUser, putUser } from '../utils/restApi';
 import {useAuthStore} from './auth.ts';
+import {useUserStore} from './user.ts';
 
 interface PrivacyLevel {
   incentive: number;
@@ -113,10 +114,9 @@ export const useFormStore = create<FormStore>((set) => ({
     })),
 
   submitForm: async () => {
-    // Accessing state outside set since we removed `get`
     const { form } = useFormStore.getState();
 
-    const user = useAuthStore.getState().user;
+    const user = useUserStore.getState().user;
     if (!user) {
       throw new Error('User not found');
     }

@@ -6,7 +6,7 @@ async function request(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
   body: object | null = null,
 ): Promise<{ status: number; json: object | null; error: string | null }> {
-  console.log("getWebApi", url);
+  console.log("web api", method, url);
 
   const { accessToken, refreshToken, setAccessToken } = useAuthStore.getState();
   const { logout } = useAuthStore.getState();

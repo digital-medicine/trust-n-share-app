@@ -3,10 +3,10 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useAuthStore} from '../../stores/auth.ts';
+import {useUserStore} from '../../stores/user.ts';
 
 export default function ProfileScreen() {
-  const user = useAuthStore(state => state.user);
+  const user = useUserStore(state => state.user);
 
   const transactions = [
     { id: 1, name: 'Rewe', date: '2024-11-05' },
@@ -20,8 +20,8 @@ export default function ProfileScreen() {
       <View style={styles.container}>
         <Section header="Info">
           <InfoBox>
-            <InfoItem title="Name" data={user?.username} />
-            <InfoItem title="Email" data={user?.email} />
+            <InfoItem title="Name" data={user.username} />
+            <InfoItem title="Email" data={user.email} />
           </InfoBox>
         </Section>
 

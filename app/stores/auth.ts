@@ -1,27 +1,11 @@
 import { create } from 'zustand';
 import * as Keychain from 'react-native-keychain';
 import {getUser, postLogin} from '../utils/restApi';
-
-interface User {
-  donorInfo: {
-    privacyLow: number;
-    privacyHigh: number;
-    privacyNone: number;
-    incentiveTypes: string[];
-    reputation: number;
-    sharing: string[];
-  };
-  _id: string;
-  username: string;
-  email: string;
-  active: boolean;
-  roles: string[];
-}
+import {updateUser} from './user.ts';
 
 interface AuthState {
   isLoading: boolean;
   isLoggedIn: boolean;
-  user: User | null;
   accessToken: string | null;
   setAccessToken: (token: string) => void;
   refreshToken: string | null;
@@ -42,7 +26,6 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set, get) => ({
   isLoading: true,
   isLoggedIn: false,
-  user: null,
   accessToken: null,
   refreshToken: null,
 
@@ -73,6 +56,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     await Keychain.setGenericPassword(
       'HealthNavApp',
       JSON.stringify({
+        userId,
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
       })
@@ -81,26 +65,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Update auth store state
     set({
       accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
       isLoggedIn: true,
     });
 
-    // Fetch user data in the background
-    getUser(userId).then(response => {
-      if (response.error) {
-        throw new Error(response.error);
-      }
-
-      set({
-        user: {
-          donorInfo: response.json.donorInfo,
-          _id: response.json._id,
-          username: response.json.username,
-          email: response.json.email,
-          active: response.json.active,
-          roles: response.json.roles,
-        },
-      });
-    });
+    updateUser(userId).then(() => {});
   },
 
   register: async (
@@ -111,17 +80,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     password: string,
     birthDate: string
   ) => {
-    // TODO: Implement actual register API call
-    // Assuming a dummy token returned from a registration endpoint
-    const token = 'dummy-auth-token';
-
-    // Store the token
-    await Keychain.setGenericPassword('HealthNavApp', token);
-
-    set({
-      accessToken: token,
-      isLoggedIn: true,
-    });
+    // TODO: Implement
   },
 
   logout: async () => {
@@ -147,10 +106,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           isLoggedIn: storedData.accessToken !== null,
           isLoading: false,
         });
+
+        updateUser(storedData.userId).then(() => {});
       } else {
         // No credentials found
         set({
           accessToken: null,
+          refreshToken: null,
           isLoggedIn: false,
           isLoading: false,
         });
