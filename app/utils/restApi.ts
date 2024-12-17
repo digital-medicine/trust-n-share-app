@@ -122,6 +122,35 @@ export async function postLogin(username: string, password: string) {
   }
 }
 
+export async function postRegister(
+  username: string,
+  email: string,
+  password: string,
+) {
+  const response = await fetch(
+    Config.API_URL + '/auth/signup',
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+        consumerInfo: null,
+        role: "donor",
+      }),
+    }
+  );
+  const json = await response.json();
+  return {
+    status: response.status,
+    json,
+  }
+}
+
 export async function getIncentives() {
   return request('/test/incentivetypes');
 }

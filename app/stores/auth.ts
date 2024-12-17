@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import * as Keychain from 'react-native-keychain';
-import {getUser, postLogin} from '../utils/restApi';
+import {getUser, postLogin, postRegister} from '../utils/restApi';
 import {updateUser} from './user.ts';
 
 interface AuthState {
@@ -12,12 +12,9 @@ interface AuthState {
   setRefreshToken: (token: string) => void;
   login: (username: string, password: string) => Promise<void>;
   register: (
-    gender: string,
-    firstName: string,
-    lastName: string,
+    username: string,
     email: string,
     password: string,
-    birthDate: string
   ) => Promise<void>;
   logout: () => Promise<void>;
   fetchCredentials: () => Promise<void>;
@@ -73,14 +70,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   register: async (
-    gender: string,
-    firstName: string,
-    lastName: string,
+    username: string,
     email: string,
     password: string,
-    birthDate: string
   ) => {
-    // TODO: Implement
+    const response = await postRegister(username, email, password);
+
+    console.log("Registration response", response);
+    if (response.status !== 200) {
+      throw new Error(response.json?.message || "Registration failed");
+    }
+
+    // Login
+    await get().login(username, password);
   },
 
   logout: async () => {

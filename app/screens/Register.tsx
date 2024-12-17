@@ -22,27 +22,15 @@ type errors = {
 export default function RegisterScreen() {
   const register = useAuthStore(state => state.register);
 
-  const [gender, setGender]  = useState(null);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [birthDate, setBirthDate] = useState(new Date(946731600000));
 
   const [errors, setErrors] = useState({} as errors);
 
-  const onDatePickerChange = (event, selectedDate) => {
-    setBirthDate(selectedDate);
-  };
-
   const validate = (): boolean => {
     let newErrors = {};
-
-    // Validate gender
-    if (gender === null) {
-      newErrors = { ...newErrors, gender: 'Please select a gender' };
-    }
 
     // Validate email
     if (!validateEmail(email)) {
@@ -50,11 +38,8 @@ export default function RegisterScreen() {
     }
 
     // Validate name
-    if (firstName.length === 0) {
-      newErrors = { ...newErrors, firstName: 'First name must not be empty' };
-    }
-    if (lastName.length === 0) {
-      newErrors = { ...newErrors, lastName: 'Last name must not be empty' };
+    if (username.length === 0) {
+      newErrors = { ...newErrors, firstName: 'Username must not be empty' };
     }
 
     // Validate password
@@ -65,11 +50,6 @@ export default function RegisterScreen() {
       newErrors = { ...newErrors, confirmPassword: 'Passwords do not match' };
     }
 
-    // Validate birthdate
-    if (birthDate >= new Date()) {
-      newErrors = { ...newErrors, birthDate: 'Birthdate is in the future' };
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -78,7 +58,7 @@ export default function RegisterScreen() {
     if (!validate()) return;
 
     try {
-      await register(gender, firstName, lastName, email, password, birthDate);
+      await register(username, email, password);
     } catch (e) {
       console.log(e);
       setErrors({form: e.message});
@@ -90,41 +70,12 @@ export default function RegisterScreen() {
       <View style={styles.container}>
         {errors.form ? <Text style={{ color: 'red' }}>{errors.form}</Text> : null}
 
-        <RNPickerSelect
-          placeholder={{
-            label: 'Select your Gender ...',
-            value: null,
-          }}
-          style={pickerSelectStyles}
-          onValueChange={(value) => setGender(value)}
-          items={[
-            { label: 'Female', value: 'female' },
-            { label: 'Male', value: 'male' },
-            { label: 'Other', value: 'other' },
-          ]}
-          Icon={() => {
-            return <Ionicons name="caret-down" size={24} color="gray" />;
-          }}
-        />
-
-        {errors.gender ? <Text style={{ color: 'red' }}>{errors.gender}</Text> : null}
-
         <FormTextInput
-          placeholder="First Name"
-          value={firstName}
-          onChangeText={setFirstName}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
           keyboardType="default"
-          autoCapitalize="words"
-        />
-
-        {errors.firstName ? <Text style={{ color: 'red' }}>{errors.firstName}</Text> : null}
-
-        <FormTextInput
-          placeholder="Last Name"
-          value={lastName}
-          onChangeText={setLastName}
-          keyboardType="default"
-          autoCapitalize="words"
+          autoCapitalize="none"
         />
 
         {errors.lastName ? <Text style={{ color: 'red' }}>{errors.lastName}</Text> : null}
@@ -158,19 +109,6 @@ export default function RegisterScreen() {
         />
 
         {errors.confirmPassword ? <Text style={{ color: 'red' }}>{errors.confirmPassword}</Text> : null}
-
-        <View style={styles.datePickerContainer}>
-          <Text style={styles.datePickerText}>Birthdate</Text>
-
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={birthDate}
-            mode="date"
-            onChange={onDatePickerChange}
-          />
-        </View>
-
-        {errors.birthDate ? <Text style={{ color: 'red' }}>{errors.birthDate}</Text> : null}
 
         <PrimaryButton onPress={handleRegister} title="Register" />
 
