@@ -2,12 +2,12 @@ import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import React from 'react';
-import {useFormStore} from '../../stores/form.ts';
+import {useUserStore} from '../../stores/user.ts';
 
 
 export default function Compensations() {
   const navigation = useNavigation();
-  const form = useFormStore(state => state.form);
+  const badgeCount = useUserStore(state => state.user?.availableCompensations.length) ?? 0;
 
   return (
     <SafeAreaView>
@@ -63,6 +63,7 @@ export default function Compensations() {
           title='Vouchers'
           description='Receive vouchers for various stores and services as a token of appreciation.'
           button={() => navigation.navigate('Vouchers')}
+          badgeCount={badgeCount}
         />
 
         <Box
@@ -94,8 +95,8 @@ export default function Compensations() {
   )
 }
 
-function Box({ title, description, button }:
-  { title: string, description: string, button: (() => void) | null }) {
+function Box({ title, description, button, badgeCount }:
+  { title: string, description: string, button: (() => void) | null, badgeCount?: number }) {
   return (
     <View style={styles.box}>
       <Text style={styles.boxHeader}>{title}</Text>
@@ -104,7 +105,7 @@ function Box({ title, description, button }:
         {description}
       </Text>
 
-      {button ? <PrimaryButton onPress={button} title='Redeem' /> : null}
+      {button ? <PrimaryButton onPress={button} title='Redeem' badgeCount={badgeCount} /> : null}
     </View>
   )
 }
