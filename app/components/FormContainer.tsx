@@ -1,22 +1,18 @@
 import {ScrollView, StyleSheet, View} from 'react-native';
 
-
-export default function FormContainer({ children }) {
+export default function FormContainer({children}) {
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        {children}
-      </ScrollView>
-    </View>
+    <ScrollView contentContainerStyle={styles.scrollView}>
+      <View style={styles.container}>{children}</View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  scrollView: {
     padding: 20,
   },
-  scrollView: {
+  container: {
     gap: 20,
   },
 });
