@@ -133,8 +133,13 @@ export default function PrivacyLevel() {
         <Text style={styles.boxHeader}>Low protection</Text>
 
         <Text style={styles.boxText}>
-          What is the suitable incentive for your data donation in case of a hypothetical
-          <Text style={{ fontWeight: 'bold' }}> high risk of re-identification?</Text>
+          Imagine that your data is now somewhat obfuscated.
+          Compared to the original data, the risk that the data can be used to draw conclusions about you is reduced by
+          10% (e.g. before it was possible to draw conclusions in 10 out of 100 cases, after in 9 out of 100 cases).
+        </Text>
+        <Text style={styles.boxText}>
+          This makes the data less interesting.
+          How much of the incentive promised for the original data would you sacrifice?
         </Text>
 
         <Text style={styles.riskText}>
@@ -159,8 +164,13 @@ export default function PrivacyLevel() {
         <Text style={styles.boxHeader}>High privacy</Text>
 
         <Text style={styles.boxText}>
-          What is the suitable incentive for your data donation in case of a hypothetical
-          <Text style={{ fontWeight: 'bold' }}> low risk of re-identification?</Text>
+          Now significantly more details are being concealed.
+          Compared to the original data, the risk that the data can be used to draw conclusions about you is reduced by
+          90% (e.g. before it was possible to draw conclusions in 10 out of 100 cases, after in 1 out of 100 cases).
+        </Text>
+        <Text style={styles.boxText}>
+          How much is this protection worth to you?
+          What proportion of the incentives promised for the original data do you want to retain?
         </Text>
 
         <Text style={styles.riskText}>
