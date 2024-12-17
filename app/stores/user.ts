@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-import {getUser} from '../utils/restApi.ts';
+import {getIncentives, getUser} from '../utils/restApi.ts';
 
 
 interface User {
@@ -16,6 +16,7 @@ interface User {
   email: string;
   active: boolean;
   roles: string[];
+  availableCompensations: string[];
 }
 
 interface UserStore {
@@ -34,20 +35,36 @@ export const useUserStore = create<UserStore>(set => ({
 export const updateUser = async (userId: string) => {
   console.log('Updating user', userId);
 
-  const {setUser} = useUserStore.getState();
+  const { setUser } = useUserStore.getState();
 
-  getUser(userId).then(response => {
-    if (response.error) {
-      throw new Error(response.error);
+  try {
+    // Fetch user data
+    const userResponse = await getUser(userId);
+    if (userResponse.error) {
+      throw new Error(userResponse.error);
     }
 
-    setUser({
-      donorInfo: response.json.donorInfo,
-      _id: response.json._id,
-      username: response.json.username,
-      email: response.json.email,
-      active: response.json.active,
-      roles: response.json.roles,
-    });
-  });
-}
+    // Fetch incentives data
+    const incentivesResponse = await getIncentives();
+    if (incentivesResponse.error) {
+      throw new Error(incentivesResponse.error);
+    }
+
+    console.log("Fetched compensations", incentivesResponse.json.incentiveTypes);
+
+    // Combine both results and update the store
+    const combinedUserData: User = {
+      donorInfo: userResponse.json.donorInfo,
+      _id: userResponse.json._id,
+      username: userResponse.json.username,
+      email: userResponse.json.email,
+      active: userResponse.json.active,
+      roles: userResponse.json.roles,
+      availableCompensations: incentivesResponse.json.incentiveTypes,
+    };
+
+    setUser(combinedUserData);
+  } catch (error) {
+    console.error("Error updating user:", error.message);
+  }
+};

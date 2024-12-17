@@ -18,10 +18,12 @@ import Reputation from './app/screens/Share/Reputation.tsx';
 import Incentives from './app/screens/Share/Incentives.tsx';
 import Consumers from './app/screens/Share/Consumers.tsx';
 import Congrats from './app/screens/Share/Congrats.tsx';
-import Compensations from './app/screens/Share/Compensations.tsx';
+import Compensations from './app/screens/Compensations/Compensations.tsx';
 import LogoutButton from './app/components/LogoutButton.tsx';
 import Transaction from './app/screens/Profile/Transaction.tsx';
 import {useAuthStore} from './app/stores/auth.ts';
+import VouchersScreen from './app/screens/Compensations/Vouchers.tsx';
+import CompensationsTabIcon from './app/components/CompensationsTabIcon.tsx';
 
 function SplashScreen() {
   return (
@@ -107,7 +109,7 @@ const CompensationsStack = createNativeStackNavigator({
       },
     },
     Vouchers: {
-      screen: () => <Text>Vouchers</Text>,
+      screen: VouchersScreen,
       options: {
         title: 'Vouchers',
       },
@@ -156,7 +158,6 @@ const MainTabs = createBottomTabNavigator({
   screenOptions: ({ route }) => ({
     tabBarIcon: ({ focused, color, size }) => {
       let iconName;
-
       switch (route.name) {
         case 'Home':
           iconName = focused ? 'home' : 'home-outline';
@@ -170,6 +171,10 @@ const MainTabs = createBottomTabNavigator({
         case 'Profile':
           iconName = focused ? 'person' : 'person-outline';
           break;
+      }
+
+      if (route.name === 'Compensations') {
+        return <CompensationsTabIcon focused={focused} size={size} color={color} />;
       }
 
       return <Ionicons name={iconName} size={size} color={color} />;
