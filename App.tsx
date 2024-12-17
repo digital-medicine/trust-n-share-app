@@ -94,10 +94,16 @@ const ShareStack = createNativeStackNavigator({
         headerShown: false,
       },
     },
-    Compensations: {
+  }
+});
+
+const CompensationsStack = createNativeStackNavigator({
+  screens: {
+    Main: {
       screen: Compensations,
       options: {
         title: 'Compensations',
+        headerShown: false,
       },
     },
     Vouchers: {
@@ -155,8 +161,11 @@ const MainTabs = createBottomTabNavigator({
         case 'Home':
           iconName = focused ? 'home' : 'home-outline';
           break;
-        case 'Share':
-          iconName = focused ? 'share-social' : 'share-social-outline';
+        case 'Upload':
+          iconName = focused ? 'cloud-upload' : 'cloud-upload-outline';
+          break;
+        case 'Compensations':
+          iconName = focused ? 'gift' : 'gift-outline';
           break;
         case 'Profile':
           iconName = focused ? 'person' : 'person-outline';
@@ -174,8 +183,14 @@ const MainTabs = createBottomTabNavigator({
         headerShown: false,
       }
     },
-    Share: {
+    Upload: {
       screen: ShareStack,
+      options: {
+        headerShown: false,
+      }
+    },
+    Compensations: {
+      screen: CompensationsStack,
       options: {
         headerShown: false,
       }

@@ -19,11 +19,9 @@ export default function Congrats() {
           Your chosen fitness activity data will now be shared with your chosen institutions.
         </Text>
 
-        <PrimaryButton
-          onPress={() => navigation.navigate('Compensations')}
-          title="Select Compensations"
-          style={{ alignSelf: 'stretch' }}
-        />
+        <Text>
+          As soon as your data is bought, you can collect your compensation in the Profile section.
+        </Text>
 
         <Text style={{ fontFamily: 'Courier' }}>{formString}</Text>
       </View>
