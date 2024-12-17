@@ -23,9 +23,7 @@ interface FormStore {
   form: FormState;
   toggleFormSelected: (category: keyof FormState, key: string) => void;
   setDuration: (months: number) => void;
-  setPrivacyIncentive: (value: number) => void;
-  setPrivacyHighRisk: (value: number) => void;
-  setPrivacyLowRisk: (value: number) => void;
+  setPrivacyLevel: (privacyLevel: PrivacyLevel) => void;
   setReputation: (value: number) => void;
   submitForm: () => Promise<void>;
 }
@@ -45,78 +43,84 @@ const initialState: FormState = {
   consumers: [],
 };
 
-export const useFormStore = create<FormStore>((set, get) => ({
+export const useFormStore = create<FormStore>((set) => ({
   form: initialState,
 
-  toggleFormSelected: (category, key) => {
-    const { form } = get();
+  toggleFormSelected: (category: string, key: string) =>
+    set((state) => {
+      if (!Array.isArray(state.form[category])) {
+        throw new Error(`Invalid category: ${String(category)}`);
+      }
 
-    if (!Array.isArray(form[category])) {
-      throw new Error(`Invalid category: ${String(category)}`);
-    }
+      const updatedCategory = state.form[category].includes(key)
+        ? state.form[category].filter((item: string) => item !== key)
+        : [...state.form[category], key];
 
-    const updatedCategory = form[category].includes(key)
-      ? form[category].filter((item: string) => item !== key)
-      : [...form[category], key];
+      return {
+        form: {
+          ...state.form,
+          [category]: updatedCategory,
+        },
+      };
+    }),
 
-    set({
+  setDuration: (months: number) =>
+    set((state) => ({
       form: {
-        ...form,
-        [category]: updatedCategory,
+        ...state.form,
+        duration: months,
       },
-    });
-  },
+    })),
 
-  setDuration: (months) => {
-    const { form } = get();
-    set({ form: { ...form, duration: months } });
-  },
+  // setPrivacyIncentive: (value: boolean) =>
+  //   set((state) => ({
+  //     form: {
+  //       ...state.form,
+  //       privacyLevel: { ...state.form.privacyLevel, incentive: value },
+  //     },
+  //   })),
+  //
+  // setPrivacyHighRisk: (value: boolean) =>
+  //   set((state) => ({
+  //     form: {
+  //       ...state.form,
+  //       privacyLevel: { ...state.form.privacyLevel, highRisk: value },
+  //     },
+  //   })),
+  //
+  // setPrivacyLowRisk: (value: boolean) =>
+  //   set((state) => ({
+  //     form: {
+  //       ...state.form,
+  //       privacyLevel: { ...state.form.privacyLevel, lowRisk: value },
+  //     },
+  //   })),
 
-  setPrivacyIncentive: (value) => {
-    const { form } = get();
-    set({
+  setPrivacyLevel: (privacyLevel: PrivacyLevel) =>
+    set((state) => ({
       form: {
-        ...form,
-        privacyLevel: { ...form.privacyLevel, incentive: value },
+        ...state.form,
+        privacyLevel: privacyLevel,
       },
-    });
-  },
+    })),
 
-  setPrivacyHighRisk: (value) => {
-    const { form } = get();
-    set({
+  setReputation: (value: number) =>
+    set((state) => ({
       form: {
-        ...form,
-        privacyLevel: { ...form.privacyLevel, highRisk: value },
+        ...state.form,
+        reputation: value,
       },
-    });
-  },
-
-  setPrivacyLowRisk: (value) => {
-    const { form } = get();
-    set({
-      form: {
-        ...form,
-        privacyLevel: { ...form.privacyLevel, lowRisk: value },
-      },
-    });
-  },
-
-  setReputation: (value) => {
-    const { form } = get();
-    set({ form: { ...form, reputation: value } });
-  },
+    })),
 
   submitForm: async () => {
-    const { form } = get();
+    // Accessing state outside set since we removed `get`
+    const { form } = useFormStore.getState();
 
-    // Fetch user data because it's needed for the form submission
     const user = useAuthStore.getState().user;
     if (!user) {
       throw new Error('User not found');
     }
 
-    // Prepare form data
     const submitData = {
       donorInfo: {
         privacyLow: form.privacyLevel.lowRisk,
@@ -133,7 +137,6 @@ export const useFormStore = create<FormStore>((set, get) => ({
       roles: user.roles,
     };
 
-    // Submit
     const submitResponse = await putUser(submitData);
     if (submitResponse.error) {
       throw new Error(submitResponse.error);

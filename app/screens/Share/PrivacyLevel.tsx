@@ -13,9 +13,12 @@ export default function PrivacyLevel() {
   const navigation = useNavigation();
 
   const form = useFormStore(state => state.form);
-  const setPrivacyIncentive = useFormStore(state => state.setPrivacyIncentive);
-  const setPrivacyHighRisk = useFormStore(state => state.setPrivacyHighRisk);
-  const setPrivacyLowRisk = useFormStore(state => state.setPrivacyLowRisk);
+  const setPrivacyLevel = useFormStore(state => state.setPrivacyLevel);
+
+  const [incentiveInput, setIncentiveInput] = useState<string>(form.privacyLevel.incentive.toString());
+  const [incentive, setIncentive] = useState<number>(form.privacyLevel.incentive);
+  const [highRisk, setHighRisk] = useState<number>(form.privacyLevel.highRisk);
+  const [lowRisk, setLowRisk] = useState<number>(form.privacyLevel.lowRisk);
 
   const [privacyHighRiskBounds, setPrivacyHighRiskBounds] = useState<{min: number, max: number}|null>(null);
   const [privacyLowRiskBounds, setPrivacyLowRiskBounds] = useState<{min: number, max: number}|null>(null);
@@ -27,63 +30,97 @@ export default function PrivacyLevel() {
     fetchPrivacyLowRiskBounds();
   }, []);
 
-  const fetchPrivacyHighRiskBounds = () => {
-    getPrivacyHighRisk(form.privacyLevel.incentive)
-      .then(response => {
-        if (response.status !== 200) {
-          setError(response.json.message);
-          return;
-        }
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchPrivacyHighRiskBounds();
+      await fetchPrivacyLowRiskBounds();
+    };
 
-        const min = response.json.data[0];
-        const max = response.json.data[1];
-        setPrivacyHighRiskBounds({
-          min,
-          max,
-        });
-      })
-      .catch(e => {
-        console.error("getPrivacyHighRisk error", e.toString());
-        setError(e.message);
-      });
-  }
+    fetchData();
+  }, [incentive]);
 
-  const fetchPrivacyLowRiskBounds = () => {
-    getPrivacyLowRisk(form.privacyLevel.incentive, form.privacyLevel.lowRisk)
-      .then(response => {
-        if (response.status !== 200) {
-          setError(response.json.message);
-          return;
-        }
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchPrivacyLowRiskBounds();
+    };
 
-        const min = response.json.data[0];
-        const max = response.json.data[1];
-        setPrivacyLowRiskBounds({
-            min,
-            max,
-          });
-      })
-      .catch(e => {
-        console.error(e);
-        setError(e.message);
-      });
-  }
+    fetchData();
+  }, [incentive, highRisk]);
 
-  const onIncentiveChange = (incentive) => {
-    validateIncentive(incentive);
+  const fetchPrivacyHighRiskBounds = async () => {
+    setPrivacyHighRiskBounds(null);
 
-    setPrivacyIncentive(incentive);
+    try {
+      const response = await getPrivacyHighRisk(incentive);
+      if (response.status !== 200) {
+        setError(response.json.message);
+        return;
+      }
 
-    fetchPrivacyHighRiskBounds();
-    fetchPrivacyLowRiskBounds();
+      const min = response.json.data[0];
+      const max = response.json.data[1];
+      console.log("Privacy High Risk Bounds", min, max);
+      setPrivacyHighRiskBounds({ min, max });
+
+      // If the selected value is outside the new bounds, adjust it
+      if (highRisk < min) {
+        setHighRisk(min);
+      } else if (highRisk > max) {
+        setHighRisk(max);
+      }
+    } catch (e) {
+      console.error("getPrivacyHighRisk error", e.toString());
+      setError(e.message);
+    }
   };
 
-  const validateIncentive = (incentive: number) => {
-    if (isNaN(incentive)) {
+  const fetchPrivacyLowRiskBounds = async () => {
+    setPrivacyLowRiskBounds(null);
+
+    try {
+      const response = await getPrivacyLowRisk(
+        incentive,
+        highRisk
+      );
+      if (response.status !== 200) {
+        setError(response.json.message);
+        return;
+      }
+
+      const min = response.json.data[0];
+      const max = response.json.data[1];
+      console.log("Privacy Low Risk Bounds", min, max);
+      setPrivacyLowRiskBounds({ min, max });
+
+      // If the selected value is outside the new bounds, adjust it
+      if (lowRisk < min) {
+        setLowRisk(min);
+      } else if (lowRisk > max) {
+        setLowRisk(max);
+      }
+    } catch (e) {
+      console.error(e);
+      setError(e.message);
+    }
+  };
+
+  const onIncentiveChange = async (value: string) => {
+    setIncentiveInput(value);
+
+    const incentive = parseFloat(value);
+    if (!validateIncentive(incentive)) {
+      return;
+    }
+    setIncentive(incentive);
+    console.log("Incentive set to", incentive);
+  };
+
+  const validateIncentive = (value: number) => {
+    if (isNaN(value)) {
       setIncentiveError('Incentive must be a number');
       return false;
     }
-    if (incentive < 0) {
+    if (value < 0) {
       setIncentiveError('Incentive must be positive');
       return false;
     }
@@ -93,10 +130,20 @@ export default function PrivacyLevel() {
   }
 
   const onSubmit = () => {
-    if (!validateIncentive(form.privacyLevel.incentive)) return;
+    if (!validateIncentive(incentive)) return;
+
+    setPrivacyLevel({
+      incentive,
+      highRisk,
+      lowRisk,
+    });
 
     // @ts-ignore
     navigation.navigate('Reputation');
+  }
+
+  const toEuro = (value: number) => {
+    return value.toFixed(2).replace('.', ',') + ' €';
   }
 
   return (
@@ -116,9 +163,8 @@ export default function PrivacyLevel() {
         <View style={styles.inputContainer}>
           <FormTextInput
             style={styles.input}
-            value={form.privacyLevel.incentive.toString()}
+            value={incentiveInput}
             onChangeText={onIncentiveChange}
-            placeholder="Duration"
             inputMode="numeric"
           />
           <Text style={styles.euro}>€</Text>
@@ -143,18 +189,24 @@ export default function PrivacyLevel() {
         </Text>
 
         <Text style={styles.riskText}>
-          {form.privacyLevel.highRisk} %
+          {toEuro(highRisk)}
         </Text>
 
         {privacyHighRiskBounds !== null
-          ? <Slider
-            style={{ width: '100%' }}
-            minimumValue={privacyHighRiskBounds.min}
-            maximumValue={privacyHighRiskBounds.max}
-            value={form.privacyLevel.highRisk}
-            onValueChange={setPrivacyHighRisk}
-          />
-
+          ? <View>
+              <Slider
+                style={styles.slider}
+                minimumValue={privacyHighRiskBounds.min}
+                maximumValue={privacyHighRiskBounds.max}
+                step={0.01}
+                value={highRisk}
+                onSlidingComplete={setHighRisk}
+              />
+              <View style={styles.sliderBoundContainer}>
+                <Text style={styles.sliderBoundMin}>{toEuro(privacyHighRiskBounds.min)}</Text>
+                <Text style={styles.sliderBoundMax}>{toEuro(privacyHighRiskBounds.max)}</Text>
+              </View>
+            </View>
           : <Text style={styles.loading}>Loading ...</Text>
         }
       </View>
@@ -174,18 +226,24 @@ export default function PrivacyLevel() {
         </Text>
 
         <Text style={styles.riskText}>
-          {form.privacyLevel.lowRisk} %
+          {toEuro(lowRisk)}
         </Text>
 
         {privacyLowRiskBounds !== null
-          ? <Slider
-            style={{ width: '100%' }}
-            minimumValue={privacyLowRiskBounds.min}
-            maximumValue={privacyLowRiskBounds.max}
-            value={form.privacyLevel.lowRisk}
-            onValueChange={setPrivacyLowRisk}
-          />
-
+          ? <View>
+              <Slider
+                style={styles.slider}
+                minimumValue={privacyLowRiskBounds.min}
+                maximumValue={privacyLowRiskBounds.max}
+                step={0.01}
+                value={lowRisk}
+                onSlidingComplete={setLowRisk}
+              />
+              <View style={styles.sliderBoundContainer}>
+                <Text style={styles.sliderBoundMin}>{toEuro(privacyLowRiskBounds.min)}</Text>
+                <Text style={styles.sliderBoundMax}>{toEuro(privacyLowRiskBounds.max)}</Text>
+              </View>
+            </View>
           : <Text style={styles.loading}>Loading ...</Text>
         }
       </View>
@@ -231,6 +289,24 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#1d1d1f',
   },
+  slider: {
+    flex: 6,
+  },
+  sliderBoundContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  sliderBoundMin: {
+    flex: 1,
+    fontSize: 16,
+    color: '#5e5e5e',
+  },
+  sliderBoundMax: {
+    flex: 1,
+    fontSize: 16,
+    color: '#5e5e5e',
+    textAlign: 'right',
+  },
   euro: {
     marginTop: 9,
     fontSize: 20,
@@ -238,6 +314,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   riskText: {
+    marginTop: 10,
     fontSize: 20,
     textAlign: 'center',
   },

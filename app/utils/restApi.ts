@@ -153,12 +153,14 @@ export async function getPrivacyHighRisk(privacyNone: number) {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ privacyNone: 50 }),
+      body: JSON.stringify({ privacyNone }),
     });
+
   const json = await response.json();
   return {
     status: response.status,
     json,
+    error: null,
   }
 }
 
@@ -173,11 +175,24 @@ export async function getPrivacyLowRisk(privacyNone: number, privacyLow: number)
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ privacyNone: 50, privacyLow: 50 }),
+      body: JSON.stringify({ privacyNone, privacyLow }),
     });
+
+  if (!response.ok) {
+    const responseJson = await response.json();
+    const errorText = `HTTP error ${response.status}: ${responseJson.message}`;
+    console.log(errorText);
+    return {
+      status: response.status,
+      json: null,
+      error: errorText,
+    };
+  }
+
   const json = await response.json();
   return {
     status: response.status,
     json,
+    error: null,
   }
 }
