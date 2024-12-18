@@ -1,5 +1,6 @@
 import Config from 'react-native-config';
 import {useAuthStore} from '../stores/auth.ts';
+import {useServiceAvailableStore} from '../stores/serviceAvailable.ts';
 
 async function request(
   url: string,
@@ -8,8 +9,8 @@ async function request(
 ): Promise<{ status: number; json: object | null; error: string | null }> {
   console.log("web api", method, url);
 
-  const { accessToken, refreshToken, setAccessToken } = useAuthStore.getState();
-  const { logout } = useAuthStore.getState();
+  const { accessToken, refreshToken, setAccessToken, logout } = useAuthStore.getState();
+  const { available, setAvailable } = useServiceAvailableStore.getState();
 
   try {
     // Send the request
@@ -22,6 +23,17 @@ async function request(
       },
       body: body ? JSON.stringify(body) : null,
     });
+
+    // If we get a 503, the server is down
+    if (response.status === 503) {
+      setAvailable(false);
+
+      return {
+        status: response.status,
+        json: null,
+        error: "Service unavailable",
+      };
+    }
 
     // If the token expired, refresh and retry
     if (response.status === 401) {

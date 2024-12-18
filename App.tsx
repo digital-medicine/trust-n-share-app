@@ -24,6 +24,8 @@ import Transaction from './app/screens/Profile/Transaction.tsx';
 import {useAuthStore} from './app/stores/auth.ts';
 import VouchersScreen from './app/screens/Compensations/Vouchers.tsx';
 import CompensationsTabIcon from './app/components/CompensationsTabIcon.tsx';
+import {useServiceAvailableStore} from './app/stores/serviceAvailable.ts';
+import Unavailable from './app/screens/Unavailable.tsx';
 
 function SplashScreen() {
   return (
@@ -211,8 +213,23 @@ const MainTabs = createBottomTabNavigator({
 
 const RootStack = createNativeStackNavigator({
   groups: {
+    Unavailable: {
+      if: () => !useServiceAvailableStore((state) => state.available),
+      screens: {
+        Unavailable: {
+          screen: Unavailable,
+          options: {
+            headerShown: false,
+          },
+        },
+      },
+    },
     Main: {
-      if: () => useAuthStore((state) => state.isLoggedIn),
+      if: () => {
+        const available = useServiceAvailableStore((state) => state.available);
+        const loggedIn = useAuthStore((state) => state.isLoggedIn);
+        return available && loggedIn;
+      },
       screens: {
         MainTabs: {
           screen: MainTabs,
@@ -223,7 +240,11 @@ const RootStack = createNativeStackNavigator({
       },
     },
     Auth: {
-      if: () => !useAuthStore((state) => state.isLoggedIn),
+      if: () => {
+        const available = useServiceAvailableStore((state) => state.available);
+        const loggedIn = useAuthStore((state) => state.isLoggedIn);
+        return available && !loggedIn;
+      },
       screens: {
         Login: {
           screen: LoginScreen,
