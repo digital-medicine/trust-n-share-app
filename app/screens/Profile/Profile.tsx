@@ -20,8 +20,8 @@ export default function ProfileScreen() {
       <View style={styles.container}>
         <Section header="Info">
           <InfoBox>
-            <InfoItem title="Name" data={user.username} />
-            <InfoItem title="Email" data={user.email} />
+            <InfoItem title="Name" data={user?.username ?? 'Error'} />
+            <InfoItem title="Email" data={user?.email ?? 'Error'} />
           </InfoBox>
         </Section>
 
