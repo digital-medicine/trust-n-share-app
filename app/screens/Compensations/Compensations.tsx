@@ -7,7 +7,7 @@ import {useUserStore} from '../../stores/user.ts';
 
 export default function Compensations() {
   const navigation = useNavigation();
-  const badgeCount = useUserStore(state => state.user?.availableCompensations.length) ?? 0;
+  const badgeCount = useUserStore(state => state.user?.availableCompensations.length);
 
   return (
     <SafeAreaView>
