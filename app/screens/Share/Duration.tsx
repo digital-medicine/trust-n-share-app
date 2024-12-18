@@ -42,7 +42,7 @@ export default function Duration() {
   return (
     <FormContainer>
       <View style={styles.container}>
-        <Text style={styles.text}>Share my data for</Text>
+        <Text style={styles.text}>Offer my data for</Text>
 
         <FormTextInput
           style={styles.input}
