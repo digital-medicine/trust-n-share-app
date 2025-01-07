@@ -1,9 +1,11 @@
 import {Platform} from 'react-native';
-import type {HealthKitPermissions} from 'react-native-health';
+import type {AppleHealthKit as HealthKitType, HealthKitPermissions} from 'react-native-health';
 import {
   initialize,
   requestPermission,
-  readRecords, getGrantedPermissions, aggregateGroupByDuration,
+  readRecords,
+  getGrantedPermissions,
+  aggregateGroupByDuration,
 } from 'react-native-health-connect';
 
 let AppleHealthKit: typeof import('react-native-health').default | null = null;
@@ -12,13 +14,13 @@ if (Platform.OS === 'ios') {
 }
 
 export class HealthData {
-  steps?: {date: string, value: number}[];
-  energyBurned?: {date: string, value: number}[];
+  steps?: {date: string; value: number}[];
+  energyBurned?: {date: string; value: number}[];
   // TODO: Add more
 }
 
 export default async function fetchHealthData(): Promise<HealthData> {
-  console.log("Fetching health data for platform", Platform.OS);
+  console.log('Fetching health data for platform', Platform.OS);
 
   if (Platform.OS === 'ios') {
     return await fetchHealthKitData();
@@ -43,6 +45,7 @@ async function fetchHealthKitData(): Promise<HealthData> {
         AppleHealthKit.Constants.Permissions.StepCount,
         AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
         AppleHealthKit.Constants.Permissions.BasalEnergyBurned,
+        AppleHealthKit.Constants.Permissions.ActivitySummary,
         // ADD MORE PERMISSIONS HERE
       ],
     },
@@ -54,10 +57,12 @@ async function fetchHealthKitData(): Promise<HealthData> {
     steps,
     activeEnergyBurned,
     basalEnergyBurned,
+    // activeMinutes,
   ] = await Promise.all([
     fetchAndAggregateData(AppleHealthKit.getDailyStepCountSamples),
     fetchAndAggregateData(AppleHealthKit.getActiveEnergyBurned),
     fetchAndAggregateData(AppleHealthKit.getBasalEnergyBurned),
+    // fetchActiveMinutes(AppleHealthKit),
     // ADD MORE FETCH FUNCTIONS HERE
   ]);
 
@@ -89,13 +94,16 @@ function initHealthKit(permissions: HealthKitPermissions): Promise<void> {
 }
 
 function fetchAndAggregateData(
-  fetchMethod: (options: any, callback: (error: string, results: Array<any>) => void) => void,
-): Promise<{ date: string; value: number }[] | null> {
+  fetchMethod: (
+    options: any,
+    callback: (error: string, results: Array<any>) => void,
+  ) => void,
+): Promise<{date: string; value: number}[] | null> {
   const options = {
     startDate: getStartDateAWeekAgo(),
   };
 
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     fetchMethod(options, (error: string, results: Array<any>) => {
       if (error) {
         console.log('fetch error:', error);
@@ -108,7 +116,7 @@ function fetchAndAggregateData(
   });
 }
 
-function sumResultsByDay(results: Array<any>): { date: string; value: number }[] {
+function sumResultsByDay(results: Array<any>): {date: string; value: number}[] {
   const aggregatedData = results.reduce((acc: Record<string, number>, item) => {
     const day = new Date(item.startDate).toISOString().split('T')[0];
     acc[day] = (acc[day] || 0) + item.value;
@@ -119,6 +127,30 @@ function sumResultsByDay(results: Array<any>): { date: string; value: number }[]
     date,
     value,
   }));
+}
+
+function fetchActiveMinutes(
+  healthKit: HealthKitType,
+): Promise<{date: string; value: number}[] | null> {
+  return new Promise(resolve => {
+    const options = {
+      startDate: getStartDateAWeekAgo(),
+    };
+
+    healthKit.getActivitySummary(options, (error: string, results: Array<any>) => {
+      if (error) {
+        console.log('fetch error:', error);
+        return resolve(null);
+      }
+
+      console.log('getActiveMinutes', results);
+      // TODO: Transform results when actual data is available (need Apple Watch)
+      return resolve(null);
+
+      // const dataByDay = sumResultsByDay(results);
+      // resolve(dataByDay);
+    });
+  });
 }
 
 function getStartDateAWeekAgo(): string {
