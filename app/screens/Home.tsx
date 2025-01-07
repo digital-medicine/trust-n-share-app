@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Dimensions, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BarChart} from 'react-native-chart-kit';
 import {useHealthStore} from '../stores/health.ts';
@@ -69,67 +69,69 @@ export default function HomeScreen() {
   }, [healthData]);
 
   return (
-    <SafeAreaView>
-      {/* Personal Health data */}
-      <View style={styles.personalHealthContainer}>
-        <Text style={styles.header}>Personal Fitness Data</Text>
-        {healthLoading
-          ? <Text>Loading...</Text>
-          : <View style={styles.personalHealthGrid}>
+    <ScrollView>
+      <SafeAreaView>
+        {/* Personal Health data */}
+        <View style={styles.personalHealthContainer}>
+          <Text style={styles.header}>Personal Fitness Data</Text>
+          {healthLoading
+            ? <Text>Loading...</Text>
+            : <View style={styles.personalHealthGrid}>
               <PersonalHealthItem title="steps taken" value={stepsToday} icon="footsteps" />
               <PersonalHealthItem title="calories burned" value={energyBurnedToday} icon="flame" />
             </View>
-        }
+          }
 
-      </View>
+        </View>
 
-      {/* fitness statistics */}
-      <View style={styles.statisticsContainer}>
-        <Text style={styles.header}>Fitness Statistics</Text>
-        {healthLoading
-          ? <Text>Loading...</Text>
-          :
-          <View style={styles.chartContainer}>
-            <Text style={styles.chartHeader}>Steps taken this week</Text>
-            {healthData?.steps?.length ?? 0 > 0
-              ? <BarChart
-                data={stepsChartData}
-                style={{
-                  marginVertical: 8,
-                  borderRadius: 8,
-                  paddingRight: 0,
-                }}
-                chartConfig={{
-                  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                  decimalPlaces: 0,
-                  backgroundGradientFrom: "#d7d7d7",
-                  backgroundGradientFromOpacity: 0,
-                  backgroundGradientTo: "#d7d7d7",
-                  backgroundGradientToOpacity: 0,
-                  barPercentage: 1,
-                  useShadowColorFromDataset: false,
-                  fillShadowGradientFrom: '#0071e3',
-                  fillShadowGradientFromOpacity: 1,
-                  fillShadowGradientTo: '#0071e3',
-                  fillShadowGradientToOpacity: 1,
-                  barRadius: 8,
-                }}
-                width={Dimensions.get('window').width - 50}
-                height={200}
-                fromZero={true}
-                withInnerLines={false}
-                showBarTops={false}
-                withHorizontalLabels={false}
-                showValuesOnTopOfBars={true}
-              />
-              : <View style={styles.chartEmptyState}>
-                <Text style={styles.noData}>No data</Text>
-              </View>
-            }
-          </View>
-        }
-      </View>
-    </SafeAreaView>
+        {/* fitness statistics */}
+        <View style={styles.statisticsContainer}>
+          <Text style={styles.header}>Fitness Statistics</Text>
+          {healthLoading
+            ? <Text>Loading...</Text>
+            :
+            <View style={styles.chartContainer}>
+              <Text style={styles.chartHeader}>Steps taken this week</Text>
+              {healthData?.steps?.length ?? 0 > 0
+                ? <BarChart
+                  data={stepsChartData}
+                  style={{
+                    marginVertical: 8,
+                    borderRadius: 8,
+                    paddingRight: 0,
+                  }}
+                  chartConfig={{
+                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                    decimalPlaces: 0,
+                    backgroundGradientFrom: "#d7d7d7",
+                    backgroundGradientFromOpacity: 0,
+                    backgroundGradientTo: "#d7d7d7",
+                    backgroundGradientToOpacity: 0,
+                    barPercentage: 1,
+                    useShadowColorFromDataset: false,
+                    fillShadowGradientFrom: '#0071e3',
+                    fillShadowGradientFromOpacity: 1,
+                    fillShadowGradientTo: '#0071e3',
+                    fillShadowGradientToOpacity: 1,
+                    barRadius: 8,
+                  }}
+                  width={Dimensions.get('window').width - 50}
+                  height={200}
+                  fromZero={true}
+                  withInnerLines={false}
+                  showBarTops={false}
+                  withHorizontalLabels={false}
+                  showValuesOnTopOfBars={true}
+                />
+                : <View style={styles.chartEmptyState}>
+                  <Text style={styles.noData}>No data</Text>
+                </View>
+              }
+            </View>
+          }
+        </View>
+      </SafeAreaView>
+    </ScrollView>
   );
 }
 
