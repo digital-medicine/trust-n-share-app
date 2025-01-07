@@ -113,8 +113,12 @@ async function request(
 }
 
 export async function postLogin(username: string, password: string) {
+  const url = Config.API_URL + '/auth/signin';
+
+  console.log("postLogin", url, username);
+
   const response = await fetch(
-    Config.API_URL + '/auth/signin',
+    url,
     {
       method: 'POST',
       headers: {
