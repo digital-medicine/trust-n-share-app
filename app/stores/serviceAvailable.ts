@@ -6,7 +6,7 @@ interface ServiceAvailableStore {
 }
 
 export const useServiceAvailableStore = create<ServiceAvailableStore>((set) => ({
-  available: false,
+  available: true,
   setAvailable: (value: boolean) => {
     set({ available: value });
   },
