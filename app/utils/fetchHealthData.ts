@@ -50,11 +50,24 @@ async function fetchHealthKitData(): Promise<HealthData> {
 
   await initHealthKit(permissions);
 
-  const [steps, energyBurned] = await Promise.all([
+  const [
+    steps,
+    activeEnergyBurned,
+    basalEnergyBurned,
+  ] = await Promise.all([
     fetchAndAggregateData(AppleHealthKit.getDailyStepCountSamples),
     fetchAndAggregateData(AppleHealthKit.getActiveEnergyBurned),
+    fetchAndAggregateData(AppleHealthKit.getBasalEnergyBurned),
     // ADD MORE FETCH FUNCTIONS HERE
   ]);
+
+  // Combine active and basal energy burned
+  const energyBurned = activeEnergyBurned?.map((entry, index) => {
+    return {
+      date: entry.date,
+      value: entry.value + (basalEnergyBurned?.[index]?.value ?? 0),
+    };
+  });
 
   if (steps !== null) data.steps = steps;
   if (energyBurned !== null) data.energyBurned = energyBurned;
@@ -126,10 +139,10 @@ async function fetchHealthConnectData(): Promise<HealthData> {
 
   // request permissions
   const grantedPermissions = await requestPermission([
-    { accessType: 'read', recordType: 'ActiveCaloriesBurned' },
+    { accessType: 'read', recordType: 'TotalCaloriesBurned' },
     { accessType: 'read', recordType: 'Steps' },
   ]);
-  const permissionsOkay = ["Steps", "ActiveCaloriesBurned"]
+  const permissionsOkay = ["Steps", "TotalCaloriesBurned"]
     .every(recordType => grantedPermissions
       .map(permission => permission.recordType)
       .includes(recordType)
@@ -159,7 +172,7 @@ async function fetchHealthConnectData(): Promise<HealthData> {
   });
 
   const energyBurnedResult = await aggregateGroupByDuration({
-    recordType: 'ActiveCaloriesBurned',
+    recordType: 'TotalCaloriesBurned',
     timeRangeFilter: {
       operator: 'between',
       startTime: getStartDateAWeekAgo(),
@@ -173,7 +186,7 @@ async function fetchHealthConnectData(): Promise<HealthData> {
   data.energyBurned = energyBurnedResult.map(entry => {
     return {
       date: new Date(entry.endTime).toISOString().split('T')[0],
-      value: entry.result.ACTIVE_CALORIES_TOTAL.inKilocalories,
+      value: entry.result.ENERGY_TOTAL.inKilocalories,
     };
   });
 
