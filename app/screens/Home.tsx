@@ -3,11 +3,15 @@ import {Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'reac
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BarChart} from 'react-native-chart-kit';
 import {useHealthStore} from '../stores/health.ts';
+import PrimaryButton from '../components/PrimaryButton.tsx';
+import {useNavigation} from '@react-navigation/native';
 
 export default function HomeScreen() {
   const healthData = useHealthStore(state => state.healthData);
   const fetchHealth = useHealthStore(state => state.fetchHealth);
   const healthLoading = useHealthStore(state => state.healthLoading);
+
+  const navigation = useNavigation();
 
   const [stepsToday, setStepsToday] = useState<number|null>(null);
   const [energyBurnedToday, setEnergyBurnedToday] = useState<number|null>(null);
@@ -82,6 +86,9 @@ export default function HomeScreen() {
             </View>
           }
 
+          <View style={{width: "100%", paddingHorizontal: 20}}>
+            <PrimaryButton onPress={() => navigation.navigate("Upload")} title="Upload" />
+          </View>
         </View>
 
         {/* fitness statistics */}
