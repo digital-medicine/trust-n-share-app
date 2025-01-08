@@ -19,7 +19,30 @@ export class HealthData {
   // TODO: Add more
 }
 
-export default async function fetchHealthData(): Promise<HealthData> {
+/**
+ * Initializes the health data permissions based on the platform (iOS or Android).
+ *
+ * @returns {Promise<boolean>} True if all requested permissions are granted, false if permissions are missing.
+ * @throws {Error} Throws an error if the platform is unsupported or if permissions cannot be granted.
+ */
+export async function initAndGetPermissions(): Promise<boolean> {
+  if (Platform.OS === 'ios') {
+    return await initHealthKit();
+  }
+  if (Platform.OS === 'android') {
+    return await initHealthConnect();
+  }
+
+  throw new Error('Unsupported platform');
+}
+
+/**
+ * Fetches health data based on the platform (iOS or Android).
+ *
+ * @returns {Promise<HealthData>} A promise that resolves to the health data.
+ * @throws {Error} Throws an error if the platform is unsupported.
+ */
+export async function fetchHealthData(): Promise<HealthData> {
   console.log('Fetching health data for platform', Platform.OS);
 
   if (Platform.OS === 'ios') {
@@ -32,12 +55,12 @@ export default async function fetchHealthData(): Promise<HealthData> {
   throw new Error('Unsupported platform');
 }
 
-async function fetchHealthKitData(): Promise<HealthData> {
+async function initHealthKit(): Promise<boolean> {
+  console.log('Initializing HealthKit');
+
   if (!AppleHealthKit) {
     throw new Error('Could not load HealthKit');
   }
-
-  const data = new HealthData();
 
   const permissions = {
     permissions: {
@@ -51,7 +74,65 @@ async function fetchHealthKitData(): Promise<HealthData> {
     },
   } as HealthKitPermissions;
 
-  await initHealthKit(permissions);
+  // Initialize with permissions
+  return new Promise((resolve, reject) => {
+    AppleHealthKit.initHealthKit(permissions, (error: string) => {
+      if (error) {
+        console.log('initHealthKit error:', error);
+        return reject(new Error('Cannot grant permissions!'));
+      }
+
+      // This is where we would check if permissions are granted.
+      // But, from the react-native-health docs:
+      //
+      // > Due to Apple's privacy model if an app user has previously denied a
+      // > specific permission then they can not be prompted again for that same
+      // > permission. The app user would have to go into the Apple Health app
+      // > and grant the permission to your react-native app under sources tab.
+      //
+      // > For any data that is read from Healthkit the status/error is the same
+      // > for both. This privacy restriction results in having no knowledge of
+      // > whether the permission was denied (make sure it's added to the
+      // > permissions options object), or the data for the specific request was
+      // > nil (ex. no steps recorded today).
+
+      resolve(true);
+    });
+  });
+}
+
+async function initHealthConnect(): Promise<boolean> {
+  console.log('Initializing Health Connect');
+
+  // initialize the client
+  const isInitialized = await initialize();
+  if (!isInitialized) {
+    throw new Error('Could not initialize Health Connect');
+  }
+
+  // request permissions
+  const grantedPermissions = await requestPermission([
+    { accessType: 'read', recordType: 'TotalCaloriesBurned' },
+    { accessType: 'read', recordType: 'Steps' },
+  ]);
+  const permissionsOkay = ["Steps", "TotalCaloriesBurned"]
+    .every(recordType => grantedPermissions
+      .map(permission => permission.recordType)
+      .includes(recordType)
+    );
+  if (!permissionsOkay) {
+    return false;
+  }
+
+  return true;
+}
+
+async function fetchHealthKitData(): Promise<HealthData> {
+  if (!AppleHealthKit) {
+    throw new Error('Could not load HealthKit');
+  }
+
+  const data = new HealthData();
 
   const [
     steps,
@@ -79,18 +160,6 @@ async function fetchHealthKitData(): Promise<HealthData> {
   // ASSIGN MORE DATA HERE
 
   return data;
-}
-
-function initHealthKit(permissions: HealthKitPermissions): Promise<void> {
-  return new Promise((resolve, reject) => {
-    AppleHealthKit.initHealthKit(permissions, (error: string) => {
-      if (error) {
-        console.log('initHealthKit error:', error);
-        return reject(new Error('Cannot grant permissions!'));
-      }
-      resolve();
-    });
-  });
 }
 
 function fetchAndAggregateData(
@@ -162,26 +231,6 @@ function getStartDateAWeekAgo(): string {
 
 async function fetchHealthConnectData(): Promise<HealthData> {
   const data = new HealthData();
-
-  // initialize the client
-  const isInitialized = await initialize();
-  if (!isInitialized) {
-    throw new Error('Could not initialize Health Connect');
-  }
-
-  // request permissions
-  const grantedPermissions = await requestPermission([
-    { accessType: 'read', recordType: 'TotalCaloriesBurned' },
-    { accessType: 'read', recordType: 'Steps' },
-  ]);
-  const permissionsOkay = ["Steps", "TotalCaloriesBurned"]
-    .every(recordType => grantedPermissions
-      .map(permission => permission.recordType)
-      .includes(recordType)
-    );
-  if (!permissionsOkay) {
-    throw new Error('Could not grant permissions');
-  }
 
   // Read steps
   const stepsResult = await aggregateGroupByDuration({
