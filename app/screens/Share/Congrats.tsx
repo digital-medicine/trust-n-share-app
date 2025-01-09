@@ -20,10 +20,8 @@ export default function Congrats() {
         </Text>
 
         <Text>
-          As soon as your data is bought, you can collect your compensation in the Profile section.
+          As soon as your data is bought, you can collect your compensation in the Compensations tab.
         </Text>
-
-        <Text style={{ fontFamily: 'Courier' }}>{formString}</Text>
       </View>
     </SafeAreaView>
   );
