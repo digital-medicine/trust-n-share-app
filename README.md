@@ -1,24 +1,16 @@
-# Building and running
+# Beschreibung
+
+Die Datenspender-App des TrustNShare Forschungsprojektes.  
+TrustNShare ist ein partizipativ entwickeltes, Smart-contract basiertes Datentreuhandmodell mit skalierbarem Vertrauen und Inzentivierung.
+
+**Publikationen:**
+- [TrustNShare Partizipativ entwickeltes, Smart-contract basiertes Datentreuhandmodell mit skalierbarem Vertrauen und Inzentivierung](https://elib.dlr.de/199798/)
+- [Development of a Blockchain-Based Data Trust Model for Secure and Controlled Health Data Sharing Grounded on Empirical Research](https://ebooks.iospress.nl/doi/10.3233/SHTI230472)
+
+
+# Installation
 TODO
 
-### Important note regarding react-native-healthkit
-The index.js of the package must be edited:
+# Attribution
 
-```js
-const NativeModules = require('react-native').NativeModules
-export const HealthKit = Object.assign({}, AppleHealthKit, {
-  isAvailable: NativeModules.AppleHealthKit.isAvailable,
-  initHealthKit: NativeModules.AppleHealthKit.initHealthKit,
-  getStepCount: NativeModules.AppleHealthKit.getDailyStepCountSamples,
-  getActiveEnergyBurned: NativeModules.AppleHealthKit.getActiveEnergyBurned,
-
-  Constants: {
-    Activities,
-    Observers,
-    Permissions,
-    Units,
-  },
-})
-```
-
-This can be disregarded when [this PR](https://github.com/agencyenterprise/react-native-health/pull/396) is merged.
+Logo by Flaticon: [love and romance icons](https://www.flaticon.com/free-icons/love-and-romance)
