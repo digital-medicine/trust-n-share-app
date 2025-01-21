@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import FormContainer from '../../components/FormContainer.tsx';
 import {StyleSheet, Text} from 'react-native';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
+import {translate} from '../../utils/localization.ts';
 
 
 export default function Information() {
@@ -10,15 +11,11 @@ export default function Information() {
   return (
     <FormContainer>
       <Text style={styles.textbox}>
-        We can protect your data by obscuring details.
-        We can obscure them to a greater or lesser extent.
-        The stronger the protection, the less useful the data.
-        Therefore, the next questions help us to assess how much protection is worth to you.
-        Then we can make you suitable offers.
+        {translate("upload.information.text")}
       </Text>
 
       {/* @ts-ignore */}
-      <PrimaryButton onPress={() => navigation.navigate('PrivacyLevel')} title={'Next'} />
+      <PrimaryButton onPress={() => navigation.navigate('PrivacyLevel')} title={translate("general.next")} />
     </FormContainer>
   );
 }

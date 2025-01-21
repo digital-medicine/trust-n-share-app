@@ -37,6 +37,9 @@ function SplashScreen() {
 }
 
 const ShareStack = createNativeStackNavigator({
+  screenOptions: {
+    headerBackTitle: translate("general.back"),
+  },
   screens: {
     DataSelection: {
       screen: DataSelection,
@@ -53,43 +56,43 @@ const ShareStack = createNativeStackNavigator({
     Institutions: {
       screen: Institutions,
       options: {
-        title: 'Institutions',
+        title: translate("upload.institutions.title"),
       },
     },
     Duration: {
       screen: Duration,
       options: {
-        title: 'Duration',
+        title: translate("upload.duration.title"),
       },
     },
     Information: {
       screen: Information,
       options: {
-        title: 'Information',
+        title: translate("upload.information.title"),
       },
     },
     PrivacyLevel: {
       screen: PrivacyLevel,
       options: {
-        title: 'Level of Privacy',
+        title: translate("upload.privacy-level.title"),
       },
     },
     Reputation: {
       screen: Reputation,
       options: {
-        title: 'Reputation',
+        title: translate("upload.reputation.title"),
       },
     },
     Incentives: {
       screen: Incentives,
       options: {
-        title: 'Incentives',
+        title: translate("upload.incentives.title"),
       },
     },
     Consumers: {
       screen: Consumers,
       options: {
-        title: 'Consumers',
+        title: translate("upload.consumers.title"),
       },
     },
     Congrats: {

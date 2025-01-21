@@ -2,6 +2,7 @@ import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useNavigation} from '@react-navigation/native';
 import {useFormStore} from '../../stores/form.ts';
+import {translate} from '../../utils/localization.ts';
 
 
 export default function Congrats() {
@@ -13,14 +14,14 @@ export default function Congrats() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.header}>Congratulations!</Text>
+        <Text style={styles.header}>{translate("upload.congrats.title")}</Text>
 
         <Text style={styles.subHeader}>
-          Your chosen fitness activity data will now be shared with your chosen institutions.
+          {translate("upload.congrats.subheader")}
         </Text>
 
-        <Text>
-          As soon as your data is bought, you can collect your compensation in the Compensations tab.
+        <Text style={styles.text}>
+          {translate("upload.congrats.text")}
         </Text>
       </View>
     </SafeAreaView>
@@ -40,11 +41,16 @@ const styles = StyleSheet.create({
   header: {
     paddingTop: 60,
     fontSize: 32,
+    textAlign: 'center',
     fontWeight: 'bold',
   },
   subHeader: {
     textAlign: 'center',
     fontSize: 24,
     fontWeight: 500,
-  }
+  },
+  text: {
+    textAlign: 'center',
+    fontSize: 18,
+  },
 })
