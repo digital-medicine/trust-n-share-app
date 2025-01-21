@@ -26,11 +26,12 @@ import VouchersScreen from './app/screens/Compensations/Vouchers.tsx';
 import CompensationsTabIcon from './app/components/CompensationsTabIcon.tsx';
 import {useServiceAvailableStore} from './app/stores/serviceAvailable.ts';
 import Unavailable from './app/screens/Unavailable.tsx';
+import {translate} from './app/utils/localization.ts';
 
 function SplashScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Loading...</Text>
+      <Text>{translate("general.loading")}</Text>
     </View>
   );
 }
@@ -40,13 +41,13 @@ const ShareStack = createNativeStackNavigator({
     DataSelection: {
       screen: DataSelection,
       options: {
-        title: 'Data Selection',
+        title: translate("upload.data-selection.title"),
       },
     },
     Purpose: {
       screen: Purpose,
       options: {
-        title: 'Purpose of Data usage',
+        title: translate("upload.purpose.title"),
       },
     },
     Institutions: {
@@ -188,24 +189,28 @@ const MainTabs = createBottomTabNavigator({
       screen: HomeScreen,
       options: {
         headerShown: false,
+        title: translate("general.home"),
       }
     },
     Upload: {
       screen: ShareStack,
       options: {
         headerShown: false,
+        title: translate("general.upload"),
       }
     },
     Compensations: {
       screen: CompensationsStack,
       options: {
         headerShown: false,
+        title: translate("general.compensations"),
       }
     },
     Profile: {
       screen: ProfileStack,
       options: {
         headerShown: false,
+        title: translate("general.profile"),
       }
     },
   },

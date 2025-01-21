@@ -1,0 +1,25 @@
+{
+  "general.loading": "Lade ...",
+  "general.no-data": "Keine Daten",
+  "general.home": "Home",
+  "general.upload": "Hochladen",
+  "general.compensations": "Kompensationen",
+  "general.profile": "Profil",
+  "general.next": "Weiter",
+
+  "home.today-header": "Persönliche Fitness-Daten",
+  "home.steps": "Schritte",
+  "home.calories": "Kalorien",
+  "home.statistics-header": "Statistiken",
+  "home.steps-this-week": "Schritte diese Woche",
+
+  "upload.data-selection.title": "Daten auswählen",
+  "upload.data-selection.steps": "Schritte",
+  "upload.data-selection.total-steps": "Schritte insgesamt",
+  "upload.data-selection.calories": "Kalorien",
+  "upload.data-selection.calories-total": "Kalorien insgesamt",
+  "upload.data-selection.error-no-selection": "Bitte wähle mindestens eine Datenquelle aus.",
+
+  "upload.purpose.title": "Zweck der Datennutzung",
+  "upload.purpose.error-no-selection": "Bitte wähle mindestens einen Zweck aus.",
+}

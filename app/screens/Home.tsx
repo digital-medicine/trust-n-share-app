@@ -5,6 +5,7 @@ import {BarChart} from 'react-native-chart-kit';
 import {useHealthStore} from '../stores/health.ts';
 import PrimaryButton from '../components/PrimaryButton.tsx';
 import {useNavigation} from '@react-navigation/native';
+import {translate, languageTag} from '../utils/localization.ts';
 
 export default function HomeScreen() {
   const healthData = useHealthStore(state => state.healthData);
@@ -42,7 +43,7 @@ export default function HomeScreen() {
         const date = new Date();
         date.setDate(date.getDate() - i);
 
-        const label = date.toLocaleDateString('en-US', { weekday: 'short' });
+        const label = date.toLocaleDateString(languageTag, { weekday: 'short' });
 
         const value =
           healthData.steps.find(
@@ -77,28 +78,28 @@ export default function HomeScreen() {
       <SafeAreaView>
         {/* Personal Health data */}
         <View style={styles.personalHealthContainer}>
-          <Text style={styles.header}>Personal Fitness Data</Text>
+          <Text style={styles.header}>{translate("home.today-header")}</Text>
           {healthLoading
-            ? <Text>Loading...</Text>
+            ? <Text>{translate("general.loading")}</Text>
             : <View style={styles.personalHealthGrid}>
-              <PersonalHealthItem title="steps taken" value={stepsToday} icon="footsteps" />
-              <PersonalHealthItem title="calories burned" value={energyBurnedToday} icon="flame" />
+              <PersonalHealthItem title={translate("home.steps")} value={stepsToday} icon="footsteps" />
+              <PersonalHealthItem title={translate("home.calories")} value={energyBurnedToday} icon="flame" />
             </View>
           }
 
           <View style={{width: "100%", paddingHorizontal: 20}}>
-            <PrimaryButton onPress={() => navigation.navigate("Upload")} title="Upload" />
+            <PrimaryButton onPress={() => navigation.navigate("Upload")} title={translate("general.upload")} />
           </View>
         </View>
 
         {/* fitness statistics */}
         <View style={styles.statisticsContainer}>
-          <Text style={styles.header}>Fitness Statistics</Text>
+          <Text style={styles.header}>{translate("home.statistics-header")}</Text>
           {healthLoading
             ? <Text>Loading...</Text>
             :
             <View style={styles.chartContainer}>
-              <Text style={styles.chartHeader}>Steps taken this week</Text>
+              <Text style={styles.chartHeader}>{translate("home.steps-this-week")}</Text>
               {healthData?.steps?.length ?? 0 > 0
                 ? <BarChart
                   data={stepsChartData}
@@ -149,7 +150,7 @@ function PersonalHealthItem({title, value, icon}: {title: string; value: number 
         <Ionicons name={icon} size={30} color="#6c6c6c" />
         {value !== null
           ? <Text style={personalHealthItemStyles.value}>{value}</Text>
-          : <Text style={styles.noData}>No data</Text>
+          : <Text style={styles.noData}>{translate("general.no-data")}</Text>
         }
         <Text style={personalHealthItemStyles.title}>{title}</Text>
       </View>
