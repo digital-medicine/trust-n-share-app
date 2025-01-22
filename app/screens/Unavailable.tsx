@@ -1,13 +1,15 @@
 import {StyleSheet, Text, View} from 'react-native';
 import PrimaryButton from '../components/PrimaryButton.tsx';
 import {useServiceAvailableStore} from '../stores/serviceAvailable.ts';
+import Config from 'react-native-config';
+import {translate} from '../utils/localization.ts';
 
 
 export default function Unavailable() {
   const setAvailable = useServiceAvailableStore(state => state.setAvailable);
 
   const retry = async () => {
-    const testResponse = await fetch('http://87.106.82.135:8089/');
+    const testResponse = await fetch(Config.API_URL);
 
     if (testResponse.status !== 503) {
       setAvailable(true);
@@ -16,9 +18,9 @@ export default function Unavailable() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Service unavailable :(</Text>
+      <Text style={styles.header}>{translate("unavailable.header")}</Text>
 
-      <PrimaryButton onPress={retry} title={"Retry"} />
+      <PrimaryButton onPress={retry} title={translate("unavailable.retry")} />
     </View>
   );
 }
