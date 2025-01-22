@@ -26,69 +26,73 @@ import VouchersScreen from './app/screens/Compensations/Vouchers.tsx';
 import CompensationsTabIcon from './app/components/CompensationsTabIcon.tsx';
 import {useServiceAvailableStore} from './app/stores/serviceAvailable.ts';
 import Unavailable from './app/screens/Unavailable.tsx';
+import {translate} from './app/utils/localization.ts';
 
 function SplashScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Loading...</Text>
+      <Text>{translate("general.loading")}</Text>
     </View>
   );
 }
 
 const ShareStack = createNativeStackNavigator({
+  screenOptions: {
+    headerBackTitle: translate("general.back"),
+  },
   screens: {
     DataSelection: {
       screen: DataSelection,
       options: {
-        title: 'Data Selection',
+        title: translate("upload.data-selection.title"),
       },
     },
     Purpose: {
       screen: Purpose,
       options: {
-        title: 'Purpose of Data usage',
+        title: translate("upload.purpose.title"),
       },
     },
     Institutions: {
       screen: Institutions,
       options: {
-        title: 'Institutions',
+        title: translate("upload.institutions.title"),
       },
     },
     Duration: {
       screen: Duration,
       options: {
-        title: 'Duration',
+        title: translate("upload.duration.title"),
       },
     },
     Information: {
       screen: Information,
       options: {
-        title: 'Information',
+        title: translate("upload.information.title"),
       },
     },
     PrivacyLevel: {
       screen: PrivacyLevel,
       options: {
-        title: 'Level of Privacy',
+        title: translate("upload.privacy-level.title"),
       },
     },
     Reputation: {
       screen: Reputation,
       options: {
-        title: 'Reputation',
+        title: translate("upload.reputation.title"),
       },
     },
     Incentives: {
       screen: Incentives,
       options: {
-        title: 'Incentives',
+        title: translate("upload.incentives.title"),
       },
     },
     Consumers: {
       screen: Consumers,
       options: {
-        title: 'Consumers',
+        title: translate("upload.consumers.title"),
       },
     },
     Congrats: {
@@ -102,36 +106,39 @@ const ShareStack = createNativeStackNavigator({
 });
 
 const CompensationsStack = createNativeStackNavigator({
+  screenOptions: {
+    headerBackTitle: translate("general.back"),
+  },
   screens: {
     Main: {
       screen: Compensations,
       options: {
-        title: 'Compensations',
+        title: translate("compensations.header"),
         headerShown: false,
       },
     },
     Vouchers: {
       screen: VouchersScreen,
       options: {
-        title: 'Vouchers',
+        title: translate("compensations.vouchers.title"),
       },
     },
     Money: {
       screen: () => <Text>Money</Text>,
       options: {
-        title: 'Financial Compensation',
+        title: translate("compensations.money.title"),
       },
     },
     StudyResults: {
       screen: () => <Text>StudyResults</Text>,
       options: {
-        title: 'Study results',
+        title: translate("compensations.study-results.title"),
       },
     },
     PurposeResults: {
       screen: () => <Text>Purpose</Text>,
       options: {
-        title: 'Purpose',
+        title: translate("compensations.purpose.title"),
       },
     },
   }
@@ -142,7 +149,7 @@ const ProfileStack = createNativeStackNavigator({
     Main: {
       screen: ProfileScreen,
       options: {
-        title: 'Profile',
+        title: translate("general.profile"),
         // headerShown: false,
         headerRight: LogoutButton,
       },
@@ -188,24 +195,28 @@ const MainTabs = createBottomTabNavigator({
       screen: HomeScreen,
       options: {
         headerShown: false,
+        title: translate("general.home"),
       }
     },
     Upload: {
       screen: ShareStack,
       options: {
         headerShown: false,
+        title: translate("general.upload"),
       }
     },
     Compensations: {
       screen: CompensationsStack,
       options: {
         headerShown: false,
+        title: translate("general.compensations"),
       }
     },
     Profile: {
       screen: ProfileStack,
       options: {
         headerShown: false,
+        title: translate("general.profile"),
       }
     },
   },
@@ -252,7 +263,12 @@ const RootStack = createNativeStackNavigator({
             headerShown: false,
           },
         },
-        Register: RegisterScreen,
+        Register: {
+          screen: RegisterScreen,
+          options: {
+            title: translate("register.header"),
+          },
+        },
       },
     },
   },

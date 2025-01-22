@@ -4,6 +4,7 @@ import PrimaryButton from '../../components/PrimaryButton.tsx';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useUserStore} from '../../stores/user.ts';
+import {translate} from '../../utils/localization.ts';
 
 export default function ProfileScreen() {
   const user = useUserStore(state => state.user);
@@ -18,14 +19,14 @@ export default function ProfileScreen() {
   return (
     <ScrollView style={styles.safeArea}>
       <View style={styles.container}>
-        <Section header="Info">
+        <Section header={translate("profile.info")}>
           <InfoBox>
-            <InfoItem title="Name" data={user?.username ?? 'Error'} />
-            <InfoItem title="Email" data={user?.email ?? 'Error'} />
+            <InfoItem title={translate("profile.name")} data={user?.username ?? 'Error'} />
+            <InfoItem title={translate("profile.email")} data={user?.email ?? 'Error'} />
           </InfoBox>
         </Section>
 
-        <Section header="Transaction History">
+        <Section header={translate("profile.upload-history")}>
           <TransactionHistory transactions={transactions} />
         </Section>
       </View>

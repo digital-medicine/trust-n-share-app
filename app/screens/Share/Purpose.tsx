@@ -6,6 +6,7 @@ import {useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
 import {useFormStore} from '../../stores/form.ts';
 import {useFormOptionsStore} from '../../stores/formOptions.ts';
+import {translate} from '../../utils/localization.ts';
 
 
 export default function Purpose()  {
@@ -18,7 +19,7 @@ export default function Purpose()  {
 
   const onSubmit = () => {
     if (form.purposes.length === 0) {
-      setError('Please select at least one purpose.');
+      setError(translate("upload.purpose.error-no-selection"));
       return;
     }
 
@@ -40,7 +41,7 @@ export default function Purpose()  {
 
       <ErrorText error={error} />
 
-      <PrimaryButton onPress={onSubmit} title={'Next'} />
+      <PrimaryButton onPress={onSubmit} title={translate("general.next")} />
     </FormContainer>
   );
 }

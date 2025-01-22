@@ -3,6 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import React from 'react';
 import {useUserStore} from '../../stores/user.ts';
+import {translate} from '../../utils/localization.ts';
 
 
 export default function Compensations() {
@@ -12,7 +13,7 @@ export default function Compensations() {
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.header}>Select your compensation</Text>
+        <Text style={styles.header}>{translate("compensations.header")}</Text>
 
         {/*{form.incentives.includes('vouchers')
           ? <Box
@@ -60,33 +61,33 @@ export default function Compensations() {
         }*/}
 
         <Box
-          title='Vouchers'
-          description='Receive vouchers for various stores and services as a token of appreciation.'
+          title={translate("compensations.vouchers.title")}
+          description={translate("compensations.vouchers.description")}
           button={() => navigation.navigate('Vouchers')}
           badgeCount={badgeCount}
         />
 
         <Box
-          title='Results of the study'
-          description='Get exclusive access to the results of the study you participated in.'
+          title={translate("compensations.study-results.title")}
+          description={translate("compensations.study-results.description")}
           button={() => navigation.navigate('StudyResults')}
         />
 
         <Box
-          title='Donations for institutes'
-          description='Contribute to educational and research institutes through your participation.'
+          title={translate("compensations.donations.title")}
+          description={translate("compensations.donations.description")}
           button={null}
         />
 
         <Box
-          title='Purpose of data use'
-          description='Understand how your data will be used and for what purposes.'
+          title={translate("compensations.purpose.title")}
+          description={translate("compensations.purpose.description")}
           button={() => navigation.navigate('PurposeResults')}
         />
 
         <Box
-          title='Financial compensation'
-          description='Receive a final compensation for your valuable participation.'
+          title={translate("compensations.money.title")}
+          description={translate("compensations.money.description")}
           button={() => navigation.navigate('Money')}
         />
 
@@ -105,7 +106,11 @@ function Box({ title, description, button, badgeCount }:
         {description}
       </Text>
 
-      {button ? <PrimaryButton onPress={button} title='Redeem' badgeCount={badgeCount} /> : null}
+      {button ? <PrimaryButton
+        onPress={button}
+        title={translate("compensations.redeem")}
+        badgeCount={badgeCount}
+      /> : null}
     </View>
   )
 }

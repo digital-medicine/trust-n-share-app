@@ -4,6 +4,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import Slider from '@react-native-community/slider';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useFormStore} from '../../stores/form.ts';
+import {translate} from '../../utils/localization.ts';
 
 
 export default function Reputation() {
@@ -14,14 +15,15 @@ export default function Reputation() {
   return (
     <FormContainer>
       <View style={styles.box}>
-        <Text style={styles.boxHeader}>Buyer Reputation</Text>
+        <Text style={styles.boxHeader}>{translate("upload.reputation.box-title")}</Text>
 
         <Text style={styles.boxText}>
-          What reputation should a
-          <Text style={{ fontWeight: 'bold' }}> buyer </Text>
-          of your data set have as a
-          <Text style={{ fontWeight: 'bold' }}> minimum</Text>
-          ?
+          {/*What reputation should a*/}
+          {/*<Text style={{ fontWeight: 'bold' }}> buyer </Text>*/}
+          {/*of your data set have as a*/}
+          {/*<Text style={{ fontWeight: 'bold' }}> minimum</Text>*/}
+          {/*?*/}
+          {translate("upload.reputation.text")}
         </Text>
 
         <Text style={styles.reputationText}>
@@ -38,7 +40,7 @@ export default function Reputation() {
         />
       </View>
 
-      <PrimaryButton onPress={() => navigation.navigate('Incentives')} title={'Next'} />
+      <PrimaryButton onPress={() => navigation.navigate('Incentives')} title={translate("general.next")} />
     </FormContainer>
   )
 }

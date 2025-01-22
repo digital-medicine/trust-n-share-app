@@ -7,6 +7,7 @@ import ErrorText from '../../components/ErrorText.tsx';
 import {getConsumers} from '../../utils/restApi.ts';
 import {useAuthStore} from '../../stores/auth.ts';
 import {useFormStore} from '../../stores/form.ts';
+import {translate} from '../../utils/localization.ts';
 
 export default function Consumers() {
   const form = useFormStore(state => state.form);
@@ -42,7 +43,7 @@ export default function Consumers() {
 
   function onSubmit() {
     if (form.consumers.length === 0) {
-      setError("Please select at least one consumer.");
+      setError(translate("upload.consumers.error-no-selection"));
       return;
     }
 
@@ -77,7 +78,7 @@ export default function Consumers() {
 
       <ErrorText error={error} />
 
-      <PrimaryButton onPress={onSubmit} title="Submit" />
+      <PrimaryButton onPress={onSubmit} title={translate("general.submit")} />
     </FormContainer>
   );
 }

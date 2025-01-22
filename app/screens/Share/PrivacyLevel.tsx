@@ -8,6 +8,7 @@ import {useEffect, useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
 import {getPrivacyLowRisk, getPrivacyHighRisk} from '../../utils/restApi.ts';
 import {useFormStore} from '../../stores/form.ts';
+import {translate} from '../../utils/localization.ts';
 
 export default function PrivacyLevel() {
   const navigation = useNavigation();
@@ -152,12 +153,12 @@ export default function PrivacyLevel() {
 
       {/* Incentives */}
       <View style={styles.box}>
-        <Text style={styles.boxHeader}>Incentives for original data</Text>
+        <Text style={styles.boxHeader}>
+          {translate("upload.privacy-level.original-data.title")}
+        </Text>
 
         <Text style={styles.boxText}>
-          Let’s say no details would be obfuscated:
-          For similar data, data users typically offer X euros as an incentive.
-          What would be the incentive for you to share your data?
+          {translate("upload.privacy-level.original-data.text")}
         </Text>
 
         <View style={styles.inputContainer}>
@@ -176,16 +177,13 @@ export default function PrivacyLevel() {
 
       {/* High Risk */}
       <View style={styles.box}>
-        <Text style={styles.boxHeader}>Low protection</Text>
+        <Text style={styles.boxHeader}>{translate("upload.privacy-level.low-protection.title")}</Text>
 
         <Text style={styles.boxText}>
-          Imagine that your data is now somewhat obfuscated.
-          Compared to the original data, the risk that the data can be used to draw conclusions about you is reduced by
-          10% (e.g. before it was possible to draw conclusions in 10 out of 100 cases, after in 9 out of 100 cases).
+          {translate("upload.privacy-level.low-protection.text1")}
         </Text>
         <Text style={styles.boxText}>
-          This makes the data less interesting.
-          How much of the incentive promised for the original data would you sacrifice?
+          {translate("upload.privacy-level.low-protection.text2")}
         </Text>
 
         <Text style={styles.riskText}>
@@ -207,22 +205,19 @@ export default function PrivacyLevel() {
                 <Text style={styles.sliderBoundMax}>{toEuro(privacyHighRiskBounds.max)}</Text>
               </View>
             </View>
-          : <Text style={styles.loading}>Loading ...</Text>
+          : <Text style={styles.loading}>{translate("general.loading")}</Text>
         }
       </View>
 
       {/* Low Risk */}
       <View style={styles.box}>
-        <Text style={styles.boxHeader}>High privacy</Text>
+        <Text style={styles.boxHeader}>{translate("upload.privacy-level.high-protection.title")}</Text>
 
         <Text style={styles.boxText}>
-          Now significantly more details are being concealed.
-          Compared to the original data, the risk that the data can be used to draw conclusions about you is reduced by
-          90% (e.g. before it was possible to draw conclusions in 10 out of 100 cases, after in 1 out of 100 cases).
+          {translate("upload.privacy-level.high-protection.text1")}
         </Text>
         <Text style={styles.boxText}>
-          How much is this protection worth to you?
-          What proportion of the incentives promised for the original data do you want to retain?
+          {translate("upload.privacy-level.high-protection.text2")}
         </Text>
 
         <Text style={styles.riskText}>
@@ -244,11 +239,11 @@ export default function PrivacyLevel() {
                 <Text style={styles.sliderBoundMax}>{toEuro(privacyLowRiskBounds.max)}</Text>
               </View>
             </View>
-          : <Text style={styles.loading}>Loading ...</Text>
+          : <Text style={styles.loading}>{translate("general.loading")}</Text>
         }
       </View>
 
-      <PrimaryButton onPress={onSubmit} title={'Next'} />
+      <PrimaryButton onPress={onSubmit} title={translate("general.next")} />
     </FormContainer>
   )
 }

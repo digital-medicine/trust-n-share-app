@@ -5,6 +5,7 @@ import FormTextInput from '../../components/FormTextInput.tsx';
 import {StyleSheet, Text, View} from 'react-native';
 import {useState} from 'react';
 import {useFormStore} from '../../stores/form.ts';
+import {translate} from '../../utils/localization.ts';
 
 export default function Duration() {
   const navigation = useNavigation();
@@ -20,11 +21,11 @@ export default function Duration() {
 
   const validateDuration = (duration: number) => {
     if (isNaN(duration)) {
-      setError('Duration must be a number');
+      setError(translate("upload.duration.error-not-a-number"));
       return false;
     }
     if (duration < 1) {
-      setError('Duration must be at least 1 month');
+      setError(translate("upload.duration.error-too-short"));
       return false;
     }
 
@@ -42,7 +43,7 @@ export default function Duration() {
   return (
     <FormContainer>
       <View style={styles.container}>
-        <Text style={styles.text}>Offer my data for</Text>
+        <Text style={styles.text}>{translate("upload.duration.text1")}</Text>
 
         <FormTextInput
           style={styles.input}
@@ -53,12 +54,12 @@ export default function Duration() {
           onSubmitEditing={onSubmit}
         />
 
-        <Text style={styles.text}>months.</Text>
+        <Text style={styles.text}>{translate("upload.duration.text2")}</Text>
       </View>
 
       {error && <Text style={{color: 'red', textAlign: 'center'}}>{error}</Text>}
 
-      <PrimaryButton onPress={onSubmit} title={'Next'} />
+      <PrimaryButton onPress={onSubmit} title={translate("general.next")} />
     </FormContainer>
   )
 }

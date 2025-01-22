@@ -7,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {validateEmail} from '../utils/validateEmail.ts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useAuthStore} from '../stores/auth.ts';
+import {translate} from '../utils/localization.ts';
 
 type errors = {
   form?: string;
@@ -34,20 +35,20 @@ export default function RegisterScreen() {
 
     // Validate email
     if (!validateEmail(email)) {
-      newErrors = { ...newErrors, email: 'Invalid email address' };
+      newErrors = { ...newErrors, email: translate('Bitte gib eine gültige E-Mail-Adresse ein.') };
     }
 
     // Validate name
     if (username.length === 0) {
-      newErrors = { ...newErrors, firstName: 'Username must not be empty' };
+      newErrors = { ...newErrors, firstName: translate('register.error-username-empty') };
     }
 
     // Validate password
     if (password.length === 0) {
-      newErrors = { ...newErrors, password: 'Password must not be empty' };
+      newErrors = { ...newErrors, password: translate('register.error-password-empty') };
     }
     if (password !== confirmPassword) {
-      newErrors = { ...newErrors, confirmPassword: 'Passwords do not match' };
+      newErrors = { ...newErrors, confirmPassword: translate('register.error-password-mismatch') };
     }
 
     setErrors(newErrors);
@@ -68,50 +69,57 @@ export default function RegisterScreen() {
   return (
     <ScrollView>
       <View style={styles.container}>
-        {errors.form ? <Text style={{ color: 'red' }}>{errors.form}</Text> : null}
+        {errors.form ? <Text style={{color: 'red'}}>{errors.form}</Text> : null}
 
         <FormTextInput
-          placeholder="Username"
+          placeholder={translate('register.username')}
           value={username}
           onChangeText={setUsername}
           keyboardType="default"
           autoCapitalize="none"
         />
 
-        {errors.lastName ? <Text style={{ color: 'red' }}>{errors.lastName}</Text> : null}
+        {errors.lastName ? (
+          <Text style={{color: 'red'}}>{errors.lastName}</Text>
+        ) : null}
 
         <FormTextInput
-          placeholder="Email"
+          placeholder={translate('register.email')}
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
         />
 
-        {errors.email ? <Text style={{ color: 'red' }}>{errors.email}</Text> : null}
+        {errors.email ? (
+          <Text style={{color: 'red'}}>{errors.email}</Text>
+        ) : null}
 
         <FormTextInput
-          placeholder="Password"
+          placeholder={translate('register.password')}
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           autoCapitalize="none"
         />
 
-        {errors.password ? <Text style={{ color: 'red' }}>{errors.password}</Text> : null}
+        {errors.password ? (
+          <Text style={{color: 'red'}}>{errors.password}</Text>
+        ) : null}
 
         <FormTextInput
-          placeholder="Confirm Password"
+          placeholder={translate('register.confirm-password')}
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
           autoCapitalize="none"
         />
 
-        {errors.confirmPassword ? <Text style={{ color: 'red' }}>{errors.confirmPassword}</Text> : null}
+        {errors.confirmPassword ? (
+          <Text style={{color: 'red'}}>{errors.confirmPassword}</Text>
+        ) : null}
 
-        <PrimaryButton onPress={handleRegister} title="Register" />
-
+        <PrimaryButton onPress={handleRegister} title={translate("register.button")} />
       </View>
     </ScrollView>
   );

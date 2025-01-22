@@ -9,6 +9,7 @@ import {getIncentives, getPurposes} from '../../utils/restApi.ts';
 import {useFormStore} from '../../stores/form.ts';
 import {useHealthStore} from '../../stores/health.ts';
 import {useFormOptionsStore} from '../../stores/formOptions.ts';
+import {translate} from '../../utils/localization.ts';
 
 export default function DataSelection() {
   const navigation = useNavigation();
@@ -64,7 +65,7 @@ export default function DataSelection() {
   const onSubmit = () => {
     // validate form
     if (form.data.length === 0) {
-      setError('Please select at least one data type.');
+      setError(translate("upload.data-selection.error-no-selection"));
       return;
     }
 
@@ -80,16 +81,16 @@ export default function DataSelection() {
       ) : (
         <>
           <ListItem
-            title={'Steps'}
-            dataDescription={'Total steps'}
+            title={translate('upload.data-selection.steps')}
+            dataDescription={translate('upload.data-selection.total-steps')}
             data={steps}
             icon={'footsteps'}
             onPress={() => toggleFormSelected('data', 'steps')}
             selected={form.data.includes('steps')}
           />
           <ListItem
-            title={'Energy Burned'}
-            dataDescription={'Total energy burned'}
+            title={translate('upload.data-selection.calories')}
+            dataDescription={translate('upload.data-selection.calories-total')}
             data={energyBurned}
             icon={'flame'}
             onPress={() => toggleFormSelected('data', 'energyBurned')}
@@ -100,7 +101,7 @@ export default function DataSelection() {
 
       <ErrorText error={error} />
 
-      <PrimaryButton onPress={onSubmit} title={'Next'} />
+      <PrimaryButton onPress={onSubmit} title={translate("general.next")} />
     </FormContainer>
   );
 }
@@ -144,7 +145,7 @@ function ListItem({title, dataDescription, data, icon, onPress, selected}: {
           <Text style={listItemDataDescriptionStyle}>{dataDescription}:</Text>
           {data !== null
             ? <Text style={listItemDataStyle}>{data}</Text>
-            : <Text style={listItemNoDataStyle}>No data</Text>
+            : <Text style={listItemNoDataStyle}>{translate("general.no-data")}</Text>
           }
         </View>
       </View>

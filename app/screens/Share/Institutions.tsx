@@ -5,6 +5,7 @@ import FormListItem from '../../components/FormListItem.tsx';
 import {useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
 import {useFormStore} from '../../stores/form.ts';
+import {translate} from '../../utils/localization.ts';
 
 
 export default function Institutions()  {
@@ -16,7 +17,7 @@ export default function Institutions()  {
 
   const onSubmit = () => {
     if (form.institutions.length === 0) {
-      setError('Please select at least one institution.');
+      setError(translate("upload.institutions.error-no-selection"));
       return;
     }
 
@@ -28,31 +29,31 @@ export default function Institutions()  {
   return (
     <FormContainer>
       <FormListItem
-        title="Universities"
+        title={translate("upload.institutions.universities")}
         onPress={() => toggleFormSelected('institutions', 'universities')}
         selected={form.institutions.includes('universities')}
       />
 
       <FormListItem
-        title="Government and Administration"
+        title={translate("upload.institutions.government")}
         onPress={() => toggleFormSelected('institutions', 'government')}
         selected={form.institutions.includes('government')}
       />
 
       <FormListItem
-        title="Hospitals"
+        title={translate("upload.institutions.hospitals")}
         onPress={() => toggleFormSelected('institutions', 'hospitals')}
         selected={form.institutions.includes('hospitals')}
       />
 
       <FormListItem
-        title="Private companies"
+        title={translate("upload.institutions.companies")}
         onPress={() => toggleFormSelected('institutions', 'companies')}
         selected={form.institutions.includes('companies')}
       />
 
       <FormListItem
-        title="Insurance providers"
+        title={translate("upload.institutions.insurance")}
         onPress={() => toggleFormSelected('institutions', 'insurance')}
         selected={form.institutions.includes('insurance')}
       />
@@ -60,7 +61,7 @@ export default function Institutions()  {
       <ErrorText error={error} />
 
       {/*@ts-ignore*/}
-      <PrimaryButton onPress={onSubmit} title={'Next'} />
+      <PrimaryButton onPress={onSubmit} title={translate("general.next")} />
     </FormContainer>
   );
 }
