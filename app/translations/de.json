@@ -65,4 +65,18 @@
   "upload.congrats.title": "Herzlichen Glückwunsch!",
   "upload.congrats.subheader": "Deine ausgewählten Fitnessaktivitätsdaten werden nun mit den von dir gewählten Institutionen geteilt.",
   "upload.congrats.text": "Sobald deine Daten gekauft werden, kannst du deine Kompensationen im Tab \"Kompensationen\" abholen.",
+
+  "compensations.header": "Wähle deine Kompensationen",
+  "compensations.redeem": "Einlösen",
+  "compensations.vouchers.title": "Gutscheine",
+  "compensations.vouchers.description": "Erhalte Gutscheine für verschiedene Geschäfte und Dienstleistungen als Zeichen der Wertschätzung.",
+  "compensations.study-results.title": "Studienresultate",
+  "compensations.study-results.description": "Erhalte exklusiven Zugang zu den Ergebnissen der Studie, an der du teilgenommen hast.",
+  "compensations.donations.title": "Spenden für Institute",
+  "compensations.donations.description": "Trage durch deine Teilnahme zur Arbeit von Bildungs- und Forschungsinstituten bei.",
+  "compensations.purpose.title": "Zweck der Datennutzung",
+  "compensations.purpose.description": "Verstehe, wie deine Daten genutzt werden und zu welchen Zwecken.",
+  "compensations.money.title": "Finanzielle Kompensation",
+  "compensations.money.description": "Erhalte eine finanzielle Vergütung für deine wertvolle Teilnahme.",
+
 }

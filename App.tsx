@@ -106,36 +106,39 @@ const ShareStack = createNativeStackNavigator({
 });
 
 const CompensationsStack = createNativeStackNavigator({
+  screenOptions: {
+    headerBackTitle: translate("general.back"),
+  },
   screens: {
     Main: {
       screen: Compensations,
       options: {
-        title: 'Compensations',
+        title: translate("compensations.header"),
         headerShown: false,
       },
     },
     Vouchers: {
       screen: VouchersScreen,
       options: {
-        title: 'Vouchers',
+        title: translate("compensations.vouchers.title"),
       },
     },
     Money: {
       screen: () => <Text>Money</Text>,
       options: {
-        title: 'Financial Compensation',
+        title: translate("compensations.money.title"),
       },
     },
     StudyResults: {
       screen: () => <Text>StudyResults</Text>,
       options: {
-        title: 'Study results',
+        title: translate("compensations.study-results.title"),
       },
     },
     PurposeResults: {
       screen: () => <Text>Purpose</Text>,
       options: {
-        title: 'Purpose',
+        title: translate("compensations.purpose.title"),
       },
     },
   }
