@@ -8,6 +8,7 @@
   "general.next": "Weiter",
   "general.back": "Zurück",
   "general.submit": "Absenden",
+  "general.cancel": "Abbrechen",
 
   "home.today-header": "Persönliche Fitness-Daten",
   "home.steps": "Schritte",
@@ -79,4 +80,12 @@
   "compensations.money.title": "Finanzielle Kompensation",
   "compensations.money.description": "Erhalte eine finanzielle Vergütung für deine wertvolle Teilnahme.",
 
+  "profile.info": "Info",
+  "profile.name": "Name",
+  "profile.email": "E-Mail",
+  "profile.upload-history": "Upload-Verlauf",
+
+  "logout": "Abmelden",
+  "logout.confirm.header": "Abmeldung bestätigen",
+  "logout.confirm.text": "Möchtest du dich wirklich abmelden?",
 }

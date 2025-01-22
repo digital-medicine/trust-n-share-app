@@ -149,7 +149,7 @@ const ProfileStack = createNativeStackNavigator({
     Main: {
       screen: ProfileScreen,
       options: {
-        title: 'Profile',
+        title: translate("general.profile"),
         // headerShown: false,
         headerRight: LogoutButton,
       },
