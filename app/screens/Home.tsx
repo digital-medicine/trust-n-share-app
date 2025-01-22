@@ -96,7 +96,7 @@ export default function HomeScreen() {
         <View style={styles.statisticsContainer}>
           <Text style={styles.header}>{translate("home.statistics-header")}</Text>
           {healthLoading
-            ? <Text>Loading...</Text>
+            ? <Text>{translate("general.loading")}</Text>
             :
             <View style={styles.chartContainer}>
               <Text style={styles.chartHeader}>{translate("home.steps-this-week")}</Text>
@@ -132,7 +132,7 @@ export default function HomeScreen() {
                   showValuesOnTopOfBars={true}
                 />
                 : <View style={styles.chartEmptyState}>
-                  <Text style={styles.noData}>No data</Text>
+                  <Text style={styles.noData}>{translate("general.no-data")}</Text>
                 </View>
               }
             </View>
