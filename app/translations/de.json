@@ -88,4 +88,23 @@
   "logout": "Abmelden",
   "logout.confirm.header": "Abmeldung bestätigen",
   "logout.confirm.text": "Möchtest du dich wirklich abmelden?",
+
+  "login.header": "Anmelden",
+  "login.username": "Benutzername",
+  "login.password": "Passwort",
+  "login.button": "Anmelden",
+  "login.register": "Neuer Nutzer? Hier registrieren",
+  "login.error-username-empty": "Bitte gib deinen Benutzernamen ein.",
+  "login.error-password-empty": "Bitte gib dein Passwort ein.",
+
+  "register.header": "Registrieren",
+  "register.username": "Benutzername",
+  "register.email": "E-Mail",
+  "register.password": "Passwort",
+  "register.confirm-password": "Passwort bestätigen",
+  "register.button": "Registrieren",
+  "register.error-username-empty": "Bitte gib deinen Benutzernamen ein.",
+  "register.error-email-invalid": "Bitte gib eine gültige E-Mail-Adresse ein.",
+  "register.error-password-empty": "Bitte gib ein Passwort ein.",
+  "register.error-password-mismatch": "Die Passwörter stimmen nicht überein.",
 }

@@ -263,7 +263,12 @@ const RootStack = createNativeStackNavigator({
             headerShown: false,
           },
         },
-        Register: RegisterScreen,
+        Register: {
+          screen: RegisterScreen,
+          options: {
+            title: translate("register.header"),
+          },
+        },
       },
     },
   },

@@ -10,6 +10,7 @@ import FormTextInput from '../components/FormTextInput.tsx';
 import Link from '../components/Link.tsx';
 import {useNavigation} from '@react-navigation/native';
 import {useAuthStore} from '../stores/auth.ts';
+import {translate} from '../utils/localization.ts';
 
 type errors = {
   form?: string;
@@ -29,12 +30,12 @@ export default function LoginScreen() {
 
     // Validate username
     if (username.length === 0) {
-      newErrors = { ...newErrors, username: 'Username must not be empty' };
+      newErrors = { ...newErrors, username: translate("login.error-username-empty") };
     }
 
     // Validate password
     if (password.length === 0) {
-      newErrors = { ...newErrors, password: 'Password must not be empty' };
+      newErrors = { ...newErrors, password: translate("login.error-password-empty") };
     }
 
     setErrors(newErrors);
@@ -57,33 +58,40 @@ export default function LoginScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>Login</Text>
+        <Text style={styles.title}>{translate('login.header')}</Text>
 
-        {errors.form ? <Text style={{ color: 'red' }}>{errors.form}</Text> : null}
+        {errors.form ? <Text style={{color: 'red'}}>{errors.form}</Text> : null}
 
         <FormTextInput
-          placeholder="Username"
+          placeholder={translate('login.username')}
           value={username}
           onChangeText={setUsername}
           autoCapitalize="none"
         />
 
-        {errors.username ? <Text style={{ color: 'red' }}>{errors.username}</Text> : null}
+        {errors.username ? (
+          <Text style={{color: 'red'}}>{errors.username}</Text>
+        ) : null}
 
         <FormTextInput
-          placeholder="Password"
+          placeholder={translate('login.password')}
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           autoCapitalize="none"
         />
 
-        {errors.password ? <Text style={{ color: 'red' }}>{errors.password}</Text> : null}
+        {errors.password ? (
+          <Text style={{color: 'red'}}>{errors.password}</Text>
+        ) : null}
 
-        <PrimaryButton title="Login" onPress={handleLogin} />
+        <PrimaryButton
+          title={translate('login.button')}
+          onPress={handleLogin}
+        />
 
-        <Link onPress={() => navigation.navigate("Register")}>
-          New user? Register here
+        <Link onPress={() => navigation.navigate('Register')}>
+          {translate('login.register')}
         </Link>
       </View>
     </SafeAreaView>
