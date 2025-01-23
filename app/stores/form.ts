@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import { getUser, putUser } from '../utils/restApi';
-import {useAuthStore} from './auth.ts';
+import { v4 as uuidv4 } from 'uuid';
 import {useUserStore} from './user.ts';
 import Config from 'react-native-config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface PrivacyLevel {
   incentive: number;
@@ -11,7 +12,7 @@ interface PrivacyLevel {
 }
 
 interface FormState {
-  data: string[];          // Adjust these types as necessary
+  data: string[];
   purposes: string[];
   institutions: string[];
   duration: number;
@@ -119,6 +120,8 @@ export const useFormStore = create<FormStore>((set) => ({
 
     await submitUserPreferences(form);
 
+    await appendUploadHistory(form);
+
     // Find a random delay for the compensations
     const max = Number(Config.COMPENSATION_DELAY_MAX);
     const min = Number(Config.COMPENSATION_DELAY_MIN);
@@ -156,6 +159,42 @@ async function submitUserPreferences(form: FormState) {
   if (submitResponse.error) {
     throw new Error(submitResponse.error);
   }
+}
+
+async function appendUploadHistory(form: FormState) {
+  const uploadUuid = uuidv4();
+
+  // Get username
+  const user = useUserStore.getState().user;
+  if (!user) {
+    throw new Error('User not found');
+  }
+  const username = user.username;
+
+  // Get current upload history
+  const currentHistory = await AsyncStorage.getItem(username + 'uploadHistory');
+
+  // Create new upload history
+  let newHistory;
+  if (currentHistory === null) {
+    newHistory = {
+      uploads: {
+        [uploadUuid]: {
+          form: form,
+          timestamp: Date.now(),
+        },
+      },
+    };
+  } else {
+    newHistory = JSON.parse(currentHistory);
+    newHistory.uploads[uploadUuid] = {
+      form: form,
+      timestamp: Date.now(),
+    };
+  }
+
+  // Save new upload history
+  await AsyncStorage.setItem(username + 'uploadHistory', JSON.stringify(newHistory));
 }
 
 function generateCompensations(form: FormState) {
