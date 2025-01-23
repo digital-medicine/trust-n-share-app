@@ -157,7 +157,7 @@ const ProfileStack = createNativeStackNavigator({
     Transaction: {
       screen: Transaction,
       options: ({ route }) => ({
-        title: route.params.name,
+        title: route.params.date,
       }),
     }
   },

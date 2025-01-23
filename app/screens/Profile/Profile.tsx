@@ -133,8 +133,7 @@ function UploadHistory({ uploads }: { uploads: Object }) {
       {Object.entries(uploads?.uploads ?? {}).map(([uuid, upload]) => (
         <UploadButton
           key={uuid}
-          id={uuid}
-          name={'test'}
+          uuid={uuid}
           date={new Intl.DateTimeFormat('de-DE', dateOptions).format(new Date(upload.timestamp)).replace(', ', ' ')}
         />
       ))}
@@ -142,13 +141,13 @@ function UploadHistory({ uploads }: { uploads: Object }) {
   );
 }
 
-function UploadButton({ id, name, date }) {
+function UploadButton({ uuid, date }) {
   const navigation = useNavigation();
 
   return (
     <TouchableOpacity
       style={transactionButtonStyles.whiteButton}
-      onPress={() => navigation.navigate('Transaction', { id, name })}
+      onPress={() => navigation.navigate('Transaction', { uuid, date })}
     >
       <View style={transactionButtonStyles.whiteButtonLeft}>
         <Text style={transactionButtonStyles.name}>{date}</Text>
