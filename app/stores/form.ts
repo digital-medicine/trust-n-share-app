@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { getUser, putUser } from '../utils/restApi';
 import {useAuthStore} from './auth.ts';
 import {useUserStore} from './user.ts';
+import Config from 'react-native-config';
 
 interface PrivacyLevel {
   incentive: number;
@@ -114,32 +115,50 @@ export const useFormStore = create<FormStore>((set) => ({
     })),
 
   submitForm: async () => {
-    const { form } = useFormStore.getState();
+    const {form} = useFormStore.getState();
 
-    const user = useUserStore.getState().user;
-    if (!user) {
-      throw new Error('User not found');
-    }
+    await submitUserPreferences(form);
 
-    const submitData = {
-      donorInfo: {
-        privacyLow: form.privacyLevel.lowRisk,
-        privacyHigh: form.privacyLevel.highRisk,
-        privacyNone: form.privacyLevel.incentive,
-        incentiveTypes: form.incentives,
-        reputation: form.reputation,
-        sharing: form.purposes,
-      },
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-      active: true,
-      roles: user.roles,
-    };
+    // Find a random delay for the compensations
+    const max = Number(Config.COMPENSATION_DELAY_MAX);
+    const min = Number(Config.COMPENSATION_DELAY_MIN);
+    const delay = Math.floor(Math.random() * (max - min)) + min;
 
-    const submitResponse = await putUser(submitData);
-    if (submitResponse.error) {
-      throw new Error(submitResponse.error);
-    }
+    setTimeout(() => {
+      generateCompensations(form);
+    }, delay);
   },
 }));
+
+async function submitUserPreferences(form: FormState) {
+  const user = useUserStore.getState().user;
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  const submitData = {
+    donorInfo: {
+      privacyLow: form.privacyLevel.lowRisk,
+      privacyHigh: form.privacyLevel.highRisk,
+      privacyNone: form.privacyLevel.incentive,
+      incentiveTypes: form.incentives,
+      reputation: form.reputation,
+      sharing: form.purposes,
+    },
+    _id: user._id,
+    username: user.username,
+    email: user.email,
+    active: true,
+    roles: user.roles,
+  };
+
+  const submitResponse = await putUser(submitData);
+  if (submitResponse.error) {
+    throw new Error(submitResponse.error);
+  }
+}
+
+function generateCompensations(form: FormState) {
+  // TODO: Generate some random compensations that match the form data and
+  //       store them
+}
