@@ -23,11 +23,11 @@ export default function VouchersScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.grid}>
-        {user?.availableCompensations.map(compensation => (
-          <View style={styles.gridItem} key={compensation._id}>
-            <Text style={styles.gridItemHeader}>{compensation.name}</Text>
-          </View>
-        ))}
+        {/*{user?.availableCompensations.map(compensation => (*/}
+        {/*  <View style={styles.gridItem} key={compensation._id}>*/}
+        {/*    <Text style={styles.gridItemHeader}>{compensation.name}</Text>*/}
+        {/*  </View>*/}
+        {/*))}*/}
       </View>
     </ScrollView>
   );

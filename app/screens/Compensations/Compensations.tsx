@@ -4,16 +4,23 @@ import PrimaryButton from '../../components/PrimaryButton.tsx';
 import React from 'react';
 import {useUserStore} from '../../stores/user.ts';
 import {translate} from '../../utils/localization.ts';
+import {useAvailableCompensationsStore} from '../../stores/availableCompensations.ts';
 
 
 export default function Compensations() {
   const navigation = useNavigation();
-  const badgeCount = useUserStore(state => state.user?.availableCompensations.length);
+  const badgeCount = useAvailableCompensationsStore(state => state.amount()) ?? 0;
+  const addVoucher = useAvailableCompensationsStore(state => state.addVoucher);
 
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.header}>{translate("compensations.header")}</Text>
+
+        <PrimaryButton
+          title={'test'}
+          onPress={() => addVoucher('test')}
+        >test</PrimaryButton>
 
         {/*{form.incentives.includes('vouchers')
           ? <Box

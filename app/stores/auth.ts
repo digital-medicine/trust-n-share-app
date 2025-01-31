@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import * as Keychain from 'react-native-keychain';
 import {getUser, postLogin, postRegister} from '../utils/restApi';
-import {updateUser} from './user.ts';
+import {useUserStore} from './user.ts';
 
 interface AuthState {
   isLoading: boolean;
@@ -66,7 +66,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       isLoggedIn: true,
     });
 
-    updateUser(userId).then(() => {});
+    await useUserStore.getState().updateUser(userId);
   },
 
   register: async (
@@ -109,7 +109,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           isLoading: false,
         });
 
-        updateUser(storedData.userId).then(() => {});
+        await useUserStore.getState().updateUser(storedData.userId);
       } else {
         // No credentials found
         set({
