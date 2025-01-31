@@ -9,18 +9,14 @@ import {useAvailableCompensationsStore} from '../../stores/availableCompensation
 
 export default function Compensations() {
   const navigation = useNavigation();
-  const badgeCount = useAvailableCompensationsStore(state => state.amount()) ?? 0;
-  const addVoucher = useAvailableCompensationsStore(state => state.addVoucher);
+
+  const voucherCount = useAvailableCompensationsStore(state => state.vouchers.length);
+  const moneyCount = useAvailableCompensationsStore(state => state.money.length);
 
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.header}>{translate("compensations.header")}</Text>
-
-        <PrimaryButton
-          title={'test'}
-          onPress={() => addVoucher('test')}
-        >test</PrimaryButton>
 
         {/*{form.incentives.includes('vouchers')
           ? <Box
@@ -71,7 +67,14 @@ export default function Compensations() {
           title={translate("compensations.vouchers.title")}
           description={translate("compensations.vouchers.description")}
           button={() => navigation.navigate('Vouchers')}
-          badgeCount={badgeCount}
+          badgeCount={voucherCount}
+        />
+
+        <Box
+          title={translate("compensations.money.title")}
+          description={translate("compensations.money.description")}
+          button={() => navigation.navigate('Money')}
+          badgeCount={moneyCount}
         />
 
         <Box
@@ -90,12 +93,6 @@ export default function Compensations() {
           title={translate("compensations.purpose.title")}
           description={translate("compensations.purpose.description")}
           button={() => navigation.navigate('PurposeResults')}
-        />
-
-        <Box
-          title={translate("compensations.money.title")}
-          description={translate("compensations.money.description")}
-          button={() => navigation.navigate('Money')}
         />
 
       </ScrollView>
