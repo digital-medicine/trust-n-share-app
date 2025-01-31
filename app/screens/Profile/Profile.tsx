@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
-import { useNavigation } from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useUserStore} from '../../stores/user.ts';
 import {translate} from '../../utils/localization.ts';
@@ -19,18 +19,27 @@ export default function ProfileScreen() {
 
   const [uploads, setUploads] = useState({});
 
+  const fetchUploadHistory = async () => {
+    const uploadHistory = await AsyncStorage.getItem(user.username + 'uploadHistory');
+    if (uploadHistory) {
+      const uploads = JSON.parse(uploadHistory);
+
+      // sort by timestamp, descending
+      uploads.uploads = Object.fromEntries(Object.entries(uploads.uploads)
+        .sort((a, b) => b[1].timestamp - a[1].timestamp)
+      );
+
+      setUploads(uploads);
+    }
+  };
+
   useEffect(() => {
-    const fetchUploadHistory = async () => {
-      const uploadHistory = await AsyncStorage.getItem(user.username + 'uploadHistory');
-      if (uploadHistory) {
-        setUploads(JSON.parse(uploadHistory));
-      }
-    };
-
     fetchUploadHistory();
-
-    console.log('uploads', uploads);
   }, []);
+
+  useFocusEffect(() => {
+    fetchUploadHistory();
+  });
 
   return (
     <ScrollView style={styles.safeArea}>
@@ -118,8 +127,6 @@ const infoItemStyles = StyleSheet.create({
 });
 
 function UploadHistory({ uploads }: { uploads: Object }) {
-  console.log('uploads', uploads);
-
   const dateOptions: Intl.DateTimeFormatOptions = {
     day: '2-digit',
     month: '2-digit',
