@@ -1,9 +1,10 @@
 import { create } from 'zustand';
-import { getUser, putUser } from '../utils/restApi';
+import {getConsumers, getUser, putUser} from '../utils/restApi';
 import { v4 as uuidv4 } from 'uuid';
 import {useUserStore} from './user.ts';
 import Config from 'react-native-config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAvailableCompensationsStore} from './availableCompensations.ts';
 
 interface PrivacyLevel {
   incentive: number;
@@ -122,14 +123,7 @@ export const useFormStore = create<FormStore>((set) => ({
 
     await appendUploadHistory(form);
 
-    // Find a random delay for the compensations
-    const max = Number(Config.COMPENSATION_DELAY_MAX);
-    const min = Number(Config.COMPENSATION_DELAY_MIN);
-    const delay = Math.floor(Math.random() * (max - min)) + min;
-
-    setTimeout(() => {
-      generateCompensations(form);
-    }, delay);
+    await generateCompensations(form);
   },
 }));
 
@@ -197,7 +191,37 @@ async function appendUploadHistory(form: FormState) {
   await AsyncStorage.setItem(username + 'uploadHistory', JSON.stringify(newHistory));
 }
 
-function generateCompensations(form: FormState) {
-  // TODO: Generate some random compensations that match the form data and
-  //       store them
+async function generateCompensations(form: FormState) {
+  // Fetch all consumer names from API
+  const consumersResponse = await getConsumers();
+  if (consumersResponse.error) {
+    throw new Error(consumersResponse.error);
+  }
+  const allConsumers = consumersResponse.json.consumer;
+
+  for (const consumer of form.consumers) {
+    // Find the consumer
+    const consumerName: string = allConsumers.find((c) => c._id === consumer).username;
+    if (!consumerName) {
+      console.warn(`Could not find consumer: ${consumerName}`);
+      continue;
+    }
+
+    // Find a random delay for the compensations
+    let max = Number(Config.COMPENSATION_DELAY_MAX ?? 5000);
+    const min = Number(Config.COMPENSATION_DELAY_MIN ?? 1000);
+    const delay = Math.floor(Math.random() * (max - min)) + min;
+    console.log("generateCompensations delay", delay, "(max:", max, "min:", min, ")");
+
+    // Generate compensations
+    const addVoucher = useAvailableCompensationsStore.getState().addVoucher;
+    const addMoney = useAvailableCompensationsStore.getState().addMoney;
+
+    setTimeout(() => {
+      addVoucher(consumerName);
+      addVoucher(consumerName);
+      addVoucher(consumerName);
+      addMoney(consumerName);
+    }, delay);
+  }
 }
