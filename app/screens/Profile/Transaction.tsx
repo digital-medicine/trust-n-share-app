@@ -1,31 +1,38 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useUserStore} from '../../stores/user.ts';
 
 
 export default function Transaction({ route }) {
-  const { id, name } = route.params;
+  const { uuid, date } = route.params;
+
+  const user = useUserStore(state => state.user);
+
+  const [upload, setUpload] = useState({});
+
+  useEffect(() => {
+    const fetchUpload = async () => {
+      const uploadHistory = await AsyncStorage.getItem(user.username + 'uploadHistory');
+      if (uploadHistory) {
+        setUpload(JSON.parse(uploadHistory).uploads[uuid]);
+      }
+    };
+
+    fetchUpload();
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* info */}
       <View style={styles.infoBox}>
         <Text style={styles.description}>
-          Schritte zählen bis zur Erleuchtung: Eine Meta-Analyse über Fitness-Tracker und das Finden des inneren Zen.
+          {JSON.stringify(upload, null, 2)}
         </Text>
-
-        <View style={infoItemStyles.infoItem}>
-          <Text style={infoItemStyles.infoItemTitle}>Recipient:</Text>
-          <Text style={infoItemStyles.infoItemData}>{name}</Text>
-        </View>
-
-        <View style={infoItemStyles.infoItem}>
-          <Text style={infoItemStyles.infoItemTitle}>Date:</Text>
-          <Text style={infoItemStyles.infoItemData}>2024-11-01</Text>
-        </View>
       </View>
 
       {/* used data */}
-      <View style={styles.infoBox}>
+      {/*<View style={styles.infoBox}>
         <Text style={styles.boxHeader}>
           Used data
         </Text>
@@ -39,7 +46,7 @@ export default function Transaction({ route }) {
           <Text style={infoItemStyles.infoItemData}>Calories</Text>
           <Text style={infoItemStyles.infoItemTitle}>65</Text>
         </View>
-      </View>
+      </View>*/}
     </ScrollView>
   );
 }

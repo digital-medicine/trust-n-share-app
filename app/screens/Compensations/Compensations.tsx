@@ -4,11 +4,14 @@ import PrimaryButton from '../../components/PrimaryButton.tsx';
 import React from 'react';
 import {useUserStore} from '../../stores/user.ts';
 import {translate} from '../../utils/localization.ts';
+import {useAvailableCompensationsStore} from '../../stores/availableCompensations.ts';
 
 
 export default function Compensations() {
   const navigation = useNavigation();
-  const badgeCount = useUserStore(state => state.user?.availableCompensations.length);
+
+  const voucherCount = useAvailableCompensationsStore(state => state.vouchers.length);
+  const moneyCount = useAvailableCompensationsStore(state => state.money.length);
 
   return (
     <SafeAreaView>
@@ -64,7 +67,14 @@ export default function Compensations() {
           title={translate("compensations.vouchers.title")}
           description={translate("compensations.vouchers.description")}
           button={() => navigation.navigate('Vouchers')}
-          badgeCount={badgeCount}
+          badgeCount={voucherCount}
+        />
+
+        <Box
+          title={translate("compensations.money.title")}
+          description={translate("compensations.money.description")}
+          button={() => navigation.navigate('Money')}
+          badgeCount={moneyCount}
         />
 
         <Box
@@ -83,12 +93,6 @@ export default function Compensations() {
           title={translate("compensations.purpose.title")}
           description={translate("compensations.purpose.description")}
           button={() => navigation.navigate('PurposeResults')}
-        />
-
-        <Box
-          title={translate("compensations.money.title")}
-          description={translate("compensations.money.description")}
-          button={() => navigation.navigate('Money')}
         />
 
       </ScrollView>

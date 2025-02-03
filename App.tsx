@@ -23,6 +23,7 @@ import LogoutButton from './app/components/LogoutButton.tsx';
 import Transaction from './app/screens/Profile/Transaction.tsx';
 import {useAuthStore} from './app/stores/auth.ts';
 import VouchersScreen from './app/screens/Compensations/Vouchers.tsx';
+import MoneyScreen from './app/screens/Compensations/Money.tsx';
 import CompensationsTabIcon from './app/components/CompensationsTabIcon.tsx';
 import {useServiceAvailableStore} from './app/stores/serviceAvailable.ts';
 import Unavailable from './app/screens/Unavailable.tsx';
@@ -124,7 +125,7 @@ const CompensationsStack = createNativeStackNavigator({
       },
     },
     Money: {
-      screen: () => <Text>Money</Text>,
+      screen: MoneyScreen,
       options: {
         title: translate("compensations.money.title"),
       },
@@ -157,7 +158,7 @@ const ProfileStack = createNativeStackNavigator({
     Transaction: {
       screen: Transaction,
       options: ({ route }) => ({
-        title: route.params.name,
+        title: route.params.date,
       }),
     }
   },

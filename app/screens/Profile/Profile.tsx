@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
-import { useNavigation } from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useUserStore} from '../../stores/user.ts';
 import {translate} from '../../utils/localization.ts';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
   const user = useUserStore(state => state.user);
@@ -15,6 +16,30 @@ export default function ProfileScreen() {
     { id: 3, name: 'UKB', date: '2024-11-21' },
     { id: 4, name: 'UKJ', date: '2024-12-02' },
   ];
+
+  const [uploads, setUploads] = useState({});
+
+  const fetchUploadHistory = async () => {
+    const uploadHistory = await AsyncStorage.getItem(user.username + 'uploadHistory');
+    if (uploadHistory) {
+      const uploads = JSON.parse(uploadHistory);
+
+      // sort by timestamp, descending
+      uploads.uploads = Object.fromEntries(Object.entries(uploads.uploads)
+        .sort((a, b) => b[1].timestamp - a[1].timestamp)
+      );
+
+      setUploads(uploads);
+    }
+  };
+
+  useEffect(() => {
+    fetchUploadHistory();
+  }, []);
+
+  useFocusEffect(() => {
+    fetchUploadHistory();
+  });
 
   return (
     <ScrollView style={styles.safeArea}>
@@ -27,7 +52,7 @@ export default function ProfileScreen() {
         </Section>
 
         <Section header={translate("profile.upload-history")}>
-          <TransactionHistory transactions={transactions} />
+          <UploadHistory uploads={uploads} />
         </Section>
       </View>
     </ScrollView>
@@ -101,32 +126,38 @@ const infoItemStyles = StyleSheet.create({
   },
 });
 
-function TransactionHistory({ transactions }) {
+function UploadHistory({ uploads }: { uploads: Object }) {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+
   return (
     <>
-      {transactions.map((transaction, index) => (
-        <TransactionButton
-          key={transaction.id}
-          id={transaction.id}
-          name={transaction.name}
-          date={transaction.date}
+      {Object.entries(uploads?.uploads ?? {}).map(([uuid, upload]) => (
+        <UploadButton
+          key={uuid}
+          uuid={uuid}
+          date={new Intl.DateTimeFormat('de-DE', dateOptions).format(new Date(upload.timestamp)).replace(', ', ' ')}
         />
       ))}
     </>
   );
 }
 
-function TransactionButton({ id, name, date }) {
+function UploadButton({ uuid, date }) {
   const navigation = useNavigation();
 
   return (
     <TouchableOpacity
       style={transactionButtonStyles.whiteButton}
-      onPress={() => navigation.navigate('Transaction', { id, name })}
+      onPress={() => navigation.navigate('Transaction', { uuid, date })}
     >
       <View style={transactionButtonStyles.whiteButtonLeft}>
-        <Text style={transactionButtonStyles.name}>{name}</Text>
-        <Text style={transactionButtonStyles.date}>{date}</Text>
+        <Text style={transactionButtonStyles.name}>{date}</Text>
       </View>
       <Ionicons name="chevron-forward" size={24} color="black" />
     </TouchableOpacity>

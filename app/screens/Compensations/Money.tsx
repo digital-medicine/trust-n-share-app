@@ -1,16 +1,16 @@
 import {Dimensions, StyleSheet, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import {useAvailableCompensationsStore} from '../../stores/availableCompensations.ts';
 
-export default function VouchersScreen() {
-  const vouchers = useAvailableCompensationsStore(state => state.vouchers);
-  const redeemVoucher = useAvailableCompensationsStore(state => state.redeemVoucher);
+export default function MoneyScreen() {
+  const money = useAvailableCompensationsStore(state => state.money);
+  const redeemMoney = useAvailableCompensationsStore(state => state.redeemMoney);
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.grid}>
-        {vouchers.map(voucher => (
-          <TouchableOpacity style={styles.gridItem} key={voucher.uuid} onPress={() => redeemVoucher(voucher.uuid)}>
-            <Text style={styles.gridItemHeader}>{voucher.name}</Text>
+        {money.map(compensation => (
+          <TouchableOpacity style={styles.gridItem} key={compensation.uuid} onPress={() => redeemMoney(compensation.uuid)}>
+            <Text style={styles.gridItemHeader}>{compensation.name}</Text>
           </TouchableOpacity>
         ))}
       </View>
