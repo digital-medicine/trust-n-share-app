@@ -25,13 +25,13 @@
 
   "upload.purpose.title": "Zweck der Datennutzung",
   "upload.purpose.error-no-selection": "Bitte wähle mindestens einen Zweck aus.",
+  "upload.purpose.universities": "Universitäten",
+  "upload.purpose.government": "Regierungen und Behörden",
+  "upload.purpose.hospitals": "Krankenhäuser",
+  "upload.purpose.companies": "Privatunternehmen",
+  "upload.purpose.insurance": "Versicherungen",
 
   "upload.institutions.title": "Institutionen",
-  "upload.institutions.universities": "Universitäten",
-  "upload.institutions.government": "Regierungen und Behörden",
-  "upload.institutions.hospitals": "Krankenhäuser",
-  "upload.institutions.companies": "Privatunternehmen",
-  "upload.institutions.insurance": "Versicherungen",
   "upload.institutions.error-no-selection": "Bitte wähle mindestens eine Institution aus.",
 
   "upload.duration.title": "Dauer der Datennutzung",

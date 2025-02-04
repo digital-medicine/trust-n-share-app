@@ -13,7 +13,6 @@ export default function Purpose()  {
   const navigation = useNavigation();
   const form = useFormStore(state => state.form);
   const toggleFormSelected = useFormStore(state => state.toggleFormSelected);
-  const formOptions = useFormOptionsStore(state => state.formOptions);
 
   const [error, setError] = useState<string|null>(null);
 
@@ -30,14 +29,37 @@ export default function Purpose()  {
 
   return (
     <FormContainer>
-      {formOptions.purposes.map((purpose) => (
-        <FormListItem
-          key={purpose._id}
-          title={purpose.name}
-          onPress={() => toggleFormSelected('purposes', purpose._id)}
-          selected={form.purposes.includes(purpose._id)}
-        />
-      ))}
+
+
+      <FormListItem
+        title={translate("upload.purpose.universities")}
+        onPress={() => toggleFormSelected('purposes', 'universities')}
+        selected={form.purposes.includes('universities')}
+      />
+
+      <FormListItem
+        title={translate("upload.purpose.government")}
+        onPress={() => toggleFormSelected('purposes', 'government')}
+        selected={form.purposes.includes('government')}
+      />
+
+      <FormListItem
+        title={translate("upload.purpose.hospitals")}
+        onPress={() => toggleFormSelected('purposes', 'hospitals')}
+        selected={form.purposes.includes('hospitals')}
+      />
+
+      <FormListItem
+        title={translate("upload.purpose.companies")}
+        onPress={() => toggleFormSelected('purposes', 'companies')}
+        selected={form.purposes.includes('companies')}
+      />
+
+      <FormListItem
+        title={translate("upload.purpose.insurance")}
+        onPress={() => toggleFormSelected('purposes', 'insurance')}
+        selected={form.purposes.includes('insurance')}
+      />
 
       <ErrorText error={error} />
 

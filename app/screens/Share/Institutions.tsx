@@ -6,12 +6,14 @@ import {useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
 import {useFormStore} from '../../stores/form.ts';
 import {translate} from '../../utils/localization.ts';
+import {useFormOptionsStore} from '../../stores/formOptions.ts';
 
 
 export default function Institutions()  {
   const navigation = useNavigation();
   const form = useFormStore(state => state.form);
   const toggleFormSelected = useFormStore(state => state.toggleFormSelected);
+  const formOptions = useFormOptionsStore(state => state.formOptions);
 
   const [error, setError] = useState<string|null>(null);
 
@@ -28,35 +30,14 @@ export default function Institutions()  {
 
   return (
     <FormContainer>
-      <FormListItem
-        title={translate("upload.institutions.universities")}
-        onPress={() => toggleFormSelected('institutions', 'universities')}
-        selected={form.institutions.includes('universities')}
-      />
-
-      <FormListItem
-        title={translate("upload.institutions.government")}
-        onPress={() => toggleFormSelected('institutions', 'government')}
-        selected={form.institutions.includes('government')}
-      />
-
-      <FormListItem
-        title={translate("upload.institutions.hospitals")}
-        onPress={() => toggleFormSelected('institutions', 'hospitals')}
-        selected={form.institutions.includes('hospitals')}
-      />
-
-      <FormListItem
-        title={translate("upload.institutions.companies")}
-        onPress={() => toggleFormSelected('institutions', 'companies')}
-        selected={form.institutions.includes('companies')}
-      />
-
-      <FormListItem
-        title={translate("upload.institutions.insurance")}
-        onPress={() => toggleFormSelected('institutions', 'insurance')}
-        selected={form.institutions.includes('insurance')}
-      />
+      {formOptions.purposes.map((purpose) => (
+        <FormListItem
+          key={purpose._id}
+          title={purpose.name}
+          onPress={() => toggleFormSelected('institutions', purpose._id)}
+          selected={form.institutions.includes(purpose._id)}
+        />
+      ))}
 
       <ErrorText error={error} />
 

@@ -140,7 +140,7 @@ async function submitUserPreferences(form: FormState) {
       privacyNone: form.privacyLevel.incentive,
       incentiveTypes: form.incentives,
       reputation: form.reputation,
-      sharing: form.purposes,
+      sharing: form.institutions,
     },
     _id: user._id,
     username: user.username,
