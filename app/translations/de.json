@@ -59,6 +59,11 @@
   "upload.reputation.text": "Wie viel Reputation sollte ein Käufer deiner Daten mindestens haben?",
 
   "upload.incentives.title": "Anreize",
+  "upload.incentives.cash": "Bargeld",
+  "upload.incentives.voucher-1": "10% Rewe-Gutschein",
+  "upload.incentives.voucher-2": "10% Amazon-Gutschein",
+  "upload.incentives.voucher-3": "10% Zalando-Gutschein",
+  "upload.incentives.voucher-4": "10% Douglas-Gutschein",
   "upload.incentives.error-no-selection": "Bitte wähle mindestens einen Anreiz aus.",
 
   "upload.consumers.title": "Datenkonsumenten",

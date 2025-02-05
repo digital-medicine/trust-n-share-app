@@ -138,7 +138,6 @@ async function submitUserPreferences(form: FormState) {
       privacyLow: form.privacyLevel.lowRisk,
       privacyHigh: form.privacyLevel.highRisk,
       privacyNone: form.privacyLevel.incentive,
-      incentiveTypes: form.incentives,
       reputation: form.reputation,
       sharing: form.institutions,
     },
