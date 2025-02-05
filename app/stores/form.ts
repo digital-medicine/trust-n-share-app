@@ -199,6 +199,11 @@ async function generateCompensations(form: FormState) {
   const allConsumers = consumersResponse.json.consumer;
 
   for (const consumer of form.consumers) {
+    // Roll the dice if the consumer buys the data
+    if (Math.random() > Number(Config.CONSUMER_BUY_CHANCE ?? 0.5)) {
+      continue;
+    }
+
     // Find the consumer
     const consumerName: string = allConsumers.find((c) => c._id === consumer).username;
     if (!consumerName) {
@@ -217,10 +222,8 @@ async function generateCompensations(form: FormState) {
     const addMoney = useAvailableCompensationsStore.getState().addMoney;
 
     setTimeout(() => {
-      addVoucher(consumerName);
-      addVoucher(consumerName);
-      addVoucher(consumerName);
-      addMoney(consumerName);
+      console.log("consumer " + consumerName + " buys the data");
+      // TODO
     }, delay);
   }
 }
