@@ -13,7 +13,6 @@ export default function Incentives() {
   const navigation = useNavigation();
   const form = useFormStore(state => state.form);
   const toggleFormSelected = useFormStore(state => state.toggleFormSelected);
-  const formOptions = useFormOptionsStore(state => state.formOptions);
 
   const [error, setError] = useState<string|null>(null);
 
@@ -30,49 +29,44 @@ export default function Incentives() {
 
   return (
     <FormContainer>
-      {formOptions.incentives.map((incentive) => (
+      {/*{formOptions.incentives.map((incentive) => (
         <FormListItem
           key={incentive._id}
           title={incentive.name}
           onPress={() => toggleFormSelected('incentives', incentive._id)}
           selected={form.incentives.includes(incentive._id)}
         />
-      ))}
+      ))}*/}
 
-      {/*<FormListItem
-        title="Vouchers"
-        description="Receive vouchers for various stores and services as a token of appreciation"
-        onPress={() => toggleFormSelected('incentives', 'vouchers')}
-        selected={form.incentives.includes('vouchers')}
+      <FormListItem
+        title={translate("upload.incentives.cash")}
+        onPress={() => toggleFormSelected('incentives', 'cash')}
+        selected={form.incentives.includes('cash')}
       />
 
       <FormListItem
-        title="Results of the study"
-        description="Get exclusive access to the results of the study you participated in"
-        onPress={() => toggleFormSelected('incentives', 'studyResults')}
-        selected={form.incentives.includes('studyResults')}
+        title={translate("upload.incentives.voucher-1")}
+        onPress={() => toggleFormSelected('incentives', 'voucher-1')}
+        selected={form.incentives.includes('voucher-1')}
       />
 
       <FormListItem
-        title="Donations for institutes"
-        description="Contribute to educational and research institues through your participation"
-        onPress={() => toggleFormSelected('incentives', 'institutes')}
-        selected={form.incentives.includes('institutes')}
+        title={translate("upload.incentives.voucher-2")}
+        onPress={() => toggleFormSelected('incentives', 'voucher-2')}
+        selected={form.incentives.includes('voucher-2')}
       />
 
       <FormListItem
-        title="Purpose of data use"
-        description="Understand how your data will be used and for what purposes"
-        onPress={() => toggleFormSelected('incentives', 'purpose')}
-        selected={form.incentives.includes('purpose')}
+        title={translate("upload.incentives.voucher-3")}
+        onPress={() => toggleFormSelected('incentives', 'voucher-3')}
+        selected={form.incentives.includes('voucher-3')}
       />
 
       <FormListItem
-        title="Fincancial compensation"
-        description="Recieve a final compensation for your valuable participation"
-        onPress={() => toggleFormSelected('incentives', 'money')}
-        selected={form.incentives.includes('money')}
-      />*/}
+        title={translate("upload.incentives.voucher-4")}
+        onPress={() => toggleFormSelected('incentives', 'voucher-4')}
+        selected={form.incentives.includes('voucher-4')}
+      />
 
       <ErrorText error={error} />
 

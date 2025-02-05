@@ -18,23 +18,23 @@ export default function Consumers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [consumers, setConsumers] = useState([
-    { title: "Uniklinik Bonn", score: 100, id: "ukb" },
-    { title: "Uniklinik Jena", score: 100, id: "ukj" },
-    { title: "CredibleCorp", score: 50, id: "crediblecorp" },
-    { title: "ShadyCorp", score: 10, id: "shadycorp" },
-  ]); // TODO: initialize with empty array when fetched from API
+  const [consumers, setConsumers] = useState([]);
 
   useEffect(() => {
     const fetchConsumers = async () => {
       // Fetch consumers
       const response = await getConsumers();
-      console.log("Consumers Response", response);
       if (response.error) {
         setError(response.error);
         return;
       }
-      setConsumers(response.json.consumer);
+
+      // Filter consumers so that only the ones that match the previously
+      // selected institutions are shown.
+      const filteredConsumers = response.json.consumer.filter(consumer =>
+        form.institutions.includes(consumer.consumerInfo.organization));
+
+      setConsumers(filteredConsumers);
     }
     fetchConsumers().finally(() => {
       setLoading(false);

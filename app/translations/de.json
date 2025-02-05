@@ -25,13 +25,14 @@
 
   "upload.purpose.title": "Zweck der Datennutzung",
   "upload.purpose.error-no-selection": "Bitte wähle mindestens einen Zweck aus.",
+  "upload.purpose.pharma-studies": "Pharmazeutische Studien",
+  "upload.purpose.medical-equipment": "Entwicklung von medizinischen Geräten",
+  "upload.purpose.fitness-equipment": "Entwicklung von Fitnessgeräten",
+  "upload.purpose.traffic": "Verbesserungen im Verkehrswesen",
+  "upload.purpose.city-planning": "Stadtplanung",
+  "upload.purpose.market-research": "Marktforschung",
 
   "upload.institutions.title": "Institutionen",
-  "upload.institutions.universities": "Universitäten",
-  "upload.institutions.government": "Regierungen und Behörden",
-  "upload.institutions.hospitals": "Krankenhäuser",
-  "upload.institutions.companies": "Privatunternehmen",
-  "upload.institutions.insurance": "Versicherungen",
   "upload.institutions.error-no-selection": "Bitte wähle mindestens eine Institution aus.",
 
   "upload.duration.title": "Dauer der Datennutzung",
@@ -58,6 +59,11 @@
   "upload.reputation.text": "Wie viel Reputation sollte ein Käufer deiner Daten mindestens haben?",
 
   "upload.incentives.title": "Anreize",
+  "upload.incentives.cash": "Bargeld",
+  "upload.incentives.voucher-1": "10% Rewe-Gutschein",
+  "upload.incentives.voucher-2": "10% Amazon-Gutschein",
+  "upload.incentives.voucher-3": "10% Zalando-Gutschein",
+  "upload.incentives.voucher-4": "10% Douglas-Gutschein",
   "upload.incentives.error-no-selection": "Bitte wähle mindestens einen Anreiz aus.",
 
   "upload.consumers.title": "Datenkonsumenten",

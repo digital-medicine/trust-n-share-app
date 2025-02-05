@@ -13,7 +13,6 @@ export default function Purpose()  {
   const navigation = useNavigation();
   const form = useFormStore(state => state.form);
   const toggleFormSelected = useFormStore(state => state.toggleFormSelected);
-  const formOptions = useFormOptionsStore(state => state.formOptions);
 
   const [error, setError] = useState<string|null>(null);
 
@@ -30,14 +29,43 @@ export default function Purpose()  {
 
   return (
     <FormContainer>
-      {formOptions.purposes.map((purpose) => (
-        <FormListItem
-          key={purpose._id}
-          title={purpose.name}
-          onPress={() => toggleFormSelected('purposes', purpose._id)}
-          selected={form.purposes.includes(purpose._id)}
-        />
-      ))}
+
+
+      <FormListItem
+        title={translate("upload.purpose.pharma-studies")}
+        onPress={() => toggleFormSelected('purposes', 'pharma-studies')}
+        selected={form.purposes.includes('pharma-studies')}
+      />
+
+      <FormListItem
+        title={translate("upload.purpose.medical-equipment")}
+        onPress={() => toggleFormSelected('purposes', 'medical-equipment')}
+        selected={form.purposes.includes('medical-equipment')}
+      />
+
+      <FormListItem
+        title={translate("upload.purpose.fitness-equipment")}
+        onPress={() => toggleFormSelected('purposes', 'fitness-equipment')}
+        selected={form.purposes.includes('fitness-equipment')}
+      />
+
+      <FormListItem
+        title={translate("upload.purpose.traffic")}
+        onPress={() => toggleFormSelected('purposes', 'traffic')}
+        selected={form.purposes.includes('traffic')}
+      />
+
+      <FormListItem
+        title={translate("upload.purpose.city-planning")}
+        onPress={() => toggleFormSelected('purposes', 'city-planning')}
+        selected={form.purposes.includes('city-planning')}
+      />
+
+      <FormListItem
+        title={translate("upload.purpose.market-research")}
+        onPress={() => toggleFormSelected('purposes', 'market-research')}
+        selected={form.purposes.includes('market-research')}
+      />
 
       <ErrorText error={error} />
 
