@@ -14,7 +14,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({ onPress, title, style, ba
       <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
         <Text style={styles.buttonText}>{title}</Text>
 
-        {badgeCount !== undefined && (
+        {badgeCount !== undefined && badgeCount > 0 && (
           <View
             style={{
               position: 'absolute',

@@ -1,5 +1,6 @@
 import {Dimensions, StyleSheet, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import {useAvailableCompensationsStore} from '../../stores/availableCompensations.ts';
+import {translate} from '../../utils/localization.ts';
 
 export default function MoneyScreen() {
   const money = useAvailableCompensationsStore(state => state.money);
@@ -10,7 +11,7 @@ export default function MoneyScreen() {
       <View style={styles.grid}>
         {money.map(compensation => (
           <TouchableOpacity style={styles.gridItem} key={compensation.uuid} onPress={() => redeemMoney(compensation.uuid)}>
-            <Text style={styles.gridItemHeader}>{compensation.name}</Text>
+            <Text style={styles.gridItemHeader}>{translate("upload.incentives." + compensation.name)}</Text>
           </TouchableOpacity>
         ))}
       </View>
