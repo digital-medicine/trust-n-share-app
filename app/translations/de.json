@@ -25,11 +25,12 @@
 
   "upload.purpose.title": "Zweck der Datennutzung",
   "upload.purpose.error-no-selection": "Bitte wähle mindestens einen Zweck aus.",
-  "upload.purpose.universities": "Universitäten",
-  "upload.purpose.government": "Regierungen und Behörden",
-  "upload.purpose.hospitals": "Krankenhäuser",
-  "upload.purpose.companies": "Privatunternehmen",
-  "upload.purpose.insurance": "Versicherungen",
+  "upload.purpose.pharma-studies": "Pharmazeutische Studien",
+  "upload.purpose.medical-equipment": "Entwicklung von medizinischen Geräten",
+  "upload.purpose.fitness-equipment": "Entwicklung von Fitnessgeräten",
+  "upload.purpose.traffic": "Verbesserungen im Verkehrswesen",
+  "upload.purpose.city-planning": "Stadtplanung",
+  "upload.purpose.market-research": "Marktforschung",
 
   "upload.institutions.title": "Institutionen",
   "upload.institutions.error-no-selection": "Bitte wähle mindestens eine Institution aus.",
