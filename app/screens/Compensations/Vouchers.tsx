@@ -1,5 +1,6 @@
 import {Dimensions, StyleSheet, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import {useAvailableCompensationsStore} from '../../stores/availableCompensations.ts';
+import {translate} from '../../utils/localization.ts';
 
 export default function VouchersScreen() {
   const vouchers = useAvailableCompensationsStore(state => state.vouchers);
@@ -10,7 +11,7 @@ export default function VouchersScreen() {
       <View style={styles.grid}>
         {vouchers.map(voucher => (
           <TouchableOpacity style={styles.gridItem} key={voucher.uuid} onPress={() => redeemVoucher(voucher.uuid)}>
-            <Text style={styles.gridItemHeader}>{voucher.name}</Text>
+            <Text style={styles.gridItemHeader}>{translate("upload.incentives." + voucher.name)}</Text>
           </TouchableOpacity>
         ))}
       </View>

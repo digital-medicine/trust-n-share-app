@@ -221,9 +221,16 @@ async function generateCompensations(form: FormState) {
     const addVoucher = useAvailableCompensationsStore.getState().addVoucher;
     const addMoney = useAvailableCompensationsStore.getState().addMoney;
 
+    // choose one random element from form.incentives
+    const randomIncentive = form.incentives[Math.floor(Math.random() * form.incentives.length)];
+
     setTimeout(() => {
       console.log("consumer " + consumerName + " buys the data");
-      // TODO
+      if (randomIncentive == "cash") {
+        addMoney(randomIncentive);
+      } else {
+        addVoucher(randomIncentive);
+      }
     }, delay);
   }
 }

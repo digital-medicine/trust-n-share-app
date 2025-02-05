@@ -5,7 +5,6 @@ import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
 import {useFormStore} from '../../stores/form.ts';
-import {useFormOptionsStore} from '../../stores/formOptions.ts';
 import {translate} from '../../utils/localization.ts';
 
 
