@@ -1,45 +1,16 @@
-import {Dimensions, StyleSheet, Text, View, ScrollView, TouchableOpacity} from 'react-native';
-import {useAvailableCompensationsStore} from '../../stores/availableCompensations.ts';
-import {translate} from '../../utils/localization.ts';
+import React from 'react';
+import {useAvailableCompensationsStore} from '../../stores/availableCompensations';
+import CompensationsGrid from '../../components/CompensationsGrid'; // Adjust path as needed
 
-export default function MoneyScreen() {
+export default function Money() {
   const money = useAvailableCompensationsStore(state => state.money);
   const redeemMoney = useAvailableCompensationsStore(state => state.redeemMoney);
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.grid}>
-        {money.map(compensation => (
-          <TouchableOpacity style={styles.gridItem} key={compensation.uuid} onPress={() => redeemMoney(compensation.uuid)}>
-            <Text style={styles.gridItemHeader}>{translate("upload.incentives." + compensation.name)}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </ScrollView>
+    <CompensationsGrid
+      items={money}
+      onRedeem={redeemMoney}
+      emptyStateTranslationKey="compensations.money.empty-state"
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 20,
-  },
-  gridItem: {
-    width: Dimensions.get('window').width / 2 - 30,
-    height: Dimensions.get('window').width / 2 - 30,
-    padding: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  gridItemHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-});

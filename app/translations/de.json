@@ -78,6 +78,7 @@
   "compensations.redeem": "Einlösen",
   "compensations.vouchers.title": "Gutscheine",
   "compensations.vouchers.description": "Erhalte Gutscheine für verschiedene Geschäfte und Dienstleistungen als Zeichen der Wertschätzung.",
+  "compensations.vouchers.empty-state": "Zurzeit keine Kompensationen verfügbar.",
   "compensations.study-results.title": "Studienresultate",
   "compensations.study-results.description": "Erhalte exklusiven Zugang zu den Ergebnissen der Studie, an der du teilgenommen hast.",
   "compensations.donations.title": "Spenden für Institute",
@@ -86,6 +87,7 @@
   "compensations.purpose.description": "Verstehe, wie deine Daten genutzt werden und zu welchen Zwecken.",
   "compensations.money.title": "Finanzielle Kompensation",
   "compensations.money.description": "Erhalte eine finanzielle Vergütung für deine wertvolle Teilnahme.",
+  "compensations.money.empty-state": "Zurzeit keine Kompensationen verfügbar.",
 
   "profile.info": "Info",
   "profile.name": "Name",
