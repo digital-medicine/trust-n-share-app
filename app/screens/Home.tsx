@@ -18,10 +18,15 @@ export default function HomeScreen() {
   const [stepsToday, setStepsToday] = useState<number|null>(null);
   const [energyBurnedToday, setEnergyBurnedToday] = useState<number|null>(null);
   const [activeMinutesToday, setActiveMinutesToday] = useState<number|null>(null);
+  const [heartRateToday, setHeartRateToday] = useState<number|null>(null);
+
   const [stepsChartData, setStepsChartData] = useState<{labels: string[], datasets: {}}>(
     {labels: [], datasets: [{data: []}]},
   );
   const [activeMinutesChartData, setActiveMinutesChartData] = useState<{labels: string[], datasets: {}}>(
+    {labels: [], datasets: [{data: []}]},
+  );
+  const [heartRateChartData, setHeartRateChartData] = useState<{labels: string[], datasets: {}}>(
     {labels: [], datasets: [{data: []}]},
   );
 
@@ -102,6 +107,40 @@ export default function HomeScreen() {
       setActiveMinutesChartData({ labels, datasets: [{ data }] });
     }
 
+    if (healthData.heartRate && healthData.heartRate.length > 0) {
+      // Get heart rate today
+      const today = new Date().toISOString().split('T')[0];
+      const heartRate = healthData.heartRate
+        .find((entry) => entry.date === today)
+        ?.value;
+      if (heartRate) {
+        setHeartRateToday(Math.round(heartRate));
+      }
+
+      // Prepare Heart Rate data for bar chart
+      const heartRateChartDataTemp = [];
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+
+        const label = date.toLocaleDateString(languageTag, { weekday: 'short' });
+
+        const value =
+          healthData.heartRate.find(
+            (entry) => entry.date === date.toISOString().split('T')[0]
+          )?.value ?? 0;
+
+        heartRateChartDataTemp.push({
+          date,
+          label,
+          value,
+        });
+      }
+      const labels = heartRateChartDataTemp.map((entry) => entry.label);
+      const data = heartRateChartDataTemp.map((entry) => Math.round(entry.value));
+      setHeartRateChartData({ labels, datasets: [{ data }] });
+    }
+
     // Get energy burned today
     if (healthData.energyBurned) {
       const today = new Date().toISOString().split('T')[0];
@@ -135,6 +174,10 @@ export default function HomeScreen() {
                                   value={activeMinutesToday}
                                   iconPack="fontawesome6"
                                   icon="person-running" />
+              <PersonalHealthItem title={translate("home.heart-rate")}
+                                  value={heartRateToday}
+                                  iconPack="ionicons"
+                                  icon="fitness" />
             </View>
           }
 
@@ -188,6 +231,7 @@ export default function HomeScreen() {
                   </View>
                 }
               </View>
+
               <View style={styles.chartContainer}>
                 <Text style={styles.chartHeader}>{translate("home.active-minutes-this-week")}</Text>
                 {healthData?.activeMinutes?.some(entry => entry.value !== null)
@@ -225,6 +269,45 @@ export default function HomeScreen() {
                     <Text style={styles.noData}>{translate("general.no-data")}</Text>
                   </View>
                 }
+            </View>
+
+            <View style={styles.chartContainer}>
+              <Text style={styles.chartHeader}>{translate("home.heart-rate-this-week")}</Text>
+              {healthData?.heartRate?.some(entry => entry.value !== null)
+                ? <BarChart
+                  data={heartRateChartData}
+                  style={{
+                    marginVertical: 8,
+                    borderRadius: 8,
+                    paddingRight: 0,
+                  }}
+                  chartConfig={{
+                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                    decimalPlaces: 0,
+                    backgroundGradientFrom: "#d7d7d7",
+                    backgroundGradientFromOpacity: 0,
+                    backgroundGradientTo: "#d7d7d7",
+                    backgroundGradientToOpacity: 0,
+                    barPercentage: 1,
+                    useShadowColorFromDataset: false,
+                    fillShadowGradientFrom: '#0071e3',
+                    fillShadowGradientFromOpacity: 1,
+                    fillShadowGradientTo: '#0071e3',
+                    fillShadowGradientToOpacity: 1,
+                    barRadius: 8,
+                  }}
+                  width={Dimensions.get('window').width - 50}
+                  height={200}
+                  fromZero={true}
+                  withInnerLines={false}
+                  showBarTops={false}
+                  withHorizontalLabels={false}
+                  showValuesOnTopOfBars={true}
+                />
+                : <View style={styles.chartEmptyState}>
+                  <Text style={styles.noData}>{translate("general.no-data")}</Text>
+                </View>
+              }
             </View>
             </>
           }

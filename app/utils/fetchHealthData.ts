@@ -17,6 +17,7 @@ export class HealthData {
   steps?: {date: string; value: number}[];
   energyBurned?: {date: string; value: number}[];
   activeMinutes?: {date: string; value: number|null}[];
+  heartRate?: {date: string; value: number}[];
   // TODO: Add more
 }
 
@@ -70,6 +71,7 @@ async function initHealthKit(): Promise<boolean> {
         AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
         AppleHealthKit.Constants.Permissions.BasalEnergyBurned,
         AppleHealthKit.Constants.Permissions.ActivitySummary,
+        AppleHealthKit.Constants.Permissions.HeartRate,
         // ADD MORE PERMISSIONS HERE
       ],
     },
@@ -116,9 +118,10 @@ async function initHealthConnect(): Promise<boolean> {
     { accessType: 'read', recordType: 'TotalCaloriesBurned' },
     { accessType: 'read', recordType: 'Steps' },
     { accessType: 'read', recordType: 'ExerciseSession' },
+    { accessType: 'read', recordType: 'HeartRate' },
     // ADD MORE PERMISSIONS HERE
   ]);
-  const permissionsOkay = ["Steps", "TotalCaloriesBurned", "ExerciseSession"]
+  const permissionsOkay = ["Steps", "TotalCaloriesBurned", "ExerciseSession", "HeartRate"]
     .every(recordType => grantedPermissions
       .map(permission => permission.recordType)
       .includes(recordType)
@@ -142,11 +145,13 @@ async function fetchHealthKitData(): Promise<HealthData> {
     activeEnergyBurned,
     basalEnergyBurned,
     activeMinutes,
+    heartRate,
   ] = await Promise.all([
     fetchAndAggregateData(AppleHealthKit.getDailyStepCountSamples),
     fetchAndAggregateData(AppleHealthKit.getActiveEnergyBurned),
     fetchAndAggregateData(AppleHealthKit.getBasalEnergyBurned),
     fetchActiveMinutes(AppleHealthKit),
+    fetchAndAggregateData(AppleHealthKit.getHeartRateSamples, "average"),
     // ADD MORE FETCH FUNCTIONS HERE
   ]);
 
@@ -161,6 +166,7 @@ async function fetchHealthKitData(): Promise<HealthData> {
   if (steps !== null) data.steps = steps;
   if (energyBurned !== null) data.energyBurned = energyBurned;
   if (activeMinutes !== null) data.activeMinutes = activeMinutes;
+  if (heartRate !== null) data.heartRate = heartRate;
   // ASSIGN MORE DATA HERE
 
   return data;
@@ -171,6 +177,7 @@ function fetchAndAggregateData(
     options: any,
     callback: (error: string, results: Array<any>) => void,
   ) => void,
+  aggregateMethod: "sum" | "average" = "sum",
 ): Promise<{date: string; value: number}[] | null> {
   const options = {
     startDate: getStartDateAWeekAgo(),
@@ -183,7 +190,10 @@ function fetchAndAggregateData(
         return resolve(null);
       }
 
-      const dataByDay = sumResultsByDay(results);
+      // const dataByDay = sumResultsByDay(results);
+      const dataByDay = aggregateMethod === "sum"
+        ? sumResultsByDay(results)
+        : averageResultsByDay(results);
       resolve(dataByDay);
     });
   });
@@ -199,6 +209,19 @@ function sumResultsByDay(results: Array<any>): {date: string; value: number}[] {
   return Object.entries(aggregatedData).map(([date, value]) => ({
     date,
     value,
+  }));
+}
+
+function averageResultsByDay(results: Array<any>): {date: string; value: number}[] {
+  const aggregatedData = results.reduce((acc: Record<string, number[]>, item) => {
+    const day = new Date(item.startDate).toISOString().split('T')[0];
+    acc[day] = [...(acc[day] || []), item.value];
+    return acc;
+  }, {});
+
+  return Object.entries(aggregatedData).map(([date, values]) => ({
+    date,
+    value: values.reduce((acc, value) => acc + value, 0) / values.length,
   }));
 }
 
@@ -316,6 +339,27 @@ async function fetchHealthConnectData(): Promise<HealthData> {
     return {
       date: new Date(entry.endTime).toISOString().split('T')[0],
       value: entry.result.EXERCISE_DURATION_TOTAL.inSeconds / 60,
+    };
+  });
+
+  // Read Heart Rate
+  const heartRateResult = await aggregateGroupByDuration({
+    recordType: 'HeartRate',
+    timeRangeFilter: {
+      operator: 'between',
+      startTime: getStartDateAWeekAgo(),
+      endTime: new Date().toISOString(),
+    },
+    timeRangeSlicer: {
+      duration: 'DAYS',
+      length: 1,
+    },
+  });
+  console.log(heartRateResult);
+  data.heartRate = heartRateResult.map(entry => {
+    return {
+      date: new Date(entry.endTime).toISOString().split('T')[0],
+      value: entry.result.HEART_RATE_AVERAGE,
     };
   });
 
