@@ -28,10 +28,12 @@ export default function IncentivesGrid({
               <Text style={styles.gridItemHeader}>
                 {translate('upload.incentives.' + item.name)}
               </Text>
-              <PrimaryButton
-                title={translate('compensations.redeem')}
-                onPress={() => onRedeem(item.uuid)}
-              />
+              <View style={{ width: '100%' }}>
+                <PrimaryButton
+                  title={translate('compensations.redeem')}
+                  onPress={() => onRedeem(item.uuid)}
+                />
+              </View>
             </View>
           ))}
         </View>
