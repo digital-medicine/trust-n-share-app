@@ -77,7 +77,7 @@ export default function Compensations() {
           badgeCount={moneyCount}
         />
 
-        <Box
+        {/*<Box
           title={translate("compensations.study-results.title")}
           description={translate("compensations.study-results.description")}
           button={() => navigation.navigate('StudyResults')}
@@ -93,7 +93,7 @@ export default function Compensations() {
           title={translate("compensations.purpose.title")}
           description={translate("compensations.purpose.description")}
           button={() => navigation.navigate('PurposeResults')}
-        />
+        />*/}
 
       </ScrollView>
     </SafeAreaView>
@@ -112,7 +112,7 @@ function Box({ title, description, button, badgeCount }:
 
       {button ? <PrimaryButton
         onPress={button}
-        title={translate("compensations.redeem")}
+        title={translate("compensations.view")}
         badgeCount={badgeCount}
       /> : null}
     </View>

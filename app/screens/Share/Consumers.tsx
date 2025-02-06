@@ -69,7 +69,7 @@ export default function Consumers() {
         : consumers.map((item) => (
           <Item
             key={item._id}
-            title={item.username}
+            title={item.consumerInfo.name}
             score={item.consumerInfo.reputation}
             onPress={() => toggleFormSelected("consumers", item._id)}
             selected={form.consumers.includes(item._id)}
@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#4190e0',
   },
   title: {
+    textAlign: 'center',
     fontSize: 18,
     fontWeight: 500,
   },
