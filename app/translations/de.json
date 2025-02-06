@@ -25,6 +25,10 @@
   "upload.data-selection.total-steps": "Schritte insgesamt",
   "upload.data-selection.calories": "Kalorien",
   "upload.data-selection.calories-total": "Kalorien insgesamt",
+  "upload.data-selection.active-minutes": "Aktive Minuten",
+  "upload.data-selection.total-active-minutes": "Aktive Minuten insgesamt",
+  "upload.data-selection.heart-rate": "Herzfrequenz",
+  "upload.data-selection.average-heart-rate": "Durschschnittliche BPM",
   "upload.data-selection.error-no-selection": "Bitte wähle mindestens eine Datenquelle aus.",
 
   "upload.purpose.title": "Zweck der Datennutzung",
