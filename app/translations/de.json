@@ -13,8 +13,10 @@
   "home.today-header": "Persönliche Fitness-Daten",
   "home.steps": "Schritte",
   "home.calories": "Kalorien",
+  "home.active-minutes": "Aktive Minuten",
   "home.statistics-header": "Statistiken",
   "home.steps-this-week": "Schritte diese Woche",
+  "home.active-minutes-this-week": "Aktive Minuten diese Woche",
 
   "upload.data-selection.title": "Daten auswählen",
   "upload.data-selection.steps": "Schritte",

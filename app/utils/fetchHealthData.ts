@@ -16,6 +16,7 @@ if (Platform.OS === 'ios') {
 export class HealthData {
   steps?: {date: string; value: number}[];
   energyBurned?: {date: string; value: number}[];
+  activeMinutes?: {date: string; value: number|null}[];
   // TODO: Add more
 }
 
@@ -138,12 +139,12 @@ async function fetchHealthKitData(): Promise<HealthData> {
     steps,
     activeEnergyBurned,
     basalEnergyBurned,
-    // activeMinutes,
+    activeMinutes,
   ] = await Promise.all([
     fetchAndAggregateData(AppleHealthKit.getDailyStepCountSamples),
     fetchAndAggregateData(AppleHealthKit.getActiveEnergyBurned),
     fetchAndAggregateData(AppleHealthKit.getBasalEnergyBurned),
-    // fetchActiveMinutes(AppleHealthKit),
+    fetchActiveMinutes(AppleHealthKit),
     // ADD MORE FETCH FUNCTIONS HERE
   ]);
 
@@ -157,6 +158,7 @@ async function fetchHealthKitData(): Promise<HealthData> {
 
   if (steps !== null) data.steps = steps;
   if (energyBurned !== null) data.energyBurned = energyBurned;
+  if (activeMinutes !== null) data.activeMinutes = activeMinutes;
   // ASSIGN MORE DATA HERE
 
   return data;
@@ -200,26 +202,49 @@ function sumResultsByDay(results: Array<any>): {date: string; value: number}[] {
 
 function fetchActiveMinutes(
   healthKit: HealthKitType,
-): Promise<{date: string; value: number}[] | null> {
-  return new Promise(resolve => {
+): Promise<{ date: string; value: number | null }[]> {
+  const promises: Promise<{ date: string; value: number | null }>[] = [];
+
+  // Fetch active minutes for each day independently. This is because HealthKit
+  // does not give us any timestamps for the data it provides.
+  for (let i = 0; i < 7; i++) {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - i);
+    startDate.setUTCHours(0, 0, 0, 0);
+
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() - i);
+    endDate.setUTCHours(23, 59, 59, 999);
+
     const options = {
-      startDate: getStartDateAWeekAgo(),
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
     };
 
-    healthKit.getActivitySummary(options, (error: string, results: Array<any>) => {
-      if (error) {
-        console.log('fetch error:', error);
-        return resolve(null);
+    const resultDate = startDate.toISOString().split("T")[0];
+
+    const promise = new Promise<{ date: string; value: number | null }>(
+      (resolve) => {
+        healthKit.getActivitySummary(
+          options,
+          (error: string, results: Array<any>) => {
+
+            if (error) {
+              console.error("getActivitySummary error:", error);
+              resolve({ date: resultDate, value: null });
+            } else {
+              const value = results[0]?.appleExerciseTime ?? null;
+              resolve({ date: resultDate, value });
+            }
+          }
+        );
       }
+    );
 
-      console.log('getActiveMinutes', results);
-      // TODO: Transform results when actual data is available (need Apple Watch)
-      return resolve(null);
+    promises.push(promise);
+  }
 
-      // const dataByDay = sumResultsByDay(results);
-      // resolve(dataByDay);
-    });
-  });
+  return Promise.all(promises);
 }
 
 function getStartDateAWeekAgo(): string {
