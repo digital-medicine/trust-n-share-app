@@ -297,6 +297,7 @@ const styles = StyleSheet.create({
   statisticsContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 20,
   },
   header: {
     fontSize: 24,

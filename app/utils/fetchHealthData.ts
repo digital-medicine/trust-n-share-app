@@ -115,8 +115,10 @@ async function initHealthConnect(): Promise<boolean> {
   const grantedPermissions = await requestPermission([
     { accessType: 'read', recordType: 'TotalCaloriesBurned' },
     { accessType: 'read', recordType: 'Steps' },
+    { accessType: 'read', recordType: 'ExerciseSession' },
+    // ADD MORE PERMISSIONS HERE
   ]);
-  const permissionsOkay = ["Steps", "TotalCaloriesBurned"]
+  const permissionsOkay = ["Steps", "TotalCaloriesBurned", "ExerciseSession"]
     .every(recordType => grantedPermissions
       .map(permission => permission.recordType)
       .includes(recordType)
@@ -277,6 +279,7 @@ async function fetchHealthConnectData(): Promise<HealthData> {
     };
   });
 
+  // Read energy burned
   const energyBurnedResult = await aggregateGroupByDuration({
     recordType: 'TotalCaloriesBurned',
     timeRangeFilter: {
@@ -293,6 +296,26 @@ async function fetchHealthConnectData(): Promise<HealthData> {
     return {
       date: new Date(entry.endTime).toISOString().split('T')[0],
       value: entry.result.ENERGY_TOTAL.inKilocalories,
+    };
+  });
+
+  // Read Exercise Time
+  const exerciseResult = await aggregateGroupByDuration({
+    recordType: 'ExerciseSession',
+    timeRangeFilter: {
+      operator: 'between',
+      startTime: getStartDateAWeekAgo(),
+      endTime: new Date().toISOString(),
+    },
+    timeRangeSlicer: {
+      duration: 'DAYS',
+      length: 1,
+    },
+  });
+  data.activeMinutes = exerciseResult.map(entry => {
+    return {
+      date: new Date(entry.endTime).toISOString().split('T')[0],
+      value: entry.result.EXERCISE_DURATION_TOTAL.inSeconds / 60,
     };
   });
 
