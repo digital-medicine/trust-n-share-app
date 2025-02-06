@@ -10,6 +10,7 @@ import {useFormStore} from '../../stores/form.ts';
 import {useHealthStore} from '../../stores/health.ts';
 import {useFormOptionsStore} from '../../stores/formOptions.ts';
 import {translate} from '../../utils/localization.ts';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 export default function DataSelection() {
   const navigation = useNavigation();
@@ -22,6 +23,8 @@ export default function DataSelection() {
   const [loading, setLoading] = useState(true);
   const [steps, setSteps] = useState<number|null>(null);
   const [energyBurned, setEnergyBurned] = useState<number|null>(null);
+  const [activeMinutes, setActiveMinutes] = useState<number|null>(null);
+  const [heartRate, setHeartRate] = useState<number|null>(null);
 
   const [error, setError] = useState<string|null>(null);
 
@@ -37,6 +40,20 @@ export default function DataSelection() {
     if (healthData.energyBurned && healthData.energyBurned.length > 0) {
       const totalEnergyBurned = Math.round(healthData.energyBurned.reduce((acc, entry) => acc + entry.value, 0));
       setEnergyBurned(totalEnergyBurned);
+    }
+    
+    // aggregate total active minutes
+    if (healthData.activeMinutes && healthData.activeMinutes.length > 0) {
+      const totalActiveMinutes = Math.round(healthData.activeMinutes.reduce((acc, entry) => acc + entry.value, 0));
+      setActiveMinutes(totalActiveMinutes);
+    }
+    
+    // aggregate average heart rate
+    if (healthData.heartRate && healthData.heartRate.length > 0) {
+      const totalHeartRate = Math.round(
+        healthData.heartRate.reduce((acc, entry) => acc + entry.value, 0),
+      ) / healthData.heartRate.length;
+      setHeartRate(totalHeartRate);
     }
 
     const fetchFormOptions = async () => {
@@ -84,6 +101,7 @@ export default function DataSelection() {
             title={translate('upload.data-selection.steps')}
             dataDescription={translate('upload.data-selection.total-steps')}
             data={steps}
+            iconPack={'ionicons'}
             icon={'footsteps'}
             onPress={() => toggleFormSelected('data', 'steps')}
             selected={form.data.includes('steps')}
@@ -92,9 +110,28 @@ export default function DataSelection() {
             title={translate('upload.data-selection.calories')}
             dataDescription={translate('upload.data-selection.calories-total')}
             data={energyBurned}
+            iconPack={'ionicons'}
             icon={'flame'}
             onPress={() => toggleFormSelected('data', 'energyBurned')}
             selected={form.data.includes('energyBurned')}
+          />
+          <ListItem
+            title={translate('upload.data-selection.active-minutes')}
+            dataDescription={translate('upload.data-selection.total-active-minutes')}
+            data={activeMinutes}
+            iconPack={'fontawesome6'}
+            icon={'person-running'}
+            onPress={() => toggleFormSelected('data', 'activeMinutes')}
+            selected={form.data.includes('activeMinutes')}
+          />
+          <ListItem
+            title={translate('upload.data-selection.heart-rate')}
+            dataDescription={translate('upload.data-selection.average-heart-rate')}
+            data={heartRate}
+            iconPack={'ionicons'}
+            icon={'fitness'}
+            onPress={() => toggleFormSelected('data', 'heartRate')}
+            selected={form.data.includes('heartRate')}
           />
         </>
       )}
@@ -106,10 +143,11 @@ export default function DataSelection() {
   );
 }
 
-function ListItem({title, dataDescription, data, icon, onPress, selected}: {
+function ListItem({title, dataDescription, data, iconPack, icon, onPress, selected}: {
   title: string,
   dataDescription: string,
   data: number|string|null,
+  iconPack: "ionicons" | "fontawesome6",
   icon: string,
   onPress: () => void,
   selected: boolean,
@@ -151,7 +189,8 @@ function ListItem({title, dataDescription, data, icon, onPress, selected}: {
       </View>
 
       {/* right side (icon) */}
-      <Ionicons name={icon} size={36} color={selected ? '#fff' : '#6c6c6c'} />
+      {iconPack === 'ionicons' && <Ionicons name={icon} size={36} color={selected ? '#fff' : '#6c6c6c'} />}
+      {iconPack === 'fontawesome6' && <FontAwesome6 name={icon} size={36} color={selected ? '#fff' : '#6c6c6c'} />}
     </TouchableOpacity>
   );
 }
