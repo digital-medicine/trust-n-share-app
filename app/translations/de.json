@@ -50,14 +50,14 @@
   "upload.duration.error-too-short": "Die Bereitstellungsdauer muss mindestens 1 Monat betragen.",
 
   "upload.information.title": "Informationen",
-  "upload.information.text": "Wir können deine Daten schützen, indem wir Details verschleiern. Wir können diese in unterschiedlichem Maße verschleiern. Je stärker der Schutz, desto weniger nützlich sind die Daten. Die nächsten Fragen helfen uns daher einzuschätzen, wie viel dir Schutz durch Verschleierung wert ist. Anschließend können wir Ihnen passende Angebote unterbreiten.",
+  "upload.information.text": "Wir können deine Daten schützen, indem wir Details in unterschiedlichem Maße verschleiern. Je höher der Schutz, desto weniger nützlich sind die Daten. Die nächsten Fragen helfen uns daher einzuschätzen, wie viel dir Schutz durch Verschleierung wert ist. Anschließend können wir dir passende Angebote unterbreiten.",
 
   "upload.privacy-level.title": "Grad des Datenschutzes",
   "upload.privacy-level.original-data.title": "Anreize für Originaldaten",
   "upload.privacy-level.original-data.text": "Angenommen, es würden keine Details verschleiert: Für ähnliche Daten bieten Datenkonsumenten typischerweise X Euro als Anreiz. Welcher Anreiz wäre für dich erforderlich, um deine Daten teilen zu wollen?",
   "upload.privacy-level.low-protection.title": "Niedriger Datenschutz",
-  "upload.privacy-level.low-protection.text1": "Stell dir vor, deine Daten werden jetzt teilweise verschleiert. Im Vergleich zu den ursprünglichen Daten ist das Risiko, dass Rückschlüsse auf dich gezogen werden können, um 10% reduziert (z. B. vorher war es in 10 von 100 Fällen möglich, Rückschlüsse zu ziehen, danach in 9 von 100 Fällen).",
-  "upload.privacy-level.low-protection.text2": "Das macht die Daten weniger interessant. Wie viel von dem für die Originaldaten versprochenen Anreiz würdest du opfern?",
+  "upload.privacy-level.low-protection.text1": "Stell dir vor, deine Daten werden jetzt teilweise verschleiert. Im Vergleich zu den ursprünglichen Daten ist das Risiko, dass Rückschlüsse auf dich gezogen werden können, um 10% reduziert (z. B. vorher war es in 10 von 100 Fällen möglich, Rückschlüsse auf dich zu ziehen, danach in 9 von 100 Fällen).",
+  "upload.privacy-level.low-protection.text2": "Das macht die Daten weniger interessant. Welchen Anteil des ursprünglich in Aussicht gestellten Anreizes wärst du bereit, zugunsten erhöhter Datensicherheit zurückzustellen?",
   "upload.privacy-level.high-protection.title": "Hoher Datenschutz",
   "upload.privacy-level.high-protection.text1": "Jetzt werden deutlich mehr Details verschleiert. Im Vergleich zu den ursprünglichen Daten ist das Risiko, dass Rückschlüsse auf dich gezogen werden können, um 90% reduziert (z. B. vorher war es in 10 von 100 Fällen möglich, Rückschlüsse zu ziehen, danach in 1 von 100 Fällen).",
   "upload.privacy-level.high-protection.text2": "Wie viel ist dir dieser Schutz wert? Welchen Anteil der für die Originaldaten versprochenen Anreize möchtest du behalten?",
