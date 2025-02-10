@@ -1,5 +1,9 @@
-import { create } from 'zustand';
-import {fetchHealthData, HealthData, initAndGetPermissions} from '../utils/fetchHealthData';
+import {create} from 'zustand';
+import {
+  fetchHealthData,
+  HealthData,
+  initAndGetPermissions,
+} from '../utils/fetchHealthData';
 
 interface HealthStore {
   healthLoading: boolean;
@@ -8,13 +12,13 @@ interface HealthStore {
   fetchHealth: () => Promise<void>;
 }
 
-export const useHealthStore = create<HealthStore>((set) => ({
+export const useHealthStore = create<HealthStore>(set => ({
   healthLoading: true,
   permissionsGranted: false,
   healthData: new HealthData(),
 
   fetchHealth: async () => {
-    set({ healthLoading: true });
+    set({healthLoading: true});
     try {
       const permissionsGranted = await initAndGetPermissions();
       const healthData = await fetchHealthData();
@@ -25,7 +29,7 @@ export const useHealthStore = create<HealthStore>((set) => ({
     } catch (e) {
       console.error(e);
     } finally {
-      set({ healthLoading: false });
+      set({healthLoading: false});
     }
   },
 }));

@@ -3,9 +3,8 @@ import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUserStore} from '../../stores/user.ts';
 
-
-export default function Transaction({ route }) {
-  const { uuid, date } = route.params;
+export default function Transaction({route}) {
+  const {uuid, date} = route.params;
 
   const user = useUserStore(state => state.user);
 
@@ -13,7 +12,9 @@ export default function Transaction({ route }) {
 
   useEffect(() => {
     const fetchUpload = async () => {
-      const uploadHistory = await AsyncStorage.getItem(user.username + 'uploadHistory');
+      const uploadHistory = await AsyncStorage.getItem(
+        user.username + 'uploadHistory',
+      );
       if (uploadHistory) {
         setUpload(JSON.parse(uploadHistory).uploads[uuid]);
       }

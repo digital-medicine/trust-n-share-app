@@ -2,21 +2,23 @@ import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import React from 'react';
-import {useUserStore} from '../../stores/user.ts';
 import {translate} from '../../utils/localization.ts';
 import {useAvailableCompensationsStore} from '../../stores/availableCompensations.ts';
-
 
 export default function Compensations() {
   const navigation = useNavigation();
 
-  const voucherCount = useAvailableCompensationsStore(state => state.vouchers.length);
-  const moneyCount = useAvailableCompensationsStore(state => state.money.length);
+  const voucherCount = useAvailableCompensationsStore(
+    state => state.vouchers.length,
+  );
+  const moneyCount = useAvailableCompensationsStore(
+    state => state.money.length,
+  );
 
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.header}>{translate("compensations.header")}</Text>
+        <Text style={styles.header}>{translate('compensations.header')}</Text>
 
         {/*{form.incentives.includes('vouchers')
           ? <Box
@@ -64,15 +66,15 @@ export default function Compensations() {
         }*/}
 
         <Box
-          title={translate("compensations.vouchers.title")}
-          description={translate("compensations.vouchers.description")}
+          title={translate('compensations.vouchers.title')}
+          description={translate('compensations.vouchers.description')}
           button={() => navigation.navigate('Vouchers')}
           badgeCount={voucherCount}
         />
 
         <Box
-          title={translate("compensations.money.title")}
-          description={translate("compensations.money.description")}
+          title={translate('compensations.money.title')}
+          description={translate('compensations.money.description')}
           button={() => navigation.navigate('Money')}
           badgeCount={moneyCount}
         />
@@ -94,29 +96,37 @@ export default function Compensations() {
           description={translate("compensations.purpose.description")}
           button={() => navigation.navigate('PurposeResults')}
         />*/}
-
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
-function Box({ title, description, button, badgeCount }:
-  { title: string, description: string, button: (() => void) | null, badgeCount?: number }) {
+function Box({
+  title,
+  description,
+  button,
+  badgeCount,
+}: {
+  title: string;
+  description: string;
+  button: (() => void) | null;
+  badgeCount?: number;
+}) {
   return (
     <View style={styles.box}>
       <Text style={styles.boxHeader}>{title}</Text>
 
-      <Text style={styles.boxText}>
-        {description}
-      </Text>
+      <Text style={styles.boxText}>{description}</Text>
 
-      {button ? <PrimaryButton
-        onPress={button}
-        title={translate("compensations.view")}
-        badgeCount={badgeCount}
-      /> : null}
+      {button ? (
+        <PrimaryButton
+          onPress={button}
+          title={translate('compensations.view')}
+          badgeCount={badgeCount}
+        />
+      ) : null}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

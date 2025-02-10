@@ -4,7 +4,6 @@ import {useServiceAvailableStore} from '../stores/serviceAvailable.ts';
 import Config from 'react-native-config';
 import {translate} from '../utils/localization.ts';
 
-
 export default function Unavailable() {
   const setAvailable = useServiceAvailableStore(state => state.setAvailable);
 
@@ -14,13 +13,13 @@ export default function Unavailable() {
     if (testResponse.status !== 503) {
       setAvailable(true);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{translate("unavailable.header")}</Text>
+      <Text style={styles.header}>{translate('unavailable.header')}</Text>
 
-      <PrimaryButton onPress={retry} title={translate("unavailable.retry")} />
+      <PrimaryButton onPress={retry} title={translate('unavailable.retry')} />
     </View>
   );
 }

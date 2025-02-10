@@ -9,7 +9,6 @@
   "general.back": "Zurück",
   "general.submit": "Absenden",
   "general.cancel": "Abbrechen",
-
   "home.today-header": "Persönliche Fitness-Daten",
   "home.steps": "Schritte",
   "home.calories": "Kalorien",
@@ -19,7 +18,6 @@
   "home.steps-this-week": "Schritte diese Woche",
   "home.active-minutes-this-week": "Aktive Minuten diese Woche",
   "home.heart-rate-this-week": "Herzfrequenz diese Woche",
-
   "upload.data-selection.title": "Daten auswählen",
   "upload.data-selection.steps": "Schritte",
   "upload.data-selection.total-steps": "Schritte insgesamt",
@@ -30,7 +28,6 @@
   "upload.data-selection.heart-rate": "Herzfrequenz",
   "upload.data-selection.average-heart-rate": "Durschschnittliche BPM",
   "upload.data-selection.error-no-selection": "Bitte wähle mindestens eine Datenquelle aus.",
-
   "upload.purpose.title": "Zweck der Datennutzung",
   "upload.purpose.error-no-selection": "Bitte wähle mindestens einen Zweck aus.",
   "upload.purpose.pharma-studies": "Pharmazeutische Studien",
@@ -39,19 +36,15 @@
   "upload.purpose.traffic": "Verbesserungen im Verkehrswesen",
   "upload.purpose.city-planning": "Stadtplanung",
   "upload.purpose.market-research": "Marktforschung",
-
   "upload.institutions.title": "Institutionen",
   "upload.institutions.error-no-selection": "Bitte wähle mindestens eine Institution aus.",
-
   "upload.duration.title": "Dauer der Datennutzung",
   "upload.duration.text1": "Stelle meine Daten für",
   "upload.duration.text2": "Monate zur Verfügung.",
   "upload.duration.error-not-a-number": "Bitte gib eine Zahl ein.",
   "upload.duration.error-too-short": "Die Bereitstellungsdauer muss mindestens 1 Monat betragen.",
-
   "upload.information.title": "Informationen",
   "upload.information.text": "Wir können deine Daten schützen, indem wir Details in unterschiedlichem Maße verschleiern. Je höher der Schutz, desto weniger nützlich sind die Daten. Die nächsten Fragen helfen uns daher einzuschätzen, wie viel dir Schutz durch Verschleierung wert ist. Anschließend können wir dir passende Angebote unterbreiten.",
-
   "upload.privacy-level.title": "Grad des Datenschutzes",
   "upload.privacy-level.original-data.title": "Anreize für Originaldaten",
   "upload.privacy-level.original-data.text": "Angenommen, es würden keine Details verschleiert: Für ähnliche Daten bieten Datenkonsumenten typischerweise X Euro als Anreiz. Welcher Anreiz wäre für dich erforderlich, um deine Daten teilen zu wollen?",
@@ -61,11 +54,9 @@
   "upload.privacy-level.high-protection.title": "Hoher Datenschutz",
   "upload.privacy-level.high-protection.text1": "Jetzt werden deutlich mehr Details verschleiert. Im Vergleich zu den ursprünglichen Daten ist das Risiko, dass Rückschlüsse auf dich gezogen werden können, um 90% reduziert (z. B. vorher war es in 10 von 100 Fällen möglich, Rückschlüsse zu ziehen, danach in 1 von 100 Fällen).",
   "upload.privacy-level.high-protection.text2": "Wie viel ist dir dieser Schutz wert? Welchen Anteil der für die Originaldaten versprochenen Anreize möchtest du behalten?",
-
   "upload.reputation.title": "Reputation",
   "upload.reputation.box-title": "Reputation des Käufers",
   "upload.reputation.text": "Wie viel Reputation sollte ein Käufer deiner Daten mindestens haben?",
-
   "upload.incentives.title": "Anreize",
   "upload.incentives.cash": "Bargeld",
   "upload.incentives.voucher-1": "10% Rewe-Gutschein",
@@ -73,14 +64,11 @@
   "upload.incentives.voucher-3": "10% Zalando-Gutschein",
   "upload.incentives.voucher-4": "10% Douglas-Gutschein",
   "upload.incentives.error-no-selection": "Bitte wähle mindestens einen Anreiz aus.",
-
   "upload.consumers.title": "Datenkonsumenten",
   "upload.consumers.error-no-selection": "Bitte wähle mindestens einen Datenkonsumenten aus.",
-
   "upload.congrats.title": "Herzlichen Glückwunsch!",
   "upload.congrats.subheader": "Deine ausgewählten Fitnessaktivitätsdaten werden nun mit den von dir gewählten Institutionen geteilt.",
   "upload.congrats.text": "Sobald deine Daten gekauft werden, kannst du deine Kompensationen im Tab \"Kompensationen\" abholen.",
-
   "compensations.header": "Wähle deine Kompensationen",
   "compensations.view": "Ansehen",
   "compensations.redeem": "Einlösen",
@@ -96,16 +84,13 @@
   "compensations.money.title": "Finanzielle Kompensation",
   "compensations.money.description": "Erhalte eine finanzielle Vergütung für deine wertvolle Teilnahme.",
   "compensations.money.empty-state": "Zurzeit keine Kompensationen verfügbar.",
-
   "profile.info": "Info",
   "profile.name": "Name",
   "profile.email": "E-Mail",
   "profile.upload-history": "Upload-Verlauf",
-
   "logout": "Abmelden",
   "logout.confirm.header": "Abmeldung bestätigen",
   "logout.confirm.text": "Möchtest du dich wirklich abmelden?",
-
   "login.header": "Anmelden",
   "login.username": "Benutzername",
   "login.password": "Passwort",
@@ -113,7 +98,6 @@
   "login.register": "Neuer Nutzer? Hier registrieren",
   "login.error-username-empty": "Bitte gib deinen Benutzernamen ein.",
   "login.error-password-empty": "Bitte gib dein Passwort ein.",
-
   "register.header": "Registrieren",
   "register.username": "Benutzername",
   "register.email": "E-Mail",
@@ -124,7 +108,6 @@
   "register.error-email-invalid": "Bitte gib eine gültige E-Mail-Adresse ein.",
   "register.error-password-empty": "Bitte gib ein Passwort ein.",
   "register.error-password-mismatch": "Die Passwörter stimmen nicht überein.",
-
   "unavailable.header": "Dienst nicht verfügbar :(",
   "unavailable.retry": "Erneut versuchen"
 }

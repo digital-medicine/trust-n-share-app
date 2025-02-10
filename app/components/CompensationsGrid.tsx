@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, StyleSheet, Text, View, Dimensions} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 import PrimaryButton from './PrimaryButton';
 import {translate} from '../utils/localization.ts'; // Adjust path as needed
 
@@ -28,7 +28,7 @@ export default function IncentivesGrid({
               <Text style={styles.gridItemHeader}>
                 {translate('upload.incentives.' + item.name)}
               </Text>
-              <View style={{ width: '100%' }}>
+              <View style={{width: '100%'}}>
                 <PrimaryButton
                   title={translate('compensations.redeem')}
                   onPress={() => onRedeem(item.uuid)}

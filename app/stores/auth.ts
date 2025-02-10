@@ -1,6 +1,6 @@
-import { create } from 'zustand';
+import {create} from 'zustand';
 import * as Keychain from 'react-native-keychain';
-import {getUser, postLogin, postRegister} from '../utils/restApi';
+import {postLogin, postRegister} from '../utils/restApi';
 import {useUserStore} from './user.ts';
 
 interface AuthState {
@@ -27,18 +27,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   refreshToken: null,
 
   setAccessToken: (token: string) => {
-    set({ accessToken: token });
+    set({accessToken: token});
   },
 
   setRefreshToken: (token: string) => {
-    set({ refreshToken: token });
+    set({refreshToken: token});
   },
 
   login: async (username: string, password: string) => {
     const response = await postLogin(username, password);
 
     if (response.status !== 200) {
-      throw new Error(response.json?.message || "Login failed");
+      throw new Error(response.json?.message || 'Login failed');
     }
 
     const newAccessToken = response.json.accessToken;
@@ -46,7 +46,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const userId = response.json.id;
 
     if (!newAccessToken || !newRefreshToken) {
-      throw new Error("Tokens not received from server");
+      throw new Error('Tokens not received from server');
     }
 
     // Store tokens in Keychain
@@ -56,7 +56,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         userId,
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
-      })
+      }),
     );
 
     // Update auth store state
@@ -69,16 +69,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     await useUserStore.getState().updateUser(userId);
   },
 
-  register: async (
-    username: string,
-    email: string,
-    password: string,
-  ) => {
+  register: async (username: string, email: string, password: string) => {
     const response = await postRegister(username, email, password);
 
-    console.log("Registration response", response);
+    console.log('Registration response', response);
     if (response.status !== 200) {
-      throw new Error(response.json?.message || "Registration failed");
+      throw new Error(response.json?.message || 'Registration failed');
     }
 
     // Login
@@ -86,7 +82,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: async () => {
-    console.log("Logging out");
+    console.log('Logging out');
 
     await Keychain.resetGenericPassword();
 
@@ -120,7 +116,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         });
       }
     } catch (error) {
-      console.error("Failed to access Keychain", error);
+      console.error('Failed to access Keychain', error);
       set({
         accessToken: null,
         refreshToken: null,

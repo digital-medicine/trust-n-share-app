@@ -1,11 +1,8 @@
-import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {useContext, useState} from 'react';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {useState} from 'react';
 import FormTextInput from '../components/FormTextInput.tsx';
-import RNPickerSelect from 'react-native-picker-select';
 import PrimaryButton from '../components/PrimaryButton.tsx';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import {validateEmail} from '../utils/validateEmail.ts';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useAuthStore} from '../stores/auth.ts';
 import {translate} from '../utils/localization.ts';
 
@@ -18,7 +15,7 @@ type errors = {
   lastName?: string;
   confirmPassword?: string;
   birthDate?: string;
-}
+};
 
 export default function RegisterScreen() {
   const register = useAuthStore(state => state.register);
@@ -35,25 +32,37 @@ export default function RegisterScreen() {
 
     // Validate email
     if (!validateEmail(email)) {
-      newErrors = { ...newErrors, email: translate('Bitte gib eine gültige E-Mail-Adresse ein.') };
+      newErrors = {
+        ...newErrors,
+        email: translate('Bitte gib eine gültige E-Mail-Adresse ein.'),
+      };
     }
 
     // Validate name
     if (username.length === 0) {
-      newErrors = { ...newErrors, firstName: translate('register.error-username-empty') };
+      newErrors = {
+        ...newErrors,
+        firstName: translate('register.error-username-empty'),
+      };
     }
 
     // Validate password
     if (password.length === 0) {
-      newErrors = { ...newErrors, password: translate('register.error-password-empty') };
+      newErrors = {
+        ...newErrors,
+        password: translate('register.error-password-empty'),
+      };
     }
     if (password !== confirmPassword) {
-      newErrors = { ...newErrors, confirmPassword: translate('register.error-password-mismatch') };
+      newErrors = {
+        ...newErrors,
+        confirmPassword: translate('register.error-password-mismatch'),
+      };
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }
+  };
 
   const handleRegister = async () => {
     if (!validate()) return;
@@ -64,7 +73,7 @@ export default function RegisterScreen() {
       console.log(e);
       setErrors({form: e.message});
     }
-  }
+  };
 
   return (
     <ScrollView>
@@ -119,7 +128,10 @@ export default function RegisterScreen() {
           <Text style={{color: 'red'}}>{errors.confirmPassword}</Text>
         ) : null}
 
-        <PrimaryButton onPress={handleRegister} title={translate("register.button")} />
+        <PrimaryButton
+          onPress={handleRegister}
+          title={translate('register.button')}
+        />
       </View>
     </ScrollView>
   );
@@ -160,7 +172,7 @@ const styles = StyleSheet.create({
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOSContainer: {
-    pointerEvents: "none"
+    pointerEvents: 'none',
   },
   inputIOS: {
     backgroundColor: 'white',

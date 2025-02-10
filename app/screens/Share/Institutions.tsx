@@ -8,29 +8,28 @@ import {useFormStore} from '../../stores/form.ts';
 import {translate} from '../../utils/localization.ts';
 import {useFormOptionsStore} from '../../stores/formOptions.ts';
 
-
-export default function Institutions()  {
+export default function Institutions() {
   const navigation = useNavigation();
   const form = useFormStore(state => state.form);
   const toggleFormSelected = useFormStore(state => state.toggleFormSelected);
   const formOptions = useFormOptionsStore(state => state.formOptions);
 
-  const [error, setError] = useState<string|null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const onSubmit = () => {
     if (form.institutions.length === 0) {
-      setError(translate("upload.institutions.error-no-selection"));
+      setError(translate('upload.institutions.error-no-selection'));
       return;
     }
 
     setError(null);
     // @ts-ignore
     navigation.navigate('Duration');
-  }
+  };
 
   return (
     <FormContainer>
-      {formOptions.purposes.map((purpose) => (
+      {formOptions.purposes.map(purpose => (
         <FormListItem
           key={purpose._id}
           title={purpose.name}
@@ -42,9 +41,7 @@ export default function Institutions()  {
       <ErrorText error={error} />
 
       {/*@ts-ignore*/}
-      <PrimaryButton onPress={onSubmit} title={translate("general.next")} />
+      <PrimaryButton onPress={onSubmit} title={translate('general.next')} />
     </FormContainer>
   );
 }
-
-

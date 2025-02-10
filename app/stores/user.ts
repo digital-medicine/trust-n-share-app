@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { getUser } from '../utils/restApi.ts';
+import {create} from 'zustand';
+import {getUser} from '../utils/restApi.ts';
 
 interface User {
   donorInfo: {
@@ -23,11 +23,11 @@ interface UserStore {
   updateUser: (userId: string) => Promise<void>;
 }
 
-export const useUserStore = create<UserStore>((set) => ({
+export const useUserStore = create<UserStore>(set => ({
   user: null,
 
   setUser: (user: User) => {
-    set({ user });
+    set({user});
   },
 
   updateUser: async (userId: string) => {

@@ -1,6 +1,5 @@
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
-import {useUserStore} from '../stores/user.ts';
 import {Text, View} from 'react-native';
 import {useAvailableCompensationsStore} from '../stores/availableCompensations.ts';
 
@@ -12,13 +11,14 @@ interface CompensationsTabIconProps {
 
 export default function CompensationsTabIcon(props: CompensationsTabIconProps) {
   const iconName = props.focused ? 'gift' : 'gift-outline';
-  const badgeCount = useAvailableCompensationsStore(state => state.amount()) ?? 0;
+  const badgeCount =
+    useAvailableCompensationsStore(state => state.amount()) ?? 0;
 
   return (
     // <Ionicons name={iconName} size={props.size} color={props.color} />
 
     // icon with badge
-    <View style={{ width: 24, height: 24, margin: 5 }}>
+    <View style={{width: 24, height: 24, margin: 5}}>
       <Ionicons name={iconName} size={props.size} color={props.color} />
       {badgeCount > 0 && (
         <View
@@ -35,7 +35,7 @@ export default function CompensationsTabIcon(props: CompensationsTabIconProps) {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={{ color: 'white', fontSize: 10, fontWeight: 'bold' }}>
+          <Text style={{color: 'white', fontSize: 10, fontWeight: 'bold'}}>
             {badgeCount}
           </Text>
         </View>

@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -21,38 +21,45 @@ export default function DataSelection() {
   const setPurposes = useFormOptionsStore(state => state.setPurposes);
 
   const [loading, setLoading] = useState(true);
-  const [steps, setSteps] = useState<number|null>(null);
-  const [energyBurned, setEnergyBurned] = useState<number|null>(null);
-  const [activeMinutes, setActiveMinutes] = useState<number|null>(null);
-  const [heartRate, setHeartRate] = useState<number|null>(null);
+  const [steps, setSteps] = useState<number | null>(null);
+  const [energyBurned, setEnergyBurned] = useState<number | null>(null);
+  const [activeMinutes, setActiveMinutes] = useState<number | null>(null);
+  const [heartRate, setHeartRate] = useState<number | null>(null);
 
-  const [error, setError] = useState<string|null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch form options and aggregate health data for display
   useEffect(() => {
     // aggregate total steps
     if (healthData.steps && healthData.steps.length > 0) {
-      const totalSteps = Math.round(healthData.steps.reduce((acc, entry) => acc + entry.value, 0));
+      const totalSteps = Math.round(
+        healthData.steps.reduce((acc, entry) => acc + entry.value, 0),
+      );
       setSteps(totalSteps);
     }
 
     // aggregate total energy burned
     if (healthData.energyBurned && healthData.energyBurned.length > 0) {
-      const totalEnergyBurned = Math.round(healthData.energyBurned.reduce((acc, entry) => acc + entry.value, 0));
+      const totalEnergyBurned = Math.round(
+        healthData.energyBurned.reduce((acc, entry) => acc + entry.value, 0),
+      );
       setEnergyBurned(totalEnergyBurned);
     }
-    
+
     // aggregate total active minutes
     if (healthData.activeMinutes && healthData.activeMinutes.length > 0) {
-      const totalActiveMinutes = Math.round(healthData.activeMinutes.reduce((acc, entry) => acc + entry.value, 0));
+      const totalActiveMinutes = Math.round(
+        healthData.activeMinutes.reduce((acc, entry) => acc + entry.value, 0),
+      );
       setActiveMinutes(totalActiveMinutes);
     }
-    
+
     // aggregate average heart rate
     if (healthData.heartRate && healthData.heartRate.length > 0) {
-      const totalHeartRate = Math.round(
-        healthData.heartRate.reduce((acc, entry) => acc + entry.value, 0),
-      ) / healthData.heartRate.length;
+      const totalHeartRate =
+        Math.round(
+          healthData.heartRate.reduce((acc, entry) => acc + entry.value, 0),
+        ) / healthData.heartRate.length;
       setHeartRate(totalHeartRate);
     }
 
@@ -70,26 +77,24 @@ export default function DataSelection() {
         setError(purposesResponse.error);
       }
       setPurposes(purposesResponse.json.organizations);
-    }
+    };
     fetchFormOptions().then(() => {
       setLoading(false);
-      console.log("formOptions", formOptions);
+      console.log('formOptions', formOptions);
     });
-
-
   }, []);
 
   const onSubmit = () => {
     // validate form
     if (form.data.length === 0) {
-      setError(translate("upload.data-selection.error-no-selection"));
+      setError(translate('upload.data-selection.error-no-selection'));
       return;
     }
 
     setError(null);
     // @ts-ignore
     navigation.navigate('Purpose');
-  }
+  };
 
   return (
     <FormContainer>
@@ -117,7 +122,9 @@ export default function DataSelection() {
           />
           <ListItem
             title={translate('upload.data-selection.active-minutes')}
-            dataDescription={translate('upload.data-selection.total-active-minutes')}
+            dataDescription={translate(
+              'upload.data-selection.total-active-minutes',
+            )}
             data={activeMinutes}
             iconPack={'fontawesome6'}
             icon={'person-running'}
@@ -126,7 +133,9 @@ export default function DataSelection() {
           />
           <ListItem
             title={translate('upload.data-selection.heart-rate')}
-            dataDescription={translate('upload.data-selection.average-heart-rate')}
+            dataDescription={translate(
+              'upload.data-selection.average-heart-rate',
+            )}
             data={heartRate}
             iconPack={'ionicons'}
             icon={'fitness'}
@@ -138,19 +147,27 @@ export default function DataSelection() {
 
       <ErrorText error={error} />
 
-      <PrimaryButton onPress={onSubmit} title={translate("general.next")} />
+      <PrimaryButton onPress={onSubmit} title={translate('general.next')} />
     </FormContainer>
   );
 }
 
-function ListItem({title, dataDescription, data, iconPack, icon, onPress, selected}: {
-  title: string,
-  dataDescription: string,
-  data: number|string|null,
-  iconPack: "ionicons" | "fontawesome6",
-  icon: string,
-  onPress: () => void,
-  selected: boolean,
+function ListItem({
+  title,
+  dataDescription,
+  data,
+  iconPack,
+  icon,
+  onPress,
+  selected,
+}: {
+  title: string;
+  dataDescription: string;
+  data: number | string | null;
+  iconPack: 'ionicons' | 'fontawesome6';
+  icon: string;
+  onPress: () => void;
+  selected: boolean;
 }) {
   const listItemStyle = [
     styles.listItem,
@@ -176,21 +193,32 @@ function ListItem({title, dataDescription, data, iconPack, icon, onPress, select
   return (
     <TouchableOpacity style={listItemStyle} onPress={onPress}>
       {/* left side (text) */}
-      <View style={{ gap: 4 }}>
+      <View style={{gap: 4}}>
         <Text style={listItemTitleStyle}>{title}</Text>
 
-        <View style={{ flexDirection: "row", gap: 6 }}>
+        <View style={{flexDirection: 'row', gap: 6}}>
           <Text style={listItemDataDescriptionStyle}>{dataDescription}:</Text>
-          {data !== null
-            ? <Text style={listItemDataStyle}>{data}</Text>
-            : <Text style={listItemNoDataStyle}>{translate("general.no-data")}</Text>
-          }
+          {data !== null ? (
+            <Text style={listItemDataStyle}>{data}</Text>
+          ) : (
+            <Text style={listItemNoDataStyle}>
+              {translate('general.no-data')}
+            </Text>
+          )}
         </View>
       </View>
 
       {/* right side (icon) */}
-      {iconPack === 'ionicons' && <Ionicons name={icon} size={36} color={selected ? '#fff' : '#6c6c6c'} />}
-      {iconPack === 'fontawesome6' && <FontAwesome6 name={icon} size={36} color={selected ? '#fff' : '#6c6c6c'} />}
+      {iconPack === 'ionicons' && (
+        <Ionicons name={icon} size={36} color={selected ? '#fff' : '#6c6c6c'} />
+      )}
+      {iconPack === 'fontawesome6' && (
+        <FontAwesome6
+          name={icon}
+          size={36}
+          color={selected ? '#fff' : '#6c6c6c'}
+        />
+      )}
     </TouchableOpacity>
   );
 }
@@ -239,5 +267,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
 });

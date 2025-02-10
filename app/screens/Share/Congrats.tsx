@@ -1,9 +1,7 @@
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useNavigation} from '@react-navigation/native';
 import {useFormStore} from '../../stores/form.ts';
 import {translate} from '../../utils/localization.ts';
-
 
 export default function Congrats() {
   const form = useFormStore(state => state.form);
@@ -14,15 +12,13 @@ export default function Congrats() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.header}>{translate("upload.congrats.title")}</Text>
+        <Text style={styles.header}>{translate('upload.congrats.title')}</Text>
 
         <Text style={styles.subHeader}>
-          {translate("upload.congrats.subheader")}
+          {translate('upload.congrats.subheader')}
         </Text>
 
-        <Text style={styles.text}>
-          {translate("upload.congrats.text")}
-        </Text>
+        <Text style={styles.text}>{translate('upload.congrats.text')}</Text>
       </View>
     </SafeAreaView>
   );
@@ -53,4 +49,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
   },
-})
+});

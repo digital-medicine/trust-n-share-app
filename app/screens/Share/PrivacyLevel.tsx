@@ -6,7 +6,7 @@ import Slider from '@react-native-community/slider';
 import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useEffect, useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
-import {getPrivacyLowRisk, getPrivacyHighRisk} from '../../utils/restApi.ts';
+import {getPrivacyHighRisk, getPrivacyLowRisk} from '../../utils/restApi.ts';
 import {useFormStore} from '../../stores/form.ts';
 import {translate} from '../../utils/localization.ts';
 
@@ -16,15 +16,25 @@ export default function PrivacyLevel() {
   const form = useFormStore(state => state.form);
   const setPrivacyLevel = useFormStore(state => state.setPrivacyLevel);
 
-  const [incentiveInput, setIncentiveInput] = useState<string>(form.privacyLevel.incentive.toString());
-  const [incentive, setIncentive] = useState<number>(form.privacyLevel.incentive);
+  const [incentiveInput, setIncentiveInput] = useState<string>(
+    form.privacyLevel.incentive.toString(),
+  );
+  const [incentive, setIncentive] = useState<number>(
+    form.privacyLevel.incentive,
+  );
   const [highRisk, setHighRisk] = useState<number>(form.privacyLevel.highRisk);
   const [lowRisk, setLowRisk] = useState<number>(form.privacyLevel.lowRisk);
 
-  const [privacyHighRiskBounds, setPrivacyHighRiskBounds] = useState<{min: number, max: number}|null>(null);
-  const [privacyLowRiskBounds, setPrivacyLowRiskBounds] = useState<{min: number, max: number}|null>(null);
-  const [incentiveError, setIncentiveError] = useState<string|null>(null);
-  const [error, setError] = useState<string|null>(null);
+  const [privacyHighRiskBounds, setPrivacyHighRiskBounds] = useState<{
+    min: number;
+    max: number;
+  } | null>(null);
+  const [privacyLowRiskBounds, setPrivacyLowRiskBounds] = useState<{
+    min: number;
+    max: number;
+  } | null>(null);
+  const [incentiveError, setIncentiveError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPrivacyHighRiskBounds();
@@ -60,8 +70,8 @@ export default function PrivacyLevel() {
 
       const min = response.json.data[0];
       const max = response.json.data[1];
-      console.log("Privacy High Risk Bounds", min, max);
-      setPrivacyHighRiskBounds({ min, max });
+      console.log('Privacy High Risk Bounds', min, max);
+      setPrivacyHighRiskBounds({min, max});
 
       // If the selected value is outside the new bounds, adjust it
       if (highRisk < min) {
@@ -70,7 +80,7 @@ export default function PrivacyLevel() {
         setHighRisk(max);
       }
     } catch (e) {
-      console.error("getPrivacyHighRisk error", e.toString());
+      console.error('getPrivacyHighRisk error', e.toString());
       setError(e.message);
     }
   };
@@ -79,10 +89,7 @@ export default function PrivacyLevel() {
     setPrivacyLowRiskBounds(null);
 
     try {
-      const response = await getPrivacyLowRisk(
-        incentive,
-        highRisk
-      );
+      const response = await getPrivacyLowRisk(incentive, highRisk);
       if (response.status !== 200) {
         setError(response.json.message);
         return;
@@ -90,8 +97,8 @@ export default function PrivacyLevel() {
 
       const min = response.json.data[0];
       const max = response.json.data[1];
-      console.log("Privacy Low Risk Bounds", min, max);
-      setPrivacyLowRiskBounds({ min, max });
+      console.log('Privacy Low Risk Bounds', min, max);
+      setPrivacyLowRiskBounds({min, max});
 
       // If the selected value is outside the new bounds, adjust it
       if (lowRisk < min) {
@@ -113,7 +120,7 @@ export default function PrivacyLevel() {
       return;
     }
     setIncentive(incentive);
-    console.log("Incentive set to", incentive);
+    console.log('Incentive set to', incentive);
   };
 
   const validateIncentive = (value: number) => {
@@ -128,7 +135,7 @@ export default function PrivacyLevel() {
 
     setIncentiveError(null);
     return true;
-  }
+  };
 
   const onSubmit = () => {
     if (!validateIncentive(incentive)) return;
@@ -141,11 +148,11 @@ export default function PrivacyLevel() {
 
     // @ts-ignore
     navigation.navigate('Reputation');
-  }
+  };
 
   const toEuro = (value: number) => {
     return value.toFixed(2).replace('.', ',') + ' €';
-  }
+  };
 
   return (
     <FormContainer>
@@ -154,11 +161,11 @@ export default function PrivacyLevel() {
       {/* Incentives */}
       <View style={styles.box}>
         <Text style={styles.boxHeader}>
-          {translate("upload.privacy-level.original-data.title")}
+          {translate('upload.privacy-level.original-data.title')}
         </Text>
 
         <Text style={styles.boxText}>
-          {translate("upload.privacy-level.original-data.text")}
+          {translate('upload.privacy-level.original-data.text')}
         </Text>
 
         <View style={styles.inputContainer}>
@@ -177,75 +184,85 @@ export default function PrivacyLevel() {
 
       {/* High Risk */}
       <View style={styles.box}>
-        <Text style={styles.boxHeader}>{translate("upload.privacy-level.low-protection.title")}</Text>
+        <Text style={styles.boxHeader}>
+          {translate('upload.privacy-level.low-protection.title')}
+        </Text>
 
         <Text style={styles.boxText}>
-          {translate("upload.privacy-level.low-protection.text1")}
+          {translate('upload.privacy-level.low-protection.text1')}
         </Text>
         <Text style={styles.boxText}>
-          {translate("upload.privacy-level.low-protection.text2")}
+          {translate('upload.privacy-level.low-protection.text2')}
         </Text>
 
-        <Text style={styles.riskText}>
-          {toEuro(highRisk)}
-        </Text>
+        <Text style={styles.riskText}>{toEuro(highRisk)}</Text>
 
-        {privacyHighRiskBounds !== null
-          ? <View>
-              <Slider
-                style={styles.slider}
-                minimumValue={privacyHighRiskBounds.min}
-                maximumValue={privacyHighRiskBounds.max}
-                step={0.01}
-                value={highRisk}
-                onSlidingComplete={setHighRisk}
-              />
-              <View style={styles.sliderBoundContainer}>
-                <Text style={styles.sliderBoundMin}>{toEuro(privacyHighRiskBounds.min)}</Text>
-                <Text style={styles.sliderBoundMax}>{toEuro(privacyHighRiskBounds.max)}</Text>
-              </View>
+        {privacyHighRiskBounds !== null ? (
+          <View>
+            <Slider
+              style={styles.slider}
+              minimumValue={privacyHighRiskBounds.min}
+              maximumValue={privacyHighRiskBounds.max}
+              step={0.01}
+              value={highRisk}
+              onSlidingComplete={setHighRisk}
+            />
+            <View style={styles.sliderBoundContainer}>
+              <Text style={styles.sliderBoundMin}>
+                {toEuro(privacyHighRiskBounds.min)}
+              </Text>
+              <Text style={styles.sliderBoundMax}>
+                {toEuro(privacyHighRiskBounds.max)}
+              </Text>
             </View>
-          : <Text style={styles.loading}>{translate("general.loading")}</Text>
-        }
+          </View>
+        ) : (
+          <Text style={styles.loading}>{translate('general.loading')}</Text>
+        )}
       </View>
 
       {/* Low Risk */}
       <View style={styles.box}>
-        <Text style={styles.boxHeader}>{translate("upload.privacy-level.high-protection.title")}</Text>
+        <Text style={styles.boxHeader}>
+          {translate('upload.privacy-level.high-protection.title')}
+        </Text>
 
         <Text style={styles.boxText}>
-          {translate("upload.privacy-level.high-protection.text1")}
+          {translate('upload.privacy-level.high-protection.text1')}
         </Text>
         <Text style={styles.boxText}>
-          {translate("upload.privacy-level.high-protection.text2")}
+          {translate('upload.privacy-level.high-protection.text2')}
         </Text>
 
-        <Text style={styles.riskText}>
-          {toEuro(lowRisk)}
-        </Text>
+        <Text style={styles.riskText}>{toEuro(lowRisk)}</Text>
 
-        {privacyLowRiskBounds !== null
-          ? <View>
-              <Slider
-                style={styles.slider}
-                minimumValue={privacyLowRiskBounds.min}
-                maximumValue={privacyLowRiskBounds.max}
-                step={0.01}
-                value={lowRisk}
-                onSlidingComplete={setLowRisk}
-              />
-              <View style={styles.sliderBoundContainer}>
-                <Text style={styles.sliderBoundMin}>{toEuro(privacyLowRiskBounds.min)}</Text>
-                <Text style={styles.sliderBoundMax}>{toEuro(privacyLowRiskBounds.max)}</Text>
-              </View>
+        {privacyLowRiskBounds !== null ? (
+          <View>
+            <Slider
+              style={styles.slider}
+              minimumValue={privacyLowRiskBounds.min}
+              maximumValue={privacyLowRiskBounds.max}
+              step={0.01}
+              value={lowRisk}
+              onSlidingComplete={setLowRisk}
+            />
+            <View style={styles.sliderBoundContainer}>
+              <Text style={styles.sliderBoundMin}>
+                {toEuro(privacyLowRiskBounds.min)}
+              </Text>
+              <Text style={styles.sliderBoundMax}>
+                {toEuro(privacyLowRiskBounds.max)}
+              </Text>
             </View>
-          : <Text style={styles.loading}>{translate("general.loading")}</Text>
-        }
+          </View>
+        ) : (
+          <Text style={styles.loading}>{translate('general.loading')}</Text>
+        )}
       </View>
 
-      <PrimaryButton onPress={onSubmit} title={translate("general.next")} />
+      <PrimaryButton onPress={onSubmit} title={translate('general.next')} />
     </FormContainer>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -316,5 +333,5 @@ const styles = StyleSheet.create({
   loading: {
     alignSelf: 'center',
     color: '#5e5e5e',
-  }
+  },
 });
