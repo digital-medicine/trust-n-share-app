@@ -36,13 +36,13 @@ const initialState: FormState = {
   data: [],
   purposes: [],
   institutions: [],
-  duration: 12,
+  duration: Config.FORM_DURATION ? Number(Config.FORM_DURATION) : 12,
   privacyLevel: {
-    incentive: 5,
+    incentive: Config.FORM_PRIVACY_INCENTIVE ? Number(Config.FORM_PRIVACY_INCENTIVE) : 20,
     highRisk: 50,
     lowRisk: 50,
   },
-  reputation: 50,
+  reputation: Config.FORM_BUYER_REPUTATION ? Number(Config.FORM_BUYER_REPUTATION) : 50,
   incentives: [],
   consumers: [],
 };
