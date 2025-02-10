@@ -12,38 +12,38 @@ export default function Duration() {
   const form = useFormStore(state => state.form);
   const setDuration = useFormStore(state => state.setDuration);
 
-  const [error, setError] = useState<string|null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const onDurationChange = (duration) => {
+  const onDurationChange = duration => {
     validateDuration(duration);
     setDuration(duration);
-  }
+  };
 
   const validateDuration = (duration: number) => {
     if (isNaN(duration)) {
-      setError(translate("upload.duration.error-not-a-number"));
+      setError(translate('upload.duration.error-not-a-number'));
       return false;
     }
     if (duration < 1) {
-      setError(translate("upload.duration.error-too-short"));
+      setError(translate('upload.duration.error-too-short'));
       return false;
     }
 
     setError(null);
     return true;
-  }
+  };
 
   const onSubmit = () => {
     if (!validateDuration(form.duration)) return;
 
     // @ts-ignore
     navigation.navigate('Information');
-  }
+  };
 
   return (
     <FormContainer>
       <View style={styles.container}>
-        <Text style={styles.text}>{translate("upload.duration.text1")}</Text>
+        <Text style={styles.text}>{translate('upload.duration.text1')}</Text>
 
         <FormTextInput
           style={styles.input}
@@ -54,14 +54,16 @@ export default function Duration() {
           onSubmitEditing={onSubmit}
         />
 
-        <Text style={styles.text}>{translate("upload.duration.text2")}</Text>
+        <Text style={styles.text}>{translate('upload.duration.text2')}</Text>
       </View>
 
-      {error && <Text style={{color: 'red', textAlign: 'center'}}>{error}</Text>}
+      {error && (
+        <Text style={{color: 'red', textAlign: 'center'}}>{error}</Text>
+      )}
 
-      <PrimaryButton onPress={onSubmit} title={translate("general.next")} />
+      <PrimaryButton onPress={onSubmit} title={translate('general.next')} />
     </FormContainer>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

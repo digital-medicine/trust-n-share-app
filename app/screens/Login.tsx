@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Text,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import PrimaryButton from '../components/PrimaryButton.tsx';
 import FormTextInput from '../components/FormTextInput.tsx';
 import Link from '../components/Link.tsx';
@@ -16,7 +11,7 @@ type errors = {
   form?: string;
   username?: string;
   password?: string;
-}
+};
 
 export default function LoginScreen() {
   const login = useAuthStore(state => state.login);
@@ -30,17 +25,23 @@ export default function LoginScreen() {
 
     // Validate username
     if (username.length === 0) {
-      newErrors = { ...newErrors, username: translate("login.error-username-empty") };
+      newErrors = {
+        ...newErrors,
+        username: translate('login.error-username-empty'),
+      };
     }
 
     // Validate password
     if (password.length === 0) {
-      newErrors = { ...newErrors, password: translate("login.error-password-empty") };
+      newErrors = {
+        ...newErrors,
+        password: translate('login.error-password-empty'),
+      };
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }
+  };
 
   const handleLogin = async () => {
     if (!validate()) return;
@@ -51,7 +52,7 @@ export default function LoginScreen() {
       console.log(e);
       setErrors({form: e.message});
     }
-  }
+  };
 
   const navigation = useNavigation();
 

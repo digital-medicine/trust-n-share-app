@@ -1,11 +1,12 @@
 import {Platform} from 'react-native';
-import type {AppleHealthKit as HealthKitType, HealthKitPermissions} from 'react-native-health';
+import type {
+  AppleHealthKit as HealthKitType,
+  HealthKitPermissions,
+} from 'react-native-health';
 import {
+  aggregateGroupByDuration,
   initialize,
   requestPermission,
-  readRecords,
-  getGrantedPermissions,
-  aggregateGroupByDuration,
 } from 'react-native-health-connect';
 
 let AppleHealthKit: typeof import('react-native-health').default | null = null;
@@ -16,7 +17,7 @@ if (Platform.OS === 'ios') {
 export class HealthData {
   steps?: {date: string; value: number}[];
   energyBurned?: {date: string; value: number}[];
-  activeMinutes?: {date: string; value: number|null}[];
+  activeMinutes?: {date: string; value: number | null}[];
   heartRate?: {date: string; value: number}[];
   // TODO: Add more
 }
@@ -115,17 +116,22 @@ async function initHealthConnect(): Promise<boolean> {
 
   // request permissions
   const grantedPermissions = await requestPermission([
-    { accessType: 'read', recordType: 'TotalCaloriesBurned' },
-    { accessType: 'read', recordType: 'Steps' },
-    { accessType: 'read', recordType: 'ExerciseSession' },
-    { accessType: 'read', recordType: 'HeartRate' },
+    {accessType: 'read', recordType: 'TotalCaloriesBurned'},
+    {accessType: 'read', recordType: 'Steps'},
+    {accessType: 'read', recordType: 'ExerciseSession'},
+    {accessType: 'read', recordType: 'HeartRate'},
     // ADD MORE PERMISSIONS HERE
   ]);
-  const permissionsOkay = ["Steps", "TotalCaloriesBurned", "ExerciseSession", "HeartRate"]
-    .every(recordType => grantedPermissions
+  const permissionsOkay = [
+    'Steps',
+    'TotalCaloriesBurned',
+    'ExerciseSession',
+    'HeartRate',
+  ].every(recordType =>
+    grantedPermissions
       .map(permission => permission.recordType)
-      .includes(recordType)
-    );
+      .includes(recordType),
+  );
   if (!permissionsOkay) {
     return false;
   }
@@ -151,7 +157,7 @@ async function fetchHealthKitData(): Promise<HealthData> {
     fetchAndAggregateData(AppleHealthKit.getActiveEnergyBurned),
     fetchAndAggregateData(AppleHealthKit.getBasalEnergyBurned),
     fetchActiveMinutes(AppleHealthKit),
-    fetchAndAggregateData(AppleHealthKit.getHeartRateSamples, "average"),
+    fetchAndAggregateData(AppleHealthKit.getHeartRateSamples, 'average'),
     // ADD MORE FETCH FUNCTIONS HERE
   ]);
 
@@ -177,7 +183,7 @@ function fetchAndAggregateData(
     options: any,
     callback: (error: string, results: Array<any>) => void,
   ) => void,
-  aggregateMethod: "sum" | "average" = "sum",
+  aggregateMethod: 'sum' | 'average' = 'sum',
 ): Promise<{date: string; value: number}[] | null> {
   const options = {
     startDate: getStartDateAWeekAgo(),
@@ -191,9 +197,10 @@ function fetchAndAggregateData(
       }
 
       // const dataByDay = sumResultsByDay(results);
-      const dataByDay = aggregateMethod === "sum"
-        ? sumResultsByDay(results)
-        : averageResultsByDay(results);
+      const dataByDay =
+        aggregateMethod === 'sum'
+          ? sumResultsByDay(results)
+          : averageResultsByDay(results);
       resolve(dataByDay);
     });
   });
@@ -212,12 +219,17 @@ function sumResultsByDay(results: Array<any>): {date: string; value: number}[] {
   }));
 }
 
-function averageResultsByDay(results: Array<any>): {date: string; value: number}[] {
-  const aggregatedData = results.reduce((acc: Record<string, number[]>, item) => {
-    const day = new Date(item.startDate).toISOString().split('T')[0];
-    acc[day] = [...(acc[day] || []), item.value];
-    return acc;
-  }, {});
+function averageResultsByDay(
+  results: Array<any>,
+): {date: string; value: number}[] {
+  const aggregatedData = results.reduce(
+    (acc: Record<string, number[]>, item) => {
+      const day = new Date(item.startDate).toISOString().split('T')[0];
+      acc[day] = [...(acc[day] || []), item.value];
+      return acc;
+    },
+    {},
+  );
 
   return Object.entries(aggregatedData).map(([date, values]) => ({
     date,
@@ -227,8 +239,8 @@ function averageResultsByDay(results: Array<any>): {date: string; value: number}
 
 function fetchActiveMinutes(
   healthKit: HealthKitType,
-): Promise<{ date: string; value: number | null }[]> {
-  const promises: Promise<{ date: string; value: number | null }>[] = [];
+): Promise<{date: string; value: number | null}[]> {
+  const promises: Promise<{date: string; value: number | null}>[] = [];
 
   // Fetch active minutes for each day independently. This is because HealthKit
   // does not give us any timestamps for the data it provides.
@@ -246,24 +258,23 @@ function fetchActiveMinutes(
       endDate: endDate.toISOString(),
     };
 
-    const resultDate = startDate.toISOString().split("T")[0];
+    const resultDate = startDate.toISOString().split('T')[0];
 
-    const promise = new Promise<{ date: string; value: number | null }>(
-      (resolve) => {
+    const promise = new Promise<{date: string; value: number | null}>(
+      resolve => {
         healthKit.getActivitySummary(
           options,
           (error: string, results: Array<any>) => {
-
             if (error) {
-              console.error("getActivitySummary error:", error);
-              resolve({ date: resultDate, value: null });
+              console.error('getActivitySummary error:', error);
+              resolve({date: resultDate, value: null});
             } else {
               const value = results[0]?.appleExerciseTime ?? null;
-              resolve({ date: resultDate, value });
+              resolve({date: resultDate, value});
             }
-          }
+          },
         );
-      }
+      },
     );
 
     promises.push(promise);

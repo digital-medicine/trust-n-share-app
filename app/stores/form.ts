@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import {getConsumers, getUser, putUser} from '../utils/restApi';
-import { v4 as uuidv4 } from 'uuid';
+import {create} from 'zustand';
+import {getConsumers, putUser} from '../utils/restApi';
+import {v4 as uuidv4} from 'uuid';
 import {useUserStore} from './user.ts';
 import Config from 'react-native-config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -38,20 +38,24 @@ const initialState: FormState = {
   institutions: [],
   duration: Config.FORM_DURATION ? Number(Config.FORM_DURATION) : 12,
   privacyLevel: {
-    incentive: Config.FORM_PRIVACY_INCENTIVE ? Number(Config.FORM_PRIVACY_INCENTIVE) : 20,
+    incentive: Config.FORM_PRIVACY_INCENTIVE
+      ? Number(Config.FORM_PRIVACY_INCENTIVE)
+      : 20,
     highRisk: 50,
     lowRisk: 50,
   },
-  reputation: Config.FORM_BUYER_REPUTATION ? Number(Config.FORM_BUYER_REPUTATION) : 50,
+  reputation: Config.FORM_BUYER_REPUTATION
+    ? Number(Config.FORM_BUYER_REPUTATION)
+    : 50,
   incentives: [],
   consumers: [],
 };
 
-export const useFormStore = create<FormStore>((set) => ({
+export const useFormStore = create<FormStore>(set => ({
   form: initialState,
 
   toggleFormSelected: (category: string, key: string) =>
-    set((state) => {
+    set(state => {
       if (!Array.isArray(state.form[category])) {
         throw new Error(`Invalid category: ${String(category)}`);
       }
@@ -69,7 +73,7 @@ export const useFormStore = create<FormStore>((set) => ({
     }),
 
   setDuration: (months: number) =>
-    set((state) => ({
+    set(state => ({
       form: {
         ...state.form,
         duration: months,
@@ -101,7 +105,7 @@ export const useFormStore = create<FormStore>((set) => ({
   //   })),
 
   setPrivacyLevel: (privacyLevel: PrivacyLevel) =>
-    set((state) => ({
+    set(state => ({
       form: {
         ...state.form,
         privacyLevel: privacyLevel,
@@ -109,7 +113,7 @@ export const useFormStore = create<FormStore>((set) => ({
     })),
 
   setReputation: (value: number) =>
-    set((state) => ({
+    set(state => ({
       form: {
         ...state.form,
         reputation: value,
@@ -187,7 +191,10 @@ async function appendUploadHistory(form: FormState) {
   }
 
   // Save new upload history
-  await AsyncStorage.setItem(username + 'uploadHistory', JSON.stringify(newHistory));
+  await AsyncStorage.setItem(
+    username + 'uploadHistory',
+    JSON.stringify(newHistory),
+  );
 }
 
 async function generateCompensations(form: FormState) {
@@ -205,7 +212,9 @@ async function generateCompensations(form: FormState) {
     }
 
     // Find the consumer
-    const consumerName: string = allConsumers.find((c) => c._id === consumer).username;
+    const consumerName: string = allConsumers.find(
+      c => c._id === consumer,
+    ).username;
     if (!consumerName) {
       console.warn(`Could not find consumer: ${consumerName}`);
       continue;
@@ -215,18 +224,27 @@ async function generateCompensations(form: FormState) {
     let max = Number(Config.COMPENSATION_DELAY_MAX ?? 5000);
     const min = Number(Config.COMPENSATION_DELAY_MIN ?? 1000);
     const delay = Math.floor(Math.random() * (max - min)) + min;
-    console.log("generateCompensations delay", delay, "(max:", max, "min:", min, ")");
+    console.log(
+      'generateCompensations delay',
+      delay,
+      '(max:',
+      max,
+      'min:',
+      min,
+      ')',
+    );
 
     // Generate compensations
     const addVoucher = useAvailableCompensationsStore.getState().addVoucher;
     const addMoney = useAvailableCompensationsStore.getState().addMoney;
 
     // choose one random element from form.incentives
-    const randomIncentive = form.incentives[Math.floor(Math.random() * form.incentives.length)];
+    const randomIncentive =
+      form.incentives[Math.floor(Math.random() * form.incentives.length)];
 
     setTimeout(() => {
-      console.log("consumer " + consumerName + " buys the data");
-      if (randomIncentive == "cash") {
+      console.log('consumer ' + consumerName + ' buys the data');
+      if (randomIncentive == 'cash') {
         addMoney(randomIncentive);
       } else {
         addVoucher(randomIncentive);

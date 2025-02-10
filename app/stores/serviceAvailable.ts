@@ -5,9 +5,9 @@ interface ServiceAvailableStore {
   setAvailable: (value: boolean) => void;
 }
 
-export const useServiceAvailableStore = create<ServiceAvailableStore>((set) => ({
+export const useServiceAvailableStore = create<ServiceAvailableStore>(set => ({
   available: true,
   setAvailable: (value: boolean) => {
-    set({ available: value });
+    set({available: value});
   },
 }));

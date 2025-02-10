@@ -1,6 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import PrimaryButton from '../../components/PrimaryButton.tsx';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useUserStore} from '../../stores/user.ts';
@@ -11,22 +16,26 @@ export default function ProfileScreen() {
   const user = useUserStore(state => state.user);
 
   const transactions = [
-    { id: 1, name: 'Rewe', date: '2024-11-05' },
-    { id: 2, name: 'DLR', date: '2024-11-20' },
-    { id: 3, name: 'UKB', date: '2024-11-21' },
-    { id: 4, name: 'UKJ', date: '2024-12-02' },
+    {id: 1, name: 'Rewe', date: '2024-11-05'},
+    {id: 2, name: 'DLR', date: '2024-11-20'},
+    {id: 3, name: 'UKB', date: '2024-11-21'},
+    {id: 4, name: 'UKJ', date: '2024-12-02'},
   ];
 
   const [uploads, setUploads] = useState({});
 
   const fetchUploadHistory = async () => {
-    const uploadHistory = await AsyncStorage.getItem(user.username + 'uploadHistory');
+    const uploadHistory = await AsyncStorage.getItem(
+      user.username + 'uploadHistory',
+    );
     if (uploadHistory) {
       const uploads = JSON.parse(uploadHistory);
 
       // sort by timestamp, descending
-      uploads.uploads = Object.fromEntries(Object.entries(uploads.uploads)
-        .sort((a, b) => b[1].timestamp - a[1].timestamp)
+      uploads.uploads = Object.fromEntries(
+        Object.entries(uploads.uploads).sort(
+          (a, b) => b[1].timestamp - a[1].timestamp,
+        ),
       );
 
       setUploads(uploads);
@@ -44,14 +53,20 @@ export default function ProfileScreen() {
   return (
     <ScrollView style={styles.safeArea}>
       <View style={styles.container}>
-        <Section header={translate("profile.info")}>
+        <Section header={translate('profile.info')}>
           <InfoBox>
-            <InfoItem title={translate("profile.name")} data={user?.username ?? 'Error'} />
-            <InfoItem title={translate("profile.email")} data={user?.email ?? 'Error'} />
+            <InfoItem
+              title={translate('profile.name')}
+              data={user?.username ?? 'Error'}
+            />
+            <InfoItem
+              title={translate('profile.email')}
+              data={user?.email ?? 'Error'}
+            />
           </InfoBox>
         </Section>
 
-        <Section header={translate("profile.upload-history")}>
+        <Section header={translate('profile.upload-history')}>
           <UploadHistory uploads={uploads} />
         </Section>
       </View>
@@ -68,7 +83,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function Section({ header, children }) {
+function Section({header, children}) {
   return (
     <View style={sectionStyles.sectionContainer}>
       <Text style={sectionStyles.header}>{header}</Text>
@@ -90,7 +105,7 @@ const sectionStyles = StyleSheet.create({
   },
 });
 
-function InfoBox({ children }) {
+function InfoBox({children}) {
   return <View style={infoBoxStyles.infoBox}>{children}</View>;
 }
 
@@ -103,7 +118,7 @@ const infoBoxStyles = StyleSheet.create({
   },
 });
 
-function InfoItem({ title, data }: { title: string; data: string|undefined }) {
+function InfoItem({title, data}: {title: string; data: string | undefined}) {
   return (
     <View style={infoItemStyles.infoItem}>
       <Text style={infoItemStyles.infoItemTitle}>{title}</Text>
@@ -126,7 +141,7 @@ const infoItemStyles = StyleSheet.create({
   },
 });
 
-function UploadHistory({ uploads }: { uploads: Object }) {
+function UploadHistory({uploads}: {uploads: Object}) {
   const dateOptions: Intl.DateTimeFormatOptions = {
     day: '2-digit',
     month: '2-digit',
@@ -141,21 +156,22 @@ function UploadHistory({ uploads }: { uploads: Object }) {
         <UploadButton
           key={uuid}
           uuid={uuid}
-          date={new Intl.DateTimeFormat('de-DE', dateOptions).format(new Date(upload.timestamp)).replace(', ', ' ')}
+          date={new Intl.DateTimeFormat('de-DE', dateOptions)
+            .format(new Date(upload.timestamp))
+            .replace(', ', ' ')}
         />
       ))}
     </>
   );
 }
 
-function UploadButton({ uuid, date }) {
+function UploadButton({uuid, date}) {
   const navigation = useNavigation();
 
   return (
     <TouchableOpacity
       style={transactionButtonStyles.whiteButton}
-      onPress={() => navigation.navigate('Transaction', { uuid, date })}
-    >
+      onPress={() => navigation.navigate('Transaction', {uuid, date})}>
       <View style={transactionButtonStyles.whiteButtonLeft}>
         <Text style={transactionButtonStyles.name}>{date}</Text>
       </View>

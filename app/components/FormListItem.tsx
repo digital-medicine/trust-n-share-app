@@ -7,7 +7,12 @@ interface FormListItemProps {
   selected: boolean;
 }
 
-export default function FormListItem({ title, description, onPress, selected }: FormListItemProps) {
+export default function FormListItem({
+  title,
+  description,
+  onPress,
+  selected,
+}: FormListItemProps) {
   const listItemStyle = [
     styles.listItem,
     selected ? styles.listItemSelected : null,
@@ -24,7 +29,9 @@ export default function FormListItem({ title, description, onPress, selected }: 
   return (
     <TouchableOpacity style={listItemStyle} onPress={onPress}>
       <Text style={listItemTitleStyle}>{title}</Text>
-      {description && <Text style={listItemDescriptionStyle}>{description}</Text>}
+      {description && (
+        <Text style={listItemDescriptionStyle}>{description}</Text>
+      )}
     </TouchableOpacity>
   );
 }

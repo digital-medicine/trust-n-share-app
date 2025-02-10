@@ -6,7 +6,6 @@ import PrimaryButton from '../../components/PrimaryButton.tsx';
 import {useFormStore} from '../../stores/form.ts';
 import {translate} from '../../utils/localization.ts';
 
-
 export default function Reputation() {
   const navigation = useNavigation();
   const form = useFormStore(state => state.form);
@@ -15,7 +14,9 @@ export default function Reputation() {
   return (
     <FormContainer>
       <View style={styles.box}>
-        <Text style={styles.boxHeader}>{translate("upload.reputation.box-title")}</Text>
+        <Text style={styles.boxHeader}>
+          {translate('upload.reputation.box-title')}
+        </Text>
 
         <Text style={styles.boxText}>
           {/*What reputation should a*/}
@@ -23,15 +24,13 @@ export default function Reputation() {
           {/*of your data set have as a*/}
           {/*<Text style={{ fontWeight: 'bold' }}> minimum</Text>*/}
           {/*?*/}
-          {translate("upload.reputation.text")}
+          {translate('upload.reputation.text')}
         </Text>
 
-        <Text style={styles.reputationText}>
-          {form.reputation} %
-        </Text>
+        <Text style={styles.reputationText}>{form.reputation} %</Text>
 
         <Slider
-          style={{ width: '100%' }}
+          style={{width: '100%'}}
           minimumValue={0}
           maximumValue={100}
           step={1}
@@ -40,9 +39,12 @@ export default function Reputation() {
         />
       </View>
 
-      <PrimaryButton onPress={() => navigation.navigate('Incentives')} title={translate("general.next")} />
+      <PrimaryButton
+        onPress={() => navigation.navigate('Incentives')}
+        title={translate('general.next')}
+      />
     </FormContainer>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -66,5 +68,5 @@ const styles = StyleSheet.create({
   reputationText: {
     fontSize: 20,
     textAlign: 'center',
-  }
+  },
 });

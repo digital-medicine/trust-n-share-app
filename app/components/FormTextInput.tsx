@@ -1,9 +1,9 @@
 import React from 'react';
-import { TextInput, StyleSheet, TextInputProps } from 'react-native';
+import {StyleSheet, TextInput, TextInputProps} from 'react-native';
 
 interface PrimaryTextInputProps extends TextInputProps {}
 
-const FormTextInput: React.FC<PrimaryTextInputProps> = (props) => {
+const FormTextInput: React.FC<PrimaryTextInputProps> = props => {
   return (
     <TextInput
       style={[styles.input, props.style]}
@@ -27,4 +27,3 @@ const styles = StyleSheet.create({
     color: '#1d1d1f',
   },
 });
-

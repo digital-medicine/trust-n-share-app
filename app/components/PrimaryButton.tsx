@@ -1,5 +1,12 @@
 import React from 'react';
-import {TouchableOpacity, Text, StyleSheet, GestureResponderEvent, ViewStyle, View} from 'react-native';
+import {
+  GestureResponderEvent,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 interface PrimaryButtonProps {
   onPress: (event: GestureResponderEvent) => void;
@@ -8,7 +15,12 @@ interface PrimaryButtonProps {
   badgeCount?: number; // Optional badge count to display on the button
 }
 
-const PrimaryButton: React.FC<PrimaryButtonProps> = ({ onPress, title, style, badgeCount }) => {
+const PrimaryButton: React.FC<PrimaryButtonProps> = ({
+  onPress,
+  title,
+  style,
+  badgeCount,
+}) => {
   return (
     <>
       <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
@@ -27,14 +39,12 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({ onPress, title, style, ba
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>
+            <Text style={{color: 'white', fontSize: 14, fontWeight: 'bold'}}>
               {badgeCount}
             </Text>
           </View>
         )}
       </TouchableOpacity>
-
-
     </>
   );
 };
@@ -49,7 +59,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // Shadow for iOS
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 2,
     // Elevation for Android

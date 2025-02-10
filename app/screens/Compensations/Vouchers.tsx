@@ -4,7 +4,9 @@ import CompensationsGrid from '../../components/CompensationsGrid'; // Adjust pa
 
 export default function Vouchers() {
   const vouchers = useAvailableCompensationsStore(state => state.vouchers);
-  const redeemVoucher = useAvailableCompensationsStore(state => state.redeemVoucher);
+  const redeemVoucher = useAvailableCompensationsStore(
+    state => state.redeemVoucher,
+  );
 
   return (
     <CompensationsGrid

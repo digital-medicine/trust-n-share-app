@@ -5,7 +5,6 @@ import {useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
 import ErrorText from '../../components/ErrorText.tsx';
 import {getConsumers} from '../../utils/restApi.ts';
-import {useAuthStore} from '../../stores/auth.ts';
 import {useFormStore} from '../../stores/form.ts';
 import {translate} from '../../utils/localization.ts';
 
@@ -32,10 +31,11 @@ export default function Consumers() {
       // Filter consumers so that only the ones that match the previously
       // selected institutions are shown.
       const filteredConsumers = response.json.consumer.filter(consumer =>
-        form.institutions.includes(consumer.consumerInfo.organization));
+        form.institutions.includes(consumer.consumerInfo.organization),
+      );
 
       setConsumers(filteredConsumers);
-    }
+    };
     fetchConsumers().finally(() => {
       setLoading(false);
     });
@@ -43,7 +43,7 @@ export default function Consumers() {
 
   function onSubmit() {
     if (form.consumers.length === 0) {
-      setError(translate("upload.consumers.error-no-selection"));
+      setError(translate('upload.consumers.error-no-selection'));
       return;
     }
 
@@ -51,12 +51,12 @@ export default function Consumers() {
 
     submitForm()
       .then(() => {
-        console.log("Submitted!");
+        console.log('Submitted!');
         // @ts-ignore
-        navigation.navigate("Congrats");
+        navigation.navigate('Congrats');
       })
-      .catch((e) => {
-        const message = "Could not submit: " + e.message;
+      .catch(e => {
+        const message = 'Could not submit: ' + e.message;
         console.error(message);
         setError(message);
       });
@@ -64,21 +64,23 @@ export default function Consumers() {
 
   return (
     <FormContainer>
-      {loading
-        ? <Text>Loading...</Text>
-        : consumers.map((item) => (
+      {loading ? (
+        <Text>Loading...</Text>
+      ) : (
+        consumers.map(item => (
           <Item
             key={item._id}
             title={item.consumerInfo.name}
             score={item.consumerInfo.reputation}
-            onPress={() => toggleFormSelected("consumers", item._id)}
+            onPress={() => toggleFormSelected('consumers', item._id)}
             selected={form.consumers.includes(item._id)}
           />
-        ))}
+        ))
+      )}
 
       <ErrorText error={error} />
 
-      <PrimaryButton onPress={onSubmit} title={translate("general.submit")} />
+      <PrimaryButton onPress={onSubmit} title={translate('general.submit')} />
     </FormContainer>
   );
 }
@@ -90,15 +92,9 @@ interface ItemProps {
   selected: boolean;
 }
 
-function Item({ title, score, onPress, selected }: ItemProps) {
-    const itemStyle = [
-    styles.item,
-    selected ? styles.itemSelected : null,
-  ];
-  const titleStyle = [
-    styles.title,
-    selected ? styles.titleSelected : null,
-  ];
+function Item({title, score, onPress, selected}: ItemProps) {
+  const itemStyle = [styles.item, selected ? styles.itemSelected : null];
+  const titleStyle = [styles.title, selected ? styles.titleSelected : null];
   const scoreStyle = {
     ...styles.score,
     backgroundColor: getTrafficLightColor(score),
@@ -172,4 +168,3 @@ function getTrafficLightColor(score: number): string {
   // Convert RGB to hex code
   return rgbToHex(red, green, blue);
 }
-

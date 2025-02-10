@@ -6,11 +6,12 @@ async function request(
   url: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
   body: object | null = null,
-): Promise<{ status: number; json: object | null; error: string | null }> {
-  console.log("web api", method, url);
+): Promise<{status: number; json: object | null; error: string | null}> {
+  console.log('web api', method, url);
 
-  const { accessToken, refreshToken, setAccessToken, logout } = useAuthStore.getState();
-  const { available, setAvailable } = useServiceAvailableStore.getState();
+  const {accessToken, refreshToken, setAccessToken, logout} =
+    useAuthStore.getState();
+  const {available, setAvailable} = useServiceAvailableStore.getState();
 
   try {
     // Send the request
@@ -31,13 +32,13 @@ async function request(
       return {
         status: response.status,
         json: null,
-        error: "Service unavailable",
+        error: 'Service unavailable',
       };
     }
 
     // If the token expired, refresh and retry
     if (response.status === 401) {
-      console.log("Token expired, refreshing ...");
+      console.log('Token expired, refreshing ...');
       const refreshResponse = await fetch(
         Config.API_URL + '/auth/refreshtoken',
         {
@@ -47,11 +48,11 @@ async function request(
             'Content-Type': 'application/json',
           },
           body: `{ "refreshToken": "${refreshToken}" }`,
-        }
+        },
       );
       const refreshJson = await refreshResponse.json();
       if (refreshResponse.status === 200) {
-        console.log("Refreshed token");
+        console.log('Refreshed token');
         setAccessToken(refreshJson.accessToken);
 
         // Retry the original request
@@ -66,7 +67,7 @@ async function request(
         });
       } else {
         // Handle expired refresh token
-        console.error("Failed to refresh token: " + refreshJson.message);
+        console.error('Failed to refresh token: ' + refreshJson.message);
         await logout();
       }
     }
@@ -89,7 +90,7 @@ async function request(
       json = await response.json();
     } catch (err) {
       // @ts-ignore
-      const errorText = "Failed to parse JSON: " + err.message;
+      const errorText = 'Failed to parse JSON: ' + err.message;
       return {
         status: response.status,
         json: null,
@@ -103,7 +104,9 @@ async function request(
       error: null,
     };
   } catch (error) {
-    const errorText = "Network or fetch error: " + (error instanceof Error ? error.message : error);
+    const errorText =
+      'Network or fetch error: ' +
+      (error instanceof Error ? error.message : error);
     return {
       status: 0, // Use 0 to indicate a network error (no HTTP status available)
       json: null,
@@ -115,27 +118,24 @@ async function request(
 export async function postLogin(username: string, password: string) {
   const url = Config.API_URL + '/auth/signin';
 
-  console.log("postLogin", url, username);
+  console.log('postLogin', url, username);
 
-  const response = await fetch(
-    url,
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    }
-  );
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username,
+      password,
+    }),
+  });
   const json = await response.json();
   return {
     status: response.status,
     json,
-  }
+  };
 }
 
 export async function postRegister(
@@ -143,28 +143,25 @@ export async function postRegister(
   email: string,
   password: string,
 ) {
-  const response = await fetch(
-    Config.API_URL + '/auth/signup',
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-        consumerInfo: null,
-        role: "donor",
-      }),
-    }
-  );
+  const response = await fetch(Config.API_URL + '/auth/signup', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username,
+      email,
+      password,
+      consumerInfo: null,
+      role: 'donor',
+    }),
+  });
   const json = await response.json();
   return {
     status: response.status,
     json,
-  }
+  };
 }
 
 export async function getIncentives() {
@@ -188,40 +185,39 @@ export async function getConsumers() {
 }
 
 export async function getPrivacyHighRisk(privacyNone: number) {
-  console.log("getPrivacyHighRisk", privacyNone);
+  console.log('getPrivacyHighRisk', privacyNone);
 
-  const response = await fetch(
-    Config.PRIVACY_API_URL + '/privacyLow',
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ privacyNone }),
-    });
+  const response = await fetch(Config.PRIVACY_API_URL + '/privacyLow', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({privacyNone}),
+  });
 
   const json = await response.json();
   return {
     status: response.status,
     json,
     error: null,
-  }
+  };
 }
 
-export async function getPrivacyLowRisk(privacyNone: number, privacyLow: number) {
-  console.log("getPrivacyLowRisk", privacyNone, privacyLow);
+export async function getPrivacyLowRisk(
+  privacyNone: number,
+  privacyLow: number,
+) {
+  console.log('getPrivacyLowRisk', privacyNone, privacyLow);
 
-  const response = await fetch(
-    Config.PRIVACY_API_URL + '/privacyHigh',
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ privacyNone, privacyLow }),
-    });
+  const response = await fetch(Config.PRIVACY_API_URL + '/privacyHigh', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({privacyNone, privacyLow}),
+  });
 
   if (!response.ok) {
     const responseJson = await response.json();
@@ -239,5 +235,5 @@ export async function getPrivacyLowRisk(privacyNone: number, privacyLow: number)
     status: response.status,
     json,
     error: null,
-  }
+  };
 }
