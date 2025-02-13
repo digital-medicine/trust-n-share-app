@@ -31,7 +31,8 @@ export default function Consumers() {
       // Filter consumers so that only the ones that match the previously
       // selected institutions are shown.
       const filteredConsumers = response.json.consumer.filter(consumer =>
-        form.institutions.includes(consumer.consumerInfo.organization),
+        form.institutions.includes(consumer.consumerInfo.organization)
+        && consumer.active
       );
 
       setConsumers(filteredConsumers);
