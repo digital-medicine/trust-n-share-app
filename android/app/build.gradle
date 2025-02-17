@@ -82,8 +82,8 @@ android {
         applicationId "com.trustnavigator"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName "v1.2.1"
+        versionCode 6
+        versionName "v1.2.2"
     }
     signingConfigs {
         debug {
